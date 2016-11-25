@@ -71,3 +71,9 @@ deploy:
   type: git
   branch: master
   repo: git@github.com:bailinlin/bailinlin.github.io.git
+
+# 添加头像
+avatar: images/baibatian.jpg
+
+# 添加所说站点配置
+duoshuo_shortname: baibatian
