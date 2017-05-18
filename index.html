@@ -239,6 +239,160 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2017/05/18/nginx-basic/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/baibatian.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/18/nginx-basic/" itemprop="url">
+                  你需要了解的 nginx 基础配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-18T14:23:31+08:00">
+                2017-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/05/18/nginx-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/18/nginx-basic/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="初探nginx"><a href="#初探nginx" class="headerlink" title="初探nginx"></a>初探nginx</h2><blockquote>
+<p>今天给大家讲下nginx的基础配置,很多小伙伴在开发的过程中会使用到 nginx ,但是确对 nginx 的配置其实并不了解,今天我给大家讲下基础的配置项.nginx 的功能很多,但是说到 nginx 大家最先想到的是反向代理和负载均衡.</p>
+</blockquote>
+<p>“负载均衡”在开发环境体现的不太明显,主要是为了解决生产环境的客户端请求很多的时候,动态的去分散给各个服务器,缓解服务器压力,充 分利用资源.而说到 “反向代理”,你的第一反应应该是”正向代理”,简称”代理”,你可以把代理想象成客户端和服务端的中介,代理的种类很多,比较常见的是,客户端对服务端进行请求的时候,代理会对请求的内容进行下载缓存,从而提高客户端的请求速度,代理还有多重代理,加密处理等功能,”反向代理”的作用和正项代理的功能相辅相成,原理也类似,反向代理将字符串和相应的服务器和端口匹配上,从而获取用户想要获取的内容,那么这两者的区分是什么呢,”正向代理”作用于客户端,”反向代理”作用于服务器.</p>
+<h2 id="生动的-nginx-反向代理解释"><a href="#生动的-nginx-反向代理解释" class="headerlink" title="生动的 nginx 反向代理解释"></a>生动的 nginx 反向代理解释</h2><p>为了让大家能够更加深刻的理解代理和反向代理的模式,我们引用下知乎上<a href="https://www.zhihu.com/question/24723688/answer/160252724" target="_blank" rel="external">车小胖</a>的回答</p>
+<blockquote>
+<p>有了第三方订餐外卖平台（代理），老王懒得动身前往饭店，老王打个电话或用APP，先选好某个饭店，再点好菜，外卖小哥会送上门来。由于某个品牌的饭店口碑特别好，食客络绎不绝涌入，第三方订餐电话也不绝于耳，但是限于饭店接待能力有限，无法提供及时服务，很多食客等得不耐烦了，纷纷铩羽而归，饭店老总看着煮熟的鸭子飞走了，心疼不已。痛定思痛，老总又成立了几个连锁饭店，形成一个集群，对外提供统一标准的菜品服务，电话订餐电话400-xxx-7777，当食客涌入饭店总台，总台将食客用大巴运到各个连锁店，这样食客既不需要排队，各连锁店都能高速运转起来，一举两得，老总乐开了花，并为此种运作模式起名为“反向代理”（Reverse Proxy)。</p>
+</blockquote>
+<h2 id="nginx-基础配置"><a href="#nginx-基础配置" class="headerlink" title="nginx 基础配置"></a>nginx 基础配置</h2><p>好了,了解了 nginx 的一些概念之后,我们要开始切入今天的主题,”ngix 的基础配置”,安装好 nginx 配置之后,你对 nginx 的配置都写在 nginx.conf 的文件里,从 nginx 的配置指令作用域来讲,我们分为 5 个作用域块,分别是:</p>
+<ul>
+<li>全局作用域块</li>
+<li>event 作用域块</li>
+<li>http 指令作用域块</li>
+<li>server 指令作用域块</li>
+<li>location 指令作用域块</li>
+</ul>
+<p><img src="/images/nginx/nd.jpeg" alt="nginx基础配置"></p>
+<p>在 “全局作用域块” 作用域块中配置通用的nginx 配置,比如 nginx 的用户组信息,nginx 的并发进程数,日志存放位置等,nginx 的用户组信息配置,用来控制启动 nginx 的权限,服务并发一般情况下是越多越好,但是当超过硬件的承受范围时会适得其反,所以一般我们会配置为 auto,这样 nginx 会去检查硬件的信息,启用适当的进程数量.</p>
+<p>日志存放位置你也可以配置在 http 作用域块,”http 作用域块”作用域通常是配置请求相关的内容,比如数据的传输,对同一个接口的请求次数上线,配置请求的潮湿时间,还有是否要对请求进行 gzip 压缩等.在之前讲 web性能优化的时候,我记得和大家讲过 gzip 压缩是提高 web 性能优化的一种手段,gzip 能对 http 请求的请求头和请求体进行压缩,从而达到优化.但是不是所有的请求都要去压缩,有些压缩之后的请求体积可能会更大,从而达不到压缩的效果.那怎么办呢,在 nginx 的配置中,你可以进行配置,设置当请求大于一定值的时候,才触发 gzip 压缩 gzip 的内容这里就深入讲解了,想要了解的同学可以去谷歌下,或则在下次 nginx 的高级配置的分享的时候我们再来细讲.</p>
+<p>在 event 模块我们通常会配置进程的连接数量,就是每一个worker进程能并发处理（发起）的最大连接数.在 “server 指令作用域块” 我们可以进行独立项目的代理配置,</p>
+<p>一个 http 指令中可以包含多个 server ,每一个 server 你可以看做是一个虚拟机,部署过网站的同学应该知道,若果你没有做代理,你的服务器只能部署一个项目的内容,默认是80端口,使用代理,能将客户端的请求根据端口作为区分,发散到不同的项目中.nginx 这一点,能让我们更好的利用服务器资源</p>
+<p>在server 指令中,我们同样可以配置多个 location 指令,location 指令能将我们的字符串请求解析到对应的IP和端口,从而去获取正确的资源,location 也可以进行特殊配置,定制 网站的 404 ,500 等页面.</p>
+<h2 id="nginx-的项目配置示例"><a href="#nginx-的项目配置示例" class="headerlink" title="nginx 的项目配置示例"></a>nginx 的项目配置示例</h2><p><img src="/images/nginx/l1.jpeg" alt="nginx作用域"><br><img src="/images/nginx/l2.jpeg" alt="nginx作用域"><br>我们简单的看下,我目前使用到的两个项目的 nginx 配置,在fengdai_pc 项目中我们通过 listen 来配置项目监听端口,通过 root 来配置前端项目文件的地址,我们还通过 location 来配置了几个模块代理,account 和 funds ,定制了 404 页面,在 另一个 nginx 配置项目中我们做了https 配置,配置了域名 <code>baibatianpc.com</code>,并且指定了证书的位置,这样配置后,我们能通过 访问 <a href="https://baibatianpc.com/" target="_blank" rel="external">https://baibatianpc.com/</a> 来查看我们的项目.这里对于如何搭建 https 环境就不细讲了,不同的开发系统证书的获取和配置方式也不太一样,想要深入了解的同学继续谷歌.</p>
+<h2 id="复习"><a href="#复习" class="headerlink" title="复习"></a>复习</h2><p>好了,我们今天讲了nginx 的基础配置,我们现在来复习一下,我们今天讲的知识点有哪些</p>
+<ol>
+<li>nginx 常用的功能的概念,负载均衡,反向代理</li>
+<li>nginx 指令配置的5个作用域空间</li>
+<li>nginx 的每个配置作用域的基础配置项目</li>
+<li>简单的两个项目配置示例</li>
+</ol>
+<p>你都掌握了吗,联系我进行交流,WeChat:646321933</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2016/11/30/init-blog/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1718,7 +1872,7 @@ angular
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1768,7 +1922,7 @@ angular
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
