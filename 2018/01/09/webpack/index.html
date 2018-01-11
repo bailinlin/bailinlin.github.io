@@ -98,7 +98,7 @@ webpack 基础配置首先我们需要理解四个重要的">
 接下来我将从3个部分来给大家介绍webpack,分别是 webpack 的基础配置，哪些常用的加载器，我在项目自动化构建工具改造的过程中雨大了那些问题
 
 webpack 基础配置首先我们需要理解四个重要的">
-<meta property="og:updated_time" content="2018-01-09T13:41:42.000Z">
+<meta property="og:updated_time" content="2018-01-11T05:42:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你需要知道的 webpack 配置">
 <meta name="twitter:description" content="好久没有写文章，最近在做项目自动化构建工具的迁移，花了一点时间去研究 webpack ，webpack 的入门其实简单，但是现有的资料比较零碎，按照我的学习路径整理了下，希望对大家能有所帮助。
@@ -626,6 +626,40 @@ module.exports = {
 
 </pre>
 
+<h4 id="实现热编译"><a href="#实现热编译" class="headerlink" title="实现热编译"></a>实现热编译</h4><p>实现完配置之后我们要考虑另一个问题了，我们希望修改完之后能实时编译预览，不用每次都手动的跑一边命令，我们可以选择 webpack 提供的 node 服务，<code>webpack-dev-server</code>,在配置文件里新增一个 webpack.server.js 的文件，在文件中 require 需要的依赖，<code>webpack-dev-server</code> 可以指定服务启动的目录，及服务监听的端口，我们的配置如下</p>
+<pre>
+/**
+ * Created by bailinlin on 2018/1/4.
+ */
+var path = require("path")
+var webpack = require("webpack")
+var webpackDevServer = require("webpack-dev-server")
+var webpackCfg = require("./webpack.config.js")
+
+var compiler = webpack(webpackCfg)
+
+//init server
+var app = new webpackDevServer(compiler, {
+        contentBase        : path.join(__dirname, '../build'),
+        noInfo             : true,
+        hot                : true,
+        historyApiFallback : true,
+        stats              : { colors : true },
+        //注意此处publicPath必填
+        publicPath: webpackCfg.output.publicPath
+})
+
+app.listen(9090, "localhost", function (err) {
+        if (err) {
+                console.log(err)
+        }
+})
+
+console.log("listen at http://localhost:9090")
+</pre>
+
+<h4 id="启动我们的服务"><a href="#启动我们的服务" class="headerlink" title="启动我们的服务"></a>启动我们的服务</h4><p>配置完成之后，我们需要启动我们的服务，你可以再你的控制台中直接输入 <code>node config/webpack.server.js</code> 来启动服务，<code>webpack --config config/webpack.config.js</code> 来进行编译构建，也可以在 package.json 文件中配置 script 如</p>
+<p><pre><br>“scripts”: {<br>    “start”:”node config/webpack.server.js”,<br>    “build”: “webpack –config config/webpack.config.js”<br>  },<br></pre><br>这样你就可以通过 <code>npm start</code> 和 <code>npm run build</code>来控制你的服务启动和项目构建</p>
 <p>参考文章列表</p>
 <blockquote>
 <p>如果你还想更深入理解，你可以继续阅读这些扩展文章<br><a href="https://doc.webpack-china.org/concepts/" target="_blank" rel="external">理解概念</a><br><a href="https://doc.webpack-china.org/configuration/#-" target="_blank" rel="external">配置讲解</a><br><a href="https://doc.webpack-china.org/loaders/" target="_blank" rel="external">常会用到的loaders</a><br><a href="http://blog.csdn.net/lancewu0907/article/details/76513231" target="_blank" rel="external">webpack打包原理</a><br><a href="https://www.zhihu.com/question/46661735" target="_blank" rel="external">webpack全局变量</a><br><a href="https://github.com/webpack-contrib/css-loader/issues/74" target="_blank" rel="external">less 图片解析问题</a><br><a href="https://juejin.im/entry/5767a975df0eea0062ffe193" target="_blank" rel="external">其他优秀的配置文章</a><br><a href="https://github.com/kingvid-chan/webpack2-lessons/tree/master/lesson2" target="_blank" rel="external">《使用webpack-dev-server实现热更新》</a><br><a href="https://github.com/Klathmon/imagemin-webpack-plugin" target="_blank" rel="external">imagemin-webpack-plugin</a><br><a href="https://github.com/webpack-contrib/copy-webpack-plugin" target="_blank" rel="external">copy-webpack-plugin</a></p>
@@ -787,7 +821,7 @@ module.exports = {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-基础配置"><span class="nav-number">1.</span> <span class="nav-text">webpack 基础配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-的常用加载器"><span class="nav-number">2.</span> <span class="nav-text">webpack 的常用加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在项目迁移中遇到的问题"><span class="nav-number">3.</span> <span class="nav-text">在项目迁移中遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#目前的项目结构的控诉"><span class="nav-number">3.1.</span> <span class="nav-text">目前的项目结构的控诉</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#现有的改进方案"><span class="nav-number">3.2.</span> <span class="nav-text">现有的改进方案</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-基础配置"><span class="nav-number">1.</span> <span class="nav-text">webpack 基础配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-的常用加载器"><span class="nav-number">2.</span> <span class="nav-text">webpack 的常用加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在项目迁移中遇到的问题"><span class="nav-number">3.</span> <span class="nav-text">在项目迁移中遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#目前的项目结构的控诉"><span class="nav-number">3.1.</span> <span class="nav-text">目前的项目结构的控诉</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#现有的改进方案"><span class="nav-number">3.2.</span> <span class="nav-text">现有的改进方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现热编译"><span class="nav-number">3.3.</span> <span class="nav-text">实现热编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动我们的服务"><span class="nav-number">3.4.</span> <span class="nav-text">启动我们的服务</span></a></li></ol></li></ol></div>
             
 
           </div>
