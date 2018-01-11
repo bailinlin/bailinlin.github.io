@@ -311,6 +311,50 @@ module.exports = {
 
 </pre>
 
+#### 实现热编译
+实现完配置之后我们要考虑另一个问题了，我们希望修改完之后能实时编译预览，不用每次都手动的跑一边命令，我们可以选择 webpack 提供的 node 服务，`webpack-dev-server`,在配置文件里新增一个 webpack.server.js 的文件，在文件中 require 需要的依赖，`webpack-dev-server` 可以指定服务启动的目录，及服务监听的端口，我们的配置如下
+<pre>
+/**
+ * Created by bailinlin on 2018/1/4.
+ */
+var path = require("path")
+var webpack = require("webpack")
+var webpackDevServer = require("webpack-dev-server")
+var webpackCfg = require("./webpack.config.js")
+
+var compiler = webpack(webpackCfg)
+
+//init server
+var app = new webpackDevServer(compiler, {
+		contentBase        : path.join(__dirname, '../build'),
+		noInfo             : true,
+		hot                : true,
+		historyApiFallback : true,
+		stats              : { colors : true },
+		//注意此处publicPath必填
+		publicPath: webpackCfg.output.publicPath
+})
+
+app.listen(9090, "localhost", function (err) {
+		if (err) {
+				console.log(err)
+		}
+})
+
+console.log("listen at http://localhost:9090")
+</pre>
+
+#### 启动我们的服务
+配置完成之后，我们需要启动我们的服务，你可以再你的控制台中直接输入 `node config/webpack.server.js` 来启动服务，`webpack --config config/webpack.config.js` 来进行编译构建，也可以在 package.json 文件中配置 script 如
+<pre>
+"scripts": {
+    "start":"node config/webpack.server.js",
+    "build": "webpack --config config/webpack.config.js"
+  },
+</pre>
+这样你就可以通过 `npm start` 和 `npm run build`来控制你的服务启动和项目构建
+
+
 参考文章列表
 
 >如果你还想更深入理解，你可以继续阅读这些扩展文章
