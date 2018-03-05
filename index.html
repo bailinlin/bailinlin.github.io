@@ -340,7 +340,8 @@ var path = require('path');
 
 
 app.post('/rest/collect/event/h5/v1/', function(req, res) {
-        res.cookie('token','11111112222222224444444444')        res.cookie('httpOnly-token','11111112222222224444444444',{ httpOnly: true })
+        res.cookie('token','11111112222222224444444444')
+        res.cookie('httpOnly-token','11111112222222224444444444',{ httpOnly: true })
 
         function User() {
                 this.name;
