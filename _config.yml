@@ -77,3 +77,7 @@ avatar: images/bbt.jpeg
 
 # 添加所说站点配置
 duoshuo_shortname: baibatian
+
+# favicon config
+## Place your favicon.ico to /source directory
+favicon: /favicon.jpeg
