@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="原创,自动化,迁移," />
+  <meta name="keywords" content="cookie  跨域," />
 
 
 
@@ -84,25 +84,25 @@
 
 
 
-<meta name="description" content="为什么要前端自动化
-什么是前端自动化构建就不说了，应为我不是写书的。在前端开发实践中，大公司都会有自己的基础前端架构，能容包括了开发环境、代码管理，代码质量，性能检测，命令行工具，开发规范，开发流程，前端架构及性能优化。相对而言，小公司或则是创业型的公司，前端架构这块做得就相对没有这么好，甚至于很不规范，而规范的目的在于提升工作效率。
+<meta name="description" content="概念：设备id 即设备指纹，用来表示用户设备的唯一性
 
-而规范需要一定的过程，我们就先从代码质量，代码管理上入手。">
+问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹
+方法我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域">
 <meta property="og:type" content="article">
-<meta property="og:title" content="learn-gulp">
-<meta property="og:url" content="https://bailinlin.github.com/2016/03/30/learn-gulp/index.html">
+<meta property="og:title" content="web 浏览器指纹跨域共享">
+<meta property="og:url" content="https://bailinlin.github.com/2018/03/05/cookie-share/index.html">
 <meta property="og:site_name" content="白霸天的博客">
-<meta property="og:description" content="为什么要前端自动化
-什么是前端自动化构建就不说了，应为我不是写书的。在前端开发实践中，大公司都会有自己的基础前端架构，能容包括了开发环境、代码管理，代码质量，性能检测，命令行工具，开发规范，开发流程，前端架构及性能优化。相对而言，小公司或则是创业型的公司，前端架构这块做得就相对没有这么好，甚至于很不规范，而规范的目的在于提升工作效率。
+<meta property="og:description" content="概念：设备id 即设备指纹，用来表示用户设备的唯一性
 
-而规范需要一定的过程，我们就先从代码质量，代码管理上入手。">
-<meta property="og:updated_time" content="2016-11-30T12:38:04.000Z">
+问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹
+方法我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域">
+<meta property="og:updated_time" content="2018-03-05T09:56:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="learn-gulp">
-<meta name="twitter:description" content="为什么要前端自动化
-什么是前端自动化构建就不说了，应为我不是写书的。在前端开发实践中，大公司都会有自己的基础前端架构，能容包括了开发环境、代码管理，代码质量，性能检测，命令行工具，开发规范，开发流程，前端架构及性能优化。相对而言，小公司或则是创业型的公司，前端架构这块做得就相对没有这么好，甚至于很不规范，而规范的目的在于提升工作效率。
+<meta name="twitter:title" content="web 浏览器指纹跨域共享">
+<meta name="twitter:description" content="概念：设备id 即设备指纹，用来表示用户设备的唯一性
 
-而规范需要一定的过程，我们就先从代码质量，代码管理上入手。">
+问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹
+方法我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域">
 
 
 
@@ -130,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="https://bailinlin.github.com/2016/03/30/learn-gulp/"/>
+  <link rel="canonical" href="https://bailinlin.github.com/2018/03/05/cookie-share/"/>
 
 
 
 
 
-  <title> learn-gulp | 白霸天的博客 </title>
+  <title> web 浏览器指纹跨域共享 | 白霸天的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -247,7 +247,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2016/03/30/learn-gulp/">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/03/05/cookie-share/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="bailinlin">
@@ -271,7 +271,7 @@
             
             
               
-                learn-gulp
+                web 浏览器指纹跨域共享
               
             
           </h1>
@@ -284,8 +284,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-03-30T20:37:03+08:00">
-                2016-03-30
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-05T17:41:49+08:00">
+                2018-03-05
               </time>
             
 
@@ -300,8 +300,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/03/30/learn-gulp/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/30/learn-gulp/" itemprop="commentCount"></span>
+                <a href="/2018/03/05/cookie-share/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/05/cookie-share/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -327,81 +327,77 @@
       
 
       
-        <h3 id="为什么要前端自动化"><a href="#为什么要前端自动化" class="headerlink" title="为什么要前端自动化"></a>为什么要前端自动化</h3><blockquote>
-<p>什么是前端自动化构建就不说了，应为我不是写书的。在前端开发实践中，大公司都会有自己的基础前端架构，能容包括了开发环境、代码管理，代码质量，性能检测，命令行工具，开发规范，开发流程，前端架构及性能优化。相对而言，小公司或则是创业型的公司，前端架构这块做得就相对没有这么好，甚至于很不规范，而规范的目的在于提升工作效率。</p>
+        <blockquote>
+<p>概念：设备id 即设备指纹，用来表示用户设备的唯一性</p>
 </blockquote>
-<p>而规范需要一定的过程，我们就先从代码质量，代码管理上入手。</p>
-<ol>
-<li>对代码（html，css，js）进行语法检查</li>
-<li>对图片，代码进行压缩</li>
-<li>对sass。less 的css预处理器进行编译</li>
-<li>期望代码有改动后，能自动刷新页面</li>
-<li>…</li>
-</ol>
-<p>这些操作，我们可以通过人工来完成，但是效率真的低到没朋友，难道语法检查你要自己一行一行的<code>review</code>，或则是拜托你的同事帮你一行一行的 <code>review</code> 么。如果你让我做这个，我肯定和你绝交…但是 <code>review</code> 的目的是帮助我们写出高质量的代码。这是必不可少的，所以我们期望能有一个自动帮我们实现代码检测压缩的工具。只要一个命令，你就能轻松的实现代码压缩，图片压缩，<code>css</code>预处理器编译等原来需要你去人工完成的任务，是不是爽到爆炸。</p>
-<p>在项目自动化构建工具中，大家用得比较多的，分别是<code>grunt</code>，<code>gulp</code>。与这些自动化工具配套的包管理工具呢，通常还有<code>npm</code>。<code>node</code>包含了<code>npm</code>的包，所以只要你的系统里安装的 <code>node</code>，你就可以在你的控制台里通过 npm install 来安装你的项目依赖。还有的就是最近流行起来的 <code>webpack</code> 模块管理工具,大家对<code>webpack</code> 的反应也很好，所以我们打算在项目开发的时候把 gulp 和 webpack 一起用起来，并把研究后的搭建流程写成教程。这次分享的是gulp的搭建，下次等我的后台项目开始用 webpack 的时候，再来分享一篇。</p>
-<h3 id="从零开始搭建-gulp-前端自动化"><a href="#从零开始搭建-gulp-前端自动化" class="headerlink" title="从零开始搭建 gulp 前端自动化"></a>从零开始搭建 gulp 前端自动化</h3><ol>
-<li>安装node.js</li>
-<li>npm init 生成package文件，或则你可以自己手动生成</li>
-<li>在控制台中输入<code>npm install --save-dev gulp</code>命令，在项目中安装gulp</li>
-<li>配置gulp任务</li>
-<li>在控制台中输入 <code>gulp</code>或则<code>gulp default</code>测试你的gulp任务</li>
-<li>配置你真正需要的 gulp 任务，（压缩，代码质量检查，浏览器自动刷新）</li>
-</ol>
-<pre><code>var gulp = require(&apos;gulp&apos;);
-gulp.task(&apos;default&apos;,function(){
-    console.log(&quot;hello&quot;)
-});
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹</p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域名上存储设备id，通过跨域共享变量获取设备id，共享变量的原理是采用了iframe 的 contentWindow通讯，通过 postMessage 获取事件状态，调用封装好的回调函数进行数据处理</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>SDK 采集端，调用方初始化的时候调用方法</p>
+<pre><code>collect.setIframe = function () {
+      var that = this
+      var iframe = document.createElement(&apos;iframe&apos;)
+      iframe.src = &quot;http://localhost:82/&quot;
+      iframe.style = &apos;display:none&apos;
+      document.body.appendChild(iframe)
+      iframe.onload = function () {
+        iframe.contentWindow.postMessage(&apos;loaded&apos;,&apos;*&apos;);
+      }
+
+      //监听message事件
+      window.addEventListener(&quot;message&quot;, function(){
+            that.deviceId = event.data.deviceId
+
+            console.log(&apos;获取设备id&apos;,that.deviceId)
+
+            sessionStorage.setItem(&apos;PageSessionID&apos;,helper.upid())
+            helper.send(that.getParames(), that.eventUrl);
+            helper.sendDevice(that.getDevice(), that.deviceUrl);
+      }, false);
+}
+</code></pre><p>嵌套在 iframe 静态页面里的脚本</p>
+<pre><code>&lt;script&gt;
+
+     var getDeviceId = function() {
+             return &apos;xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx&apos;.replace(/[xy]/g, function (c) {
+                     var r = Math.random() * 16 | 0, v = c == &apos;x&apos; ? r : (r &amp; 0x3 | 0x8);
+                     return v.toString(16);
+             });
+     };
+
+     var hasCreated = false
+     var _deviceId = &apos;&apos;
+     if(document.cookie){
+             document.cookie.split(&apos;;&apos;).forEach(function(i){
+                     if(i.indexOf(&apos;deviceId&apos;)&gt;-1){
+                             hasCreated = true
+                             _deviceId = i.split(&apos;=&apos;)[1]
+                     }
+             })
+     }
+
+     if(!_deviceId &amp;&amp; (sessionStorage.getItem(&apos;deviceId&apos;)||localStorage.getItem(&apos;deviceId&apos;))){
+             hasCreated = true
+             _deviceId = sessionStorage.getItem(&apos;deviceId&apos;)||localStorage.getItem(&apos;deviceId&apos;)
+     }
 
 
+     if(!hasCreated) {
+             _deviceId =  getDeviceId()
+             document.cookie = &apos;deviceId=&apos; + _deviceId
+             sessionStorage.setItem(&apos;deviceId&apos;,_deviceId)
+             localStorage.setItem(&apos;deviceId&apos;,_deviceId)
+     }
 
-#####浏览器自动刷新
+     //回调函数
+     function receiveMessageFromIndex ( event ) {
+             console.log( &apos;receiveMessageFromIndex&apos;, event )
+             parent.postMessage( {deviceId: _deviceId}, &apos;*&apos;);
+     }
+     //监听message事件
+     window.addEventListener(&quot;message&quot;, receiveMessageFromIndex, false);
 
-1. 在你的谷歌浏览器里安装插件。关键字`livereload`
-2. 通过命令`mpn install gulp-livereload --save-dev`来安装依赖
-3. 在gulp文件中引入`livereload = require(&apos;gulp-livereload&apos;),`
-4. 在gulp的`watch`任务中通过 `livereload.listen([options])`启动刷新服务
-5. 定义的任务在最后加入一个工作流`.pipe(livereload())`,
-6. 在启动后进入到这个任务后，开启谷歌插件，就能自动刷新浏览器了
-
-#gulpfile.js 文件
-
-    var gulp = require(&apos;gulp&apos;),
-    uglify = require(&apos;gulp-uglify&apos;),
-    livereload = require(&apos;gulp-livereload&apos;),
-
-gulp.task(&apos;test&apos;,function() {
-    return gulp.src(&apos;js/test.js&apos;)
-        .pipe(uglify())
-        .pipe(gulp.dest(&apos;build&apos;))
-        .pipe(livereload())
-});
-
-gulp.task(&apos;watch&apos;,function(){
-    livereload.listen();
-    gulp.watch(&apos;js/test.js&apos;, [&apos;test&apos;]);
-});
-
-当你修改你的test.js 文件之后，ctrl + s 保存，你就可以看到时时刷新。
-</code></pre><p> 7.代码压缩</p>
-<pre><code>1.通过命令`mpn install gulp-uglify --save-dev`来安装依赖(js 压缩)
-2.通过命令`mpn install gulp-concat --save-dev`来安装依赖(合并压缩后的文件到一个文件)
-
-    #gulpfile.js 文件
-
-    uglify = require(&apos;gulp-uglify&apos;),
-
-    gulp.task(&apos;compress&apos;,function(){
-    return gulp.src(&apos;js/servers/*.js&apos;)
-        .pipe(uglify())
-        .pipe(concat(&apos;all.js&apos;))
-        .pipe(gulp.dest(&apos;dist/js&apos;))
-        .pipe(livereload())
-});
-</code></pre><p> 8.同理css压缩，生成雪碧图等task，代码质量检查，都是同样的先安装依赖，再引用，编写task</p>
-<p><strong>如果你想深入学习</strong></p>
-<p><a href="https://segmentfault.com/a/1190000004638228" target="_blank" rel="external">我理想中的前端工作流</a><br><a href="http://www.gulpjs.com.cn/" target="_blank" rel="external">gulp 中文网</a><br><a href="https://scotch.io/tutorials/a-quick-guide-to-using-livereload-with-gulp" target="_blank" rel="external">livereload</a><br><a href="https://www.npmjs.com/package/gulp-livereload" target="_blank" rel="external">gulp-livereload</a>ulp-livereload)</p>
-
+ &lt;/script&gt;
+</code></pre>
       
     </div>
 
@@ -424,7 +420,7 @@ gulp.task(&apos;watch&apos;,function(){
       
         <div class="post-tags">
           
-            <a href="/tags/原创-自动化-迁移/" rel="tag"># 原创,自动化,迁移</a>
+            <a href="/tags/cookie-跨域/" rel="tag"># cookie  跨域</a>
           
         </div>
       
@@ -433,8 +429,8 @@ gulp.task(&apos;watch&apos;,function(){
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/15/ng1-style-guide1/" rel="next" title="ng1-style-guide1">
-                <i class="fa fa-chevron-left"></i> ng1-style-guide1
+              <a href="/2018/02/26/cookie-set/" rel="next" title="跨域问题导致设置 cookie 不生效的问题">
+                <i class="fa fa-chevron-left"></i> 跨域问题导致设置 cookie 不生效的问题
               </a>
             
           </div>
@@ -442,10 +438,6 @@ gulp.task(&apos;watch&apos;,function(){
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/01/learn-wxapp/" rel="prev" title="learn-wxapp">
-                learn-wxapp <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -471,8 +463,8 @@ gulp.task(&apos;watch&apos;,function(){
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/30/learn-gulp/"
-           data-title="learn-gulp" data-url="https://bailinlin.github.com/2016/03/30/learn-gulp/">
+      <div class="ds-thread" data-thread-key="2018/03/05/cookie-share/"
+           data-title="web 浏览器指纹跨域共享" data-url="https://bailinlin.github.com/2018/03/05/cookie-share/">
       </div>
     
   </div>
@@ -562,7 +554,7 @@ gulp.task(&apos;watch&apos;,function(){
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要前端自动化"><span class="nav-number">1.</span> <span class="nav-text">为什么要前端自动化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从零开始搭建-gulp-前端自动化"><span class="nav-number">2.</span> <span class="nav-text">从零开始搭建 gulp 前端自动化</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
             
 
           </div>
