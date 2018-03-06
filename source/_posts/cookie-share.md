@@ -1,10 +1,14 @@
 ---
 title: web 浏览器指纹跨域共享
 date: 2018-03-05 17:41:49
-tags: cookie,跨域
+tags: cookie  跨域
 ---
 
 > 概念：设备id 即设备指纹，用来表示用户设备的唯一性
+
+### 背景
+
+最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。
 
 ### 问题
 
@@ -85,3 +89,11 @@ SDK 采集端，调用方初始化的时候调用方法
             window.addEventListener("message", receiveMessageFromIndex, false);
 
         </script>
+
+### 扩展阅读
+
+[跨浏览器cookie](http://cxh.me/2014/11/25/flash-shared-cookie/)
+[跨浏览器指纹识别](http://www.freebuf.com/articles/web/139984.html)
+[浏览器指纹追踪](https://paper.seebug.org/229/)
+[使用postMessage解决iframe跨域通信问题](https://rockjins.js.org/2017/05/05/2017-05-05-iframe-cross-domain-Communication)
+[window.postMessage](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage)
