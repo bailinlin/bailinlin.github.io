@@ -86,23 +86,23 @@
 
 <meta name="description" content="概念：设备id 即设备指纹，用来表示用户设备的唯一性
 
-问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹
-方法我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域">
+背景最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。
+问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localSt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="web 浏览器指纹跨域共享">
 <meta property="og:url" content="https://bailinlin.github.com/2018/03/05/cookie-share/index.html">
 <meta property="og:site_name" content="白霸天的博客">
 <meta property="og:description" content="概念：设备id 即设备指纹，用来表示用户设备的唯一性
 
-问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹
-方法我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域">
-<meta property="og:updated_time" content="2018-03-05T09:56:13.000Z">
+背景最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。
+问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localSt">
+<meta property="og:updated_time" content="2018-03-06T01:53:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="web 浏览器指纹跨域共享">
 <meta name="twitter:description" content="概念：设备id 即设备指纹，用来表示用户设备的唯一性
 
-问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹
-方法我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域">
+背景最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。
+问题web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localSt">
 
 
 
@@ -330,6 +330,7 @@
         <blockquote>
 <p>概念：设备id 即设备指纹，用来表示用户设备的唯一性</p>
 </blockquote>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹</p>
 <h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域名上存储设备id，通过跨域共享变量获取设备id，共享变量的原理是采用了iframe 的 contentWindow通讯，通过 postMessage 获取事件状态，调用封装好的回调函数进行数据处理</p>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>SDK 采集端，调用方初始化的时候调用方法</p>
@@ -397,7 +398,8 @@
      window.addEventListener(&quot;message&quot;, receiveMessageFromIndex, false);
 
  &lt;/script&gt;
-</code></pre>
+</code></pre><h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://cxh.me/2014/11/25/flash-shared-cookie/" target="_blank" rel="external">跨浏览器cookie</a><br><a href="http://www.freebuf.com/articles/web/139984.html" target="_blank" rel="external">跨浏览器指纹识别</a><br><a href="https://paper.seebug.org/229/" target="_blank" rel="external">浏览器指纹追踪</a><br><a href="https://rockjins.js.org/2017/05/05/2017-05-05-iframe-cross-domain-Communication" target="_blank" rel="external">使用postMessage解决iframe跨域通信问题</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage" target="_blank" rel="external">window.postMessage</a></p>
+
       
     </div>
 
@@ -554,7 +556,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法"><span class="nav-number">3.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展阅读"><span class="nav-number">5.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
             
 
           </div>
