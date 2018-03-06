@@ -1,7 +1,7 @@
 ---
-title: ng1-style-guide2
+title: 你需要知道的 Angular 编程指南(下)
 date: 2015-11-10 20:32:58
-tags:  译文,Angular,迁移
+tags:  [译文,Angular]
 ---
 一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）
 

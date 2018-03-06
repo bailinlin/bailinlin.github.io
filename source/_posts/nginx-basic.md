@@ -1,7 +1,7 @@
 ---
-title: 你需要了解的 nginx 基础配置
+title: 你需要知道的 nginx 基础配置
 date: 2017-05-18 14:23:31
-tags:
+tags: [ nginx ]
 ---
 
 ## 初探nginx

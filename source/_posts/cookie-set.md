@@ -1,7 +1,7 @@
 ---
 title: 跨域问题导致设置 cookie 不生效的问题
 date: 2018-02-26 16:18:09
-tags: cookie
+tags:  cookie
 ---
 我们看下跨域不生效的问题，首先抛出两个问题：
 >1. 我们如何设置 cookie ？
