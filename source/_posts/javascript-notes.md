@@ -6,22 +6,19 @@ tags: [javascript]
 
 ### 对象
 
-#### 所有的变量都可以当对象使用
+#### 变量可以当对象使用
 
 javascript 中所有的变量都可以当做对象使用，除了undefined 和 null ，我们测试下
 
 ```
-    false.toString() // "false"
+false.toString() // "false"
 
-    [1,2,3].toString() //"1,2,3"
+[1,2,3].toString() //"1,2,3"
 
-    1..toString() //"1"
+1..toString() //"1"
 
-    ({a:'33'}).toString() //"[object Object]"
-
+({a:'33'}).toString() //"[object Object]"
 ```
-
-​
 
 ```
 undefined.toString() //Uncaught TypeError
@@ -43,7 +40,7 @@ number调用时不能直接数值后面直接调用toString 方法，因为 js �
 
 
 
-对象直接调用toString 方法时，需要用小括号包裹起来，不然js 会将对象的花括号识别成块从而报错
+对象直接调用toString 方法时，需要用小括号包裹起来，不然js 会将对象的花括号识别成块，从而报错
 
 ```
 {a:'33'}.toString()  // Uncaught SyntaxError
@@ -121,10 +118,9 @@ xiaomin // Grandson的实例
          Grandson.prototype //{title:'baba',...}
             Object.prototype
                 {toString: ... /* etc. */};
-
 ```
 
-对象的属性查找，javascript 会在原型链上向上查找属性，知道查到 原型链顶部，所以，属性在原型链的越上端，查找的时间会越长，查找性能和复用属性方面需要开发者自己衡量下
+对象的属性查找，javascript 会在原型链上向上查找属性，直到查到 原型链顶部，所以，属性在原型链的越上端，查找的时间会越长，查找性能和复用属性方面需要开发者自己衡量下。
 
 #### 获取自身对象属性
 
@@ -140,7 +136,7 @@ test.hasOwnProperty('hello') //true
 test.hasOwnProperty('name') //false
 ```
 
-for in 循环会便利到对象原型链上的所有属性，如此我们将 hasOwnProperty 结合循环for in 能够获取到对象自定义属性
+for in 循环可以遍历对象原型链上的所有属性，如此我们将 hasOwnProperty 结合循环for in 能够获取到对象自定义属性
 
 ```
 var test = {hello:'222'}
@@ -164,13 +160,13 @@ for(var i in test){
 var test = {hello:'222'}
 Object.prototype.name = 'bbt'
 
-Object.keys(test)
-Object.getOwnPropertyNames(test)
+Object.keys(test) //["hello"]
+Object.getOwnPropertyNames(test) //["hello"]
 ```
 
-getOwnPropertyNames 和 Object.keys 区别是
+那 getOwnPropertyNames 和 Object.keys 的用法有什么区别呢
 
-Object.keys方法只返回可枚举的属性，Object.getOwnPropertyNames方法还返回不可枚举的属性名。
+Object.keys方法只返回可枚举的属性，Object.getOwnPropertyNames  方法还返回不可枚举的属性名。
 
 ```
 var a = ['Hello', 'World'];
@@ -186,7 +182,7 @@ Object.getOwnPropertyNames(a) // ["0", "1", "length"]  // length 是不可枚举
 
 #### 函数声明的变量提升
 
-函数定义我们通常会使用函数声明或函数赋值表达式，函数声明和变量声明一样都存在提升的情况，函数可以在声明前调用，但是不可以在赋值前调用
+我们通常会使用函数声明或函数赋值表达式来定义一个函数，函数声明和变量声明一样都存在提升的情况，函数可以在声明前调用，但是不可以在赋值前调用
 
 函数声明
 
@@ -221,13 +217,15 @@ console.log(foo) //Uncaught ReferenceError
 
 简单的说，this 就是属性和方法当前所在的对象（函数执行坐在的作用域），平时使用的 this  的情况可以大致分为5种
 
-```
-1. 全局范围调用 // 指向 window 全局对象
-2. 函数调用 //指向 window 全局变量
-3. 对象的方法调用 //指向方法调用的对象
-4. 构造函数调用 //指向构造函数创建的实例
-5. 通过，call ，apply ，bind 显示的指定 this指向
-```
+| 调用方式                                 | 指向             |
+| ------------------------------------ | -------------- |
+| 1. 全局范围调用                            | 指向 window 全局对象 |
+| 2. 函数调用                              | 指向 window 全局变量 |
+| 3. 对象的方法调用                           | 指向方法调用的对象      |
+| 4. 构造函数调用                            | 指向构造函数创建的实例    |
+| 5. 通过，call ，apply ，bind 显示的指定 this指向 | 和传参有关          |
+
+
 
 Function.call
 
@@ -369,6 +367,54 @@ for(var i = 0; i < 10; i++) {
 }
 ```
 
+#### setTimeout && setInterval
+
+> javascript 是异步的单线程运行语言，其他代码运行的时候可能会阻塞 setTimeout && setInterval 的运行
+
+```
+console.log(1)
+setTimeout(function(){
+  console.log(2)
+}, 0);
+console.log(3)
+
+输出结果： 1，3，2  //setTimeout 被阻塞
+```
+
+处理阻塞的方法是将setTimeout 和 setInterval放在回调函数里执行
+
+```
+function test(){
+  	setTimeout(function(){
+  		console.log(2)
+	}, 0);
+}
+```
+
+setTimeout 和 setInterval 被调用时会返回一个 ID 用来清除定时器
+
+手工清除某个定时器
+
+```
+var id = setTimeout(foo, 1000);
+clearTimeout(id);
+```
+
+清楚所有的定时器
+
+```
+var lastId = setTimeout(function(){
+  console.log('11')
+}, 0);
+
+for(var i=0;i<lastId;i++;){
+  clearTimeout(i);
+}
+
+```
+
+获取最后一个定时器的id，遍历清除定时器，可以清除所有的定时器。
+
 ### 类型
 
 ####包装对象
@@ -402,7 +448,7 @@ v3 === true // false
 不同数据类型之间相互运算
 
 ```
-'2'+4 //24
+'2'+4 // '24'
 ```
 
 对非布尔值进行布尔运算
@@ -421,7 +467,7 @@ if('22'){
 
 我们也通过 Number ，String，Boolean 来进行强制数据类型转换。强制类型转化的规则有点复杂，我们来了解一下。
 
-Number 转换 引用阮老师的教程解释 http://javascript.ruanyifeng.com/grammar/conversion.html
+Number 转换  [引用阮老师的详细解释](http://javascript.ruanyifeng.com/grammar/conversion.html)
 
 ```
 第一步，调用对象自身的valueOf方法。如果返回原始类型的值，则直接对该值使用Number函数，不再进行后续步骤。
@@ -453,26 +499,25 @@ Boolean('false') //true
 
 > typeof 操作符返回数据类型，但是由于 javascript 设计的历史原因，typeof 现已经不能满足我们现在对于类型判断的要求了
 
-```
-Value               Class      Type
--------------------------------------
-"foo"               String     string
-new String("foo")   String     object
-1.2                 Number     number
-new Number(1.2)     Number     object
-true                Boolean    boolean
-new Boolean(true)   Boolean    object
-new Date()          Date       object
-new Error()         Error      object
-[1,2,3]             Array      object
-new Array(1, 2, 3)  Array      object
-new Function("")    Function   function
-/abc/g              RegExp     object (function in Nitro/V8)
-new RegExp("meow")  RegExp     object (function in Nitro/V8)
-{}                  Object     object
-new Object()        Object     object
-null                null       object
-```
+
+| Value                            | Class            |Type       |
+| ------------------------------------ | -------------- |-------------- |
+|"foo"               |String     |string|
+|new String("foo")   |String     |object|
+|1.2                 |Number     |number|
+|new Number(1.2)     |Number     |object|
+|true                |Boolean    |boolean|
+|new Boolean(true)   |Boolean    |object|
+|new Date()          |Date       |object|
+|new Error()         |Error      |object|
+|[1,2,3]             |Array      |object|
+|new Array(1, 2, 3)  |Array      |object|
+|new Function("")    |Function   |functio|
+|/abc/g              |RegExp     |object (function in Nitro/V8)|
+|new RegExp("meow")  |RegExp     |object (function in Nitro/V8)|
+|{}                  |Object     |object|
+|new Object()        |Object     |object|
+|null                |null       |object|
 
 我们可以看到，typeof 不能区分对象的数组和日期，还会把 null 判断成对象，那我们一般是什么时候用 typeof 呢。我们可以用来判断一个已经定义的变量是否被赋值。
 
@@ -542,58 +587,6 @@ function type(obj) {
 
 type(function(){}) //"Function"
 ```
-
-
-
-### 特殊
-
-####setTimeout && setInterval
-
-> javascript 是异步的单线程运行语言，其他代码运行的时候可能会阻塞 setTimeout && setInterval 的运行
-
-```
-console.log(1)
-setTimeout(function(){
-  console.log(2)
-}, 0);
-console.log(3)
-
-输出结果： 1，3，2  //setTimeout 被阻塞
-```
-
-处理阻塞的方法是将setTimeout 和 setInterval放在回调函数里执行
-
-```
-function test(){
-  	setTimeout(function(){
-  		console.log(2)
-	}, 0);
-}
-```
-
-setTimeout 和 setInterval 被调用时会返回一个 ID 用来清除定时器
-
-手工清除某个定时器
-
-```
-var id = setTimeout(foo, 1000);
-clearTimeout(id);
-```
-
-清楚所有的定时器
-
-```
-var lastId = setTimeout(function(){
-  console.log('11')
-}, 0);
-
-for(var i=0;i<lastId;i++;){
-  clearTimeout(i);
-}
-
-```
-
-获取最后一个定时器的id，遍历清除定时器，可以清除所有的定时器。
 
 
 
