@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="译文,Angular," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,25 +84,15 @@
 
 
 
-<meta name="description" content="一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）
-Angular 编程引导
-服务单例
-服务是通过new关键字进行实例化的，用this来定义调用公用的方法和变量，和工厂服务很相似，为了统一，可以使用工厂服务">
-<meta property="og:type" content="article">
-<meta property="og:title" content="你需要知道的 Angular 编程指南(下)">
-<meta property="og:url" content="https://bailinlin.github.com/2015/11/10/ng1-style-guide2/index.html">
+<meta name="description" content="前端,白霸天,博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="白霸天的博客">
+<meta property="og:url" content="https://bailinlin.github.com/page/2/index.html">
 <meta property="og:site_name" content="白霸天的博客">
-<meta property="og:description" content="一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）
-Angular 编程引导
-服务单例
-服务是通过new关键字进行实例化的，用this来定义调用公用的方法和变量，和工厂服务很相似，为了统一，可以使用工厂服务">
-<meta property="og:updated_time" content="2018-03-06T02:14:05.000Z">
+<meta property="og:description" content="前端,白霸天,博客">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你需要知道的 Angular 编程指南(下)">
-<meta name="twitter:description" content="一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）
-Angular 编程引导
-服务单例
-服务是通过new关键字进行实例化的，用this来定义调用公用的方法和变量，和工厂服务很相似，为了统一，可以使用工厂服务">
+<meta name="twitter:title" content="白霸天的博客">
+<meta name="twitter:description" content="前端,白霸天,博客">
 
 
 
@@ -130,13 +120,13 @@ Angular 编程引导
 
 
 
-  <link rel="canonical" href="https://bailinlin.github.com/2015/11/10/ng1-style-guide2/"/>
+  <link rel="canonical" href="https://bailinlin.github.com/page/2/"/>
 
 
 
 
 
-  <title> 你需要知道的 Angular 编程指南(下) | 白霸天的博客 </title>
+  <title> 白霸天的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -157,7 +147,9 @@ Angular 编程引导
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -236,9 +228,9 @@ Angular 编程引导
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -271,7 +263,10 @@ Angular 编程引导
             
             
               
-                你需要知道的 Angular 编程指南(下)
+                
+                <a class="post-title-link" href="/2015/11/10/ng1-style-guide2/" itemprop="url">
+                  你需要知道的 Angular 编程指南(下)
+                </a>
               
             
           </h1>
@@ -327,7 +322,9 @@ Angular 编程引导
       
 
       
-        <p>一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）</p>
+        
+          
+            <p>一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）</p>
 <p><a href="https://github.com/Plateful/plateful-mobile/wiki/AngularJS-CoffeeScript-Style-Guide#factories" target="_blank" rel="external">Angular 编程引导</a></p>
 <h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><h4 id="单例"><a href="#单例" class="headerlink" title="单例"></a>单例</h4><blockquote>
 <p>服务是通过<code>new</code>关键字进行实例化的，用<code>this</code>来定义调用公用的方法和变量，和工厂服务很相似，为了统一，可以使用工厂服务</p>
@@ -565,64 +562,41 @@ angular
 </code></pre></li>
 </ul>
 
+          
+        
       
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
-      
-        
-
       
     </div>
 
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/译文/" rel="tag"># 译文</a>
-          
-            <a href="/tags/Angular/" rel="tag"># Angular</a>
-          
-        </div>
+
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/15/ng1-style-guide1/" rel="prev" title="你需要知道的 Angular 编程指南(上)">
-                你需要知道的 Angular 编程指南(上) <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
 
 
           </div>
@@ -630,14 +604,6 @@ angular
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2015/11/10/ng1-style-guide2/"
-           data-title="你需要知道的 Angular 编程指南(下)" data-url="https://bailinlin.github.com/2015/11/10/ng1-style-guide2/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -657,17 +623,8 @@ angular
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/bbt.jpeg"
@@ -713,22 +670,6 @@ angular
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务"><span class="nav-number">1.</span> <span class="nav-text">服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单例"><span class="nav-number">1.1.</span> <span class="nav-text">单例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂服务"><span class="nav-number">2.</span> <span class="nav-text">工厂服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单一职责"><span class="nav-number">2.1.</span> <span class="nav-text">单一职责</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单例-1"><span class="nav-number">2.2.</span> <span class="nav-text">单例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可调用的成员靠前"><span class="nav-number">2.3.</span> <span class="nav-text">可调用的成员靠前</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指令"><span class="nav-number">3.</span> <span class="nav-text">指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#限制DOM的操作"><span class="nav-number">3.1.</span> <span class="nav-text">限制DOM的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#限制元素和属性"><span class="nav-number">3.2.</span> <span class="nav-text">限制元素和属性</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>
@@ -834,10 +775,6 @@ angular
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
-
-
 
   
 
