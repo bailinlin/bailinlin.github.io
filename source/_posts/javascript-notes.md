@@ -3,12 +3,13 @@ title: 你需要知道的 javascript 的细节
 date: 2018-04-02 17:27:29
 tags: [javascript]
 ---
+> 现在的前端框架层出不穷，3个月就要重新入门一次前端的现状，让我们来不及学好基础就开始上手框架。常常就因为这样，我们会很快到达`技术瓶颈`，基础是所有技术的核心，在跳槽季重新温故了一遍 javascript 基础，有收获，整理出来分享给大家。
 
 ### 对象
 
 #### 变量可以当对象使用
 
-javascript 中所有的变量都可以当做对象使用，除了undefined 和 null ，我们测试下
+`javascript` 中所有的变量都可以当做对象使用，除了`undefined` 和 `null` ，我们测试下
 
 ```
 false.toString() // "false"
@@ -28,9 +29,9 @@ null.toString()   //Uncaught TypeError
 
 
 
-数值和对象虽然能调用 toString 方法，但是在写法上需要注意下
+数值和对象虽然能调用 `toString` 方法，但是在写法上需要注意下
 
-number调用时不能直接数值后面直接调用toString 方法，因为 js 会将点运算符解析为数值的小数点
+`number` 调用时不能直接数值后面直接调用`toString` 方法，因为 `js` 会将点运算符解析为数值的小数点
 
 ```
 1.toString() //Uncaught SyntaxError
@@ -40,7 +41,7 @@ number调用时不能直接数值后面直接调用toString 方法，因为 js �
 
 
 
-对象直接调用toString 方法时，需要用小括号包裹起来，不然js 会将对象的花括号识别成块，从而报错
+对象直接调用`toString` 方法时，需要用小括号包裹起来，不然`js` 会将对象的花括号识别成块，从而报错
 
 ```
 {a:'33'}.toString()  // Uncaught SyntaxError
@@ -50,7 +51,7 @@ number调用时不能直接数值后面直接调用toString 方法，因为 js �
 
 #### 对象删除属性
 
-> 删除对象的属性唯一的方法是使用 delete 操作符，设置元素属性为 undefined 或则 null 并不能真正删除，只是移除了属性和值的关联
+> 删除对象的属性唯一的方法是使用 `delete` 操作符，设置元素属性为 `undefined` 或则 `null` 并不能真正删除，只是移除了属性和值的关联
 
 ```
 var test = {
@@ -77,17 +78,17 @@ age:null
 undefined
 ```
 
-只有 love 被正则删除，name 和 age 还是能被遍历到
+只有 `love` 被正则删除，`name` 和 `age` 还是能被遍历到
 
 #### 构造函数
 
-> 在 javascript 中，通过关键字 new 调用的函数就被认为是构造函数，我们可以通过构造函数创建对象实例
+> 在 `javascript` 中，通过关键字 `new` 调用的函数就被认为是构造函数，我们可以通过构造函数创建对象实例
 
 但是在使用过程中你一定发现了，每实例化一个对象，都会在实例对象上创造构造函数的方法和属性。倘若创建的实例比较多，重复创建同一个方法去开辟内存空间就会显得十分浪费，我们可以通过把被经常复用的方法放在原型链上。
 
 #### 原型继承
 
-> javascript 和一些我们所了解的面向对象编程的语言不太一样，在 es6 语法以前，我们是通过原型链来实现方法和属性的继承
+> `javascript` 和一些我们所了解的面向对象编程的语言不太一样，在 `es6` 语法以前，我们是通过原型链来实现方法和属性的继承
 
 ```
 function Child(){
@@ -120,11 +121,11 @@ xiaomin // Grandson的实例
                 {toString: ... /* etc. */};
 ```
 
-对象的属性查找，javascript 会在原型链上向上查找属性，直到查到 原型链顶部，所以，属性在原型链的越上端，查找的时间会越长，查找性能和复用属性方面需要开发者自己衡量下。
+对象的属性查找，`javascript` 会在原型链上向上查找属性，直到查到 原型链顶部，所以，属性在原型链的越上端，查找的时间会越长，查找性能和复用属性方面需要开发者自己衡量下。
 
 #### 获取自身对象属性
 
-hasOwnProperty 方法能够判断一个对象是否包含自定义属性，而不是在原型链上的属性
+`hasOwnProperty` 方法能够判断一个对象是否包含自定义属性，而不是在原型链上的属性
 
 ```
 var test = {hello:'123'}
@@ -136,7 +137,7 @@ test.hasOwnProperty('hello') //true
 test.hasOwnProperty('name') //false
 ```
 
-for in 循环可以遍历对象原型链上的所有属性，如此我们将 hasOwnProperty 结合循环for in 能够获取到对象自定义属性
+`for in` 循环可以遍历对象原型链上的所有属性，如此我们将 `hasOwnProperty `结合循环`for in` 能够获取到对象自定义属性
 
 ```
 var test = {hello:'222'}
@@ -154,7 +155,7 @@ for(var i in test){
 }
 ```
 
-除了上面的方法，getOwnPropertyNames 和 Object.keys 方法，能够返回对象自身的所有属性名，也是接受一个对象作为参数，返回一个数组，包含了该对象自身的所有属性名。
+除了上面的方法，`getOwnPropertyNames` 和 ` Object.keys` 方法，能够返回对象自身的所有属性名，也是接受一个对象作为参数，返回一个数组，包含了该对象自身的所有属性名。
 
 ```
 var test = {hello:'222'}
@@ -164,9 +165,9 @@ Object.keys(test) //["hello"]
 Object.getOwnPropertyNames(test) //["hello"]
 ```
 
-那 getOwnPropertyNames 和 Object.keys 的用法有什么区别呢
+那 `getOwnPropertyNames` 和 `Object.keys` 的用法有什么区别呢
 
-Object.keys方法只返回可枚举的属性，Object.getOwnPropertyNames  方法还返回不可枚举的属性名。
+`Object.keys`方法只返回可枚举的属性，`Object.getOwnPropertyNames`  方法还返回不可枚举的属性名。
 
 ```
 var a = ['Hello', 'World'];
@@ -213,9 +214,9 @@ console.log(foo) //Uncaught ReferenceError
 
 #### this 的工作原理
 
-> 在 javascript 中 ，this 是一个比较难理解的点，不同的调用环境会导致 this 的不同指向，但是唯一不变的是 this 总是指向一个对象
+> 在 `javascript` 中 ，`this` 是一个比较难理解的点，不同的调用环境会导致 `this` 的不同指向，但是唯一不变的是 `this` 总是指向一个对象
 
-简单的说，this 就是属性和方法当前所在的对象（函数执行坐在的作用域），平时使用的 this  的情况可以大致分为5种
+简单的说，`this` 就是属性和方法当前所在的对象（函数执行坐在的作用域），平时使用的 `this`  的情况可以大致分为5种
 
 | 调用方式                                 | 指向             |
 | ------------------------------------ | -------------- |
@@ -229,7 +230,7 @@ console.log(foo) //Uncaught ReferenceError
 
 Function.call
 
-> 语法：function.call(thisArg, arg1, arg2, …)，thisArg 表示希望函数被调用的作用域，arg1, arg2, …表示希望被传入函数额参数 , 如果参数为空、`null`和`undefined`，则默认传入全局对象。
+> 语法：function.call(thisArg, arg1, arg2, …)，`thisArg`表示希望函数被调用的作用域，`arg1, arg2, …`表示希望被传入函数额参数 , 如果参数为空、`null`和`undefined`，则默认传入全局对象。
 
 代码示例
 
@@ -252,7 +253,7 @@ hello.call(undefined) //xiaomin
 
 Function.apply
 
-> 语法和call 方法类似，不同的是，传入调用函数的参数变成以数组的形式传入，即 func.apply(thisArg, [argsArray])
+> 语法和`call` 方法类似，不同的是，传入调用函数的参数变成以数组的形式传入，即 func.apply(thisArg, [argsArray])
 
 改造上面的示例就是
 
@@ -280,7 +281,7 @@ var print = d.getTime.bind(d)
 
 容易出错的地方
 
-容易出错的地方，函数调用，this 总是指向 window 全局变量，所以在对象的方法里如果有函数的调用的话（闭包的情况），this 是会指向 全局对象的，不会指向调用的对象，具体示例如下
+容易出错的地方，函数调用，`this` 总是指向 `window` 全局变量，所以在对象的方法里如果有函数的调用的话（闭包的情况），`this` 是会指向 全局对象的，不会指向调用的对象，具体示例如下
 
 ```
 var name = 'xiaomin'
@@ -298,7 +299,7 @@ test.method = function(){
 test.method() // 输出 xiaomin
 ```
 
-如果需要将 this 指向调用的对象，可以将对象的 this 指向存储起来，通常我们使用 that 变量来做这个存储。改进之后的代码
+如果需要将 `this` 指向调用的对象，可以将对象的 `this` 指向存储起来，通常我们使用 `that` 变量来做这个存储。改进之后的代码
 
 ```
 var name = 'xiaomin'
@@ -321,7 +322,7 @@ test.method() // 输出 bbt
 
 > 闭包我们可以理解成是在函数内部定义的函数
 
-在 javascript 中，内部作用域可以访问到外部作用域的变量，但是外部作用域不能访问内部作用域，需要访问的时候，我们需要通过创建闭包，来操作内部变量
+在 `javascript` 中，内部作用域可以访问到外部作用域的变量，但是外部作用域不能访问内部作用域，需要访问的时候，我们需要通过创建闭包，来操作内部变量
 
 ```
 function test(_count){
@@ -353,9 +354,9 @@ for(var i = 0; i < 10; i++) {
 }
 ```
 
-很多同学会觉得，上面的代码会正常输出0到9，但是实际是输出十次10。遇到这个题目，除了闭包的概念要理解清楚，你还需要知道，setTimeout 内的代码会被异步执行，代码会先执行所有的同步代码，即上面的这段代码会先将 for 循环执行，此时 i 的值为 10，console.log(i) 一直引用着全局变量的 i  所以会输出十次 10
+很多同学会觉得，上面的代码会正常输出0到9，但是实际是输出十次10。遇到这个题目，除了闭包的概念要理解清楚，你还需要知道，`setTimeout` 内的代码会被异步执行，代码会先执行所有的同步代码，即上面的这段代码会先将 `for` 循环执行，此时 `i` 的值为 10，console.log(i) 一直引用着全局变量的 i  所以会输出十次 10
 
- 改进代码，我们在 for 循环里创建一个闭包，把循环自增的 i 作为参数传入
+ 改进代码，我们在 `for` 循环里创建一个闭包，把循环自增的 `i` 作为参数传入
 
 ```
 for(var i = 0; i < 10; i++) {
@@ -369,7 +370,7 @@ for(var i = 0; i < 10; i++) {
 
 #### setTimeout && setInterval
 
-> javascript 是异步的单线程运行语言，其他代码运行的时候可能会阻塞 setTimeout && setInterval 的运行
+> `javascript` 是异步的单线程运行语言，其他代码运行的时候可能会阻塞 `setTimeout` && `setInterval` 的运行
 
 ```
 console.log(1)
@@ -381,7 +382,7 @@ console.log(3)
 输出结果： 1，3，2  //setTimeout 被阻塞
 ```
 
-处理阻塞的方法是将setTimeout 和 setInterval放在回调函数里执行
+处理阻塞的方法是将`setTimeout` 和 `setInterval`放在回调函数里执行
 
 ```
 function test(){
@@ -391,7 +392,7 @@ function test(){
 }
 ```
 
-setTimeout 和 setInterval 被调用时会返回一个 ID 用来清除定时器
+`setTimeout` 和 `setInterval` 被调用时会返回一个 ID 用来清除定时器
 
 手工清除某个定时器
 
@@ -423,7 +424,7 @@ for(var i=0;i<lastId;i++;){
 
 我们可以通过构造函数，将原始类型转化为对应的对象即包装对象，从而是原始类型能够方便的调用某些方法
 
-数值，字符串，布尔值的类型转换函数分别是 Number，String，Boolean，在调用的时候在函数前面加上New 就变成了构造函数，能够蒋对应的原始类型转化为“包装对象”
+数值，字符串，布尔值的类型转换函数分别是 `Number，String，Boolean`，在调用的时候在函数前面加上New 就变成了构造函数，能够蒋对应的原始类型转化为“包装对象”
 
 ```
 var v1 = new Number(123);
@@ -441,7 +442,7 @@ v3 === true // false
 
 #### 类型转换
 
-类型转换分为强制类型转换和自动转换，javascript 是动态类型语言，在到吗解析运行时，需要的数据类型和传入的数据类型不一致的时候，javascript 会进行自动类型转化。当然，你也可以通过类型转换方法进行强制类型装换。
+类型转换分为强制类型转换和自动转换，`javascript` 是动态类型语言，在到吗解析运行时，需要的数据类型和传入的数据类型不一致的时候，`javascript` 会进行自动类型转化。当然，你也可以通过类型转换方法进行强制类型装换。
 
 日常开发中，我们最常用的数据类型自动转换不过就下面三种情况
 
@@ -465,21 +466,21 @@ if('22'){
 +'12'  //12
 ```
 
-我们也通过 Number ，String，Boolean 来进行强制数据类型转换。强制类型转化的规则有点复杂，我们来了解一下。
+我们也通过` Number ，String，Boolean` 来进行强制数据类型转换。强制类型转化的规则有点复杂，我们来了解一下。
 
 Number 转换  [引用阮老师的详细解释](http://javascript.ruanyifeng.com/grammar/conversion.html)
 
 ```
 第一步，调用对象自身的valueOf方法。如果返回原始类型的值，则直接对该值使用Number函数，不再进行后续步骤。
 
-第二步，如果valueOf方法返回的还是对象，则改为调用对象自身的toString方法。如果toString方法返回原始类型的值，则对该值使用Number函数，不再进行后续步骤。
+第二步，如果 valueOf 方法返回的还是对象，则改为调用对象自身的 toString 方法。如果 toString 方法返回原始类型的值，则对该值使用 Number 函数，不再进行后续步骤。
 
-第三步，如果toString方法返回的是对象，就报错。
+第三步，如果 toString 方法返回的是对象，就报错。
 ```
 
-String 转换方法同样也是通过调用原对象的 toString 方法和 valueOf 方法，但是不同的是 String 函数会先调用 toString 方法进行转换
+`String` 转换方法同样也是通过调用原对象的 `toString` 方法和 `valueOf` 方法，但是不同的是 `String` 函数会先调用 `toString` 方法进行转换
 
-Boolean 的转换规则会相对简单一些，除了几个特殊的值，都会被转化为 true
+`Boolean` 的转换规则会相对简单一些，除了几个特殊的值，都会被转化为 `true`
 
 ```
 undefined
@@ -497,7 +498,7 @@ Boolean('false') //true
 
 #### typeof
 
-> typeof 操作符返回数据类型，但是由于 javascript 设计的历史原因，typeof 现已经不能满足我们现在对于类型判断的要求了
+> `typeof` 操作符返回数据类型，但是由于 `javascript` 设计的历史原因，`typeof` 现已经不能满足我们现在对于类型判断的要求了
 
 
 | Value                            | Class            |Type       |
@@ -519,7 +520,7 @@ Boolean('false') //true
 |new Object()        |Object     |object|
 |null                |null       |object|
 
-我们可以看到，typeof 不能区分对象的数组和日期，还会把 null 判断成对象，那我们一般是什么时候用 typeof 呢。我们可以用来判断一个已经定义的变量是否被赋值。
+我们可以看到，`typeof` 不能区分对象的数组和日期，还会把 `null` 判断成对象，那我们一般是什么时候用 `typeof` 呢。我们可以用来判断一个已经定义的变量是否被赋值。
 
 ```
 var a
@@ -530,7 +531,7 @@ if(typeof a == 'undefined'){
 
 #### instanceof
 
-> instanceof 操作符通常用来判断，一个对象是否在另一个对象的原型链上，需要注意的是 instanceof的左值是对象，右值是构造函数
+> `instanceof` 操作符通常用来判断，一个对象是否在另一个对象的原型链上，需要注意的是 `instanceof` 的左值是对象，右值是构造函数
 
 ```
 // defining constructors
@@ -548,9 +549,9 @@ o instanceof D;
 
  #### Object.prototype.toString
 
-> 那么我们有没有可以用来区分变量数据类型的方法呢，有，Object.prototype.toString
+> 那么我们有没有可以用来区分变量数据类型的方法呢，有，`Object.prototype.toString`
 
-一些原始数据类型也有 toString 方法，但是通常他们的 toString 方法都是改造过的，不能进行 数据类型判断，所以我们需要用 Object 原型链上的 toString 方法
+一些原始数据类型也有 `toString` 方法，但是通常他们的 `toString` 方法都是改造过的，不能进行 数据类型判断，所以我们需要用 `Object` 原型链上的 `toString` 方法
 
 ```
 var a = 1234
@@ -578,7 +579,7 @@ Object.prototype.toString.call(a) // "[object Number]"
 
 ```
 
-那么我们就能够通过 Object.prototype.toString 方法，封装一个可以判断变量数据类型的函数了
+那么我们就能够通过 `Object.prototype.toString` 方法，封装一个可以判断变量数据类型的函数了
 
 ```
 function type(obj) {
@@ -588,7 +589,7 @@ function type(obj) {
 type(function(){}) //"Function"
 ```
 
-
+> 这次我们从对象、函数、类型三方面入手了解了`javascript` 中容易被忽视或则说比较难理解的地方，我会继续将我在学习中积累的内容分享给大家，如果大家觉得文章有需要改进或则有其他想要了解的内容的，欢迎私信，评论或则微信我，我的微信是：646321933
 
 
 
