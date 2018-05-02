@@ -239,6 +239,558 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2015/11/15/ng1-style-guide1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/11/15/ng1-style-guide1/" itemprop="url">
+                  你需要知道的 Angular 编程指南(上)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-15T20:20:00+08:00">
+                2015-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2015/11/15/ng1-style-guide1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/15/ng1-style-guide1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）</p>
+<blockquote>
+<p><a href="https://github.com/johnpapa/angular-styleguide" target="_blank" rel="external">Angular 编程风格指导原文地址</a></p>
+</blockquote>
+<p>##1. 单一职责</p>
+<p><strong>原则 1：一个文件只能定义一个组件</strong></p>
+<p>下面的例子定义了app模块和他的依赖，把控制器和服务都定义到一个文件了</p>
+<pre><code>-- 不推荐 --
+SomeController = ()-&gt;
+someFactory = ()-&gt;
+angular
+    .module(&apos;app&apos;, [&apos;ngRoute&apos;])
+    .controller(&apos;SomeController&apos; , SomeController)
+    .factory(&apos;someFactory&apos; , someFactory)
+</code></pre><p>同样的组建，现在我们把它分解到他们自己的文件中</p>
+<pre><code>-- 推荐方式 --
+-- app.module.js --
+
+angular
+    .module(&apos;app&apos;, [&apos;ngRoute&apos;])
+
+
+-- 推荐方式 --
+-- someController.js --
+SomeController = ()-&gt;
+angular
+    .module(&apos;app&apos;)
+    .controller(&apos;SomeController&apos; , SomeController)
+
+
+-- 推荐方式 --
+-- someFactory.js --
+someFactory = ()-&gt;
+angular
+    .module(&apos;app&apos;)
+    .factory(&apos;someFactory&apos; , someFactory)
+</code></pre><p>##2. 模块</p>
+<p><strong>原则 2：定义模块的时候不要用变量来定义，用设置的语法来定义</strong></p>
+<blockquote>
+<p>因为我们使用的单一职责的原则，每一个组建一个文件，在定义组建的时候你已经用<code>angular.module</code>来介绍这个组建是哪个模块的了。</p>
+</blockquote>
+<pre><code>-- 不推荐 --
+app = angular.module(&apos;app&apos;, [
+    &apos;ngAnimate&apos;
+    &apos;ngRoute&apos;
+    &apos;app.shared&apos;
+    &apos;app.dashboard&apos;
+])
+</code></pre><p>下面是不用变量的语法</p>
+<pre><code>-- 推荐方式 --
+angular
+    .module(&apos;app&apos;, [
+    &apos;ngAnimate&apos;
+    &apos;ngRoute&apos;
+    &apos;app.shared&apos;
+    &apos;app.dashboard&apos;
+])
+</code></pre><p><strong>拓展</strong>：当使用模块的时候，不要用变量，要用链式定义的语法</p>
+<blockquote>
+<p>这样做能够使代码的可读性更高，同时也能避免变量的泄露和碰撞（重名）</p>
+</blockquote>
+<pre><code>-- 不推荐--
+app = angular.module(&apos;app&apos;)
+app.controller(&apos;SomeController&apos; , SomeController)
+SomeController = ()-&gt;
+
+-- 推荐方式 --
+SomeController = ()-&gt;
+
+angular
+  .module(&apos;app&apos;)
+  .controller(&apos;SomeController&apos; , SomeController)
+</code></pre><p><strong>设置 vs 获取</strong>所有的实例只要设置一次</p>
+<blockquote>
+<p>一个模块只要被创建一次，之后的模块获取只要通过这个切入点来获取就可以了</p>
+</blockquote>
+<ul>
+<li>用 <code>angular.module(&#39;app&#39;, [])</code> 来设置模块</li>
+<li>用<code>angular.module(&#39;app&#39;)</code>来获取模块</li>
+</ul>
+<p><strong>命名函数 vs 匿名函数</strong>：使用命名函数来代替向回掉函数传递匿名函数</p>
+<blockquote>
+<p>这样能够是代码的可读性更高，更加容易debug，减少回调函数的嵌套</p>
+</blockquote>
+<pre><code>-- 不推荐 --
+angular
+  .module(&apos;app&apos;)
+  .controller(&apos;Dashboard&apos;, ()-&gt;)
+  .factory(&apos;logger&apos;, ()-&gt; )
+
+-- 推荐方式 --
+-- dashboard.js --
+Dashboard = ()-&gt;
+  # logic goes here --&gt;
+  return
+
+angular
+  .module(&apos;app&apos;)
+  .controller(&apos;Dashboard&apos;, Dashboard)
+
+-- 推荐方式 --
+-- logger.js --
+logger = ()-&gt;
+  # logic goes here --&gt;
+  return
+
+angular
+  .module(&apos;app&apos;)
+  .factory(&apos;logger&apos;, logger)
+</code></pre><p><strong>IIFE（立即调用函数表达式）：</strong>把angular 组建包裹在能够马上调用的函数表达式中</p>
+<blockquote>
+<p>IIFE 把变量从全局作用域里解放出来，这样做能防止把变量和函数定义在全局作用句中从而造成变量的碰撞（）变量重名造成的莫名其妙的bug）</p>
+</blockquote>
+<pre><code>(-&gt;
+  logger = ()-&gt;
+    # logic goes here --&gt;
+    return
+
+  angular
+    .module(&apos;app&apos;)
+    .factory(&apos;logger&apos;, logger);
+
+)()
+</code></pre><p><strong>主意</strong>：为了使代码更加简洁，下面的编程先省略 IIFE 语法</p>
+<p>##3. 控制器</p>
+<p><strong>controller as view 语法：</strong>用 <code>controllerAs</code>语法来代替经典的把controller 绑定到  $scope 作用域的语法</p>
+<ul>
+<li>控制器是一个构造类，需要通过<code>newed</code>来创建一个新的实例，但是<code>controllerAS</code>语法更像 javascript 的构造函数</li>
+<li>这样的用法能够促进我们在视图中绑定对应对象的变量（ 用<code>customer.name</code>来取代<code>name</code>）等等，这样能够是我们的代码更易读，避免我们没有指定对象的时候的一些参考问题。</li>
+<li><p>能够让我们避免在视图中的嵌套控制器中使用<code>$parent</code>来调用父级控制器</p>
+<pre><code>-- 不推荐 --
+&lt;div ng-controller=&quot;Customer&quot;&gt;
+  {{ name }}
+&lt;/div&gt;
+-- 推荐方式 --
+&lt;div ng-controller=&quot;Customer as customer&quot;&gt;
+  {{ customer.name }}
+&lt;/div&gt;
+</code></pre></li>
+</ul>
+<p><strong>controllerAs Controller Syntax</strong>：用<code>controllerAs</code>来代替<code>传统的将控制器绑定到$scope</code>的语法</p>
+<ul>
+<li><code>controllerAs</code>通过 <code>this</code>来从控制器的内部把返回的内容绑定到$scope 上<br><code>controllerAs</code>在语法上比 <code>$scope</code>要友好，使用<code>controllerAs</code> 你依旧可以把把数据绑定到视图，依旧可以访问绑定在<code>$scope</code>上的方法</li>
+<li><p>能够避免可能把方法定义到服务上更好的时候，想要将控制器中的方法绑定到<code>$scope</code>上，在服务中要考虑$scope 的用法，在控制器中只有必要的时候才能绑定到<code>$scope</code>上，举个例子，当要通过<code>$emit</code>,<code>$broadcast</code>,<code>$on</code>来传递和接收事件的时候，要在服务中定义，再在控制器中调用<br><strong>主意</strong>：介于 coffeescript 会自动返回最后一行，我们最好在函数的最后一行加上一个return 声明（即使这个函数没有任何东西返回），大多数上可以没有返回声明，但是在我自己的开发过程中，没有返回声明的时候，会报错，所以建议还是加上这个返回声明</p>
+<pre><code>-- 不推荐 --
+(-&gt;
+  Customer = ($scope)-&gt;
+    $scope.name = {}
+    $scope.sendMessage = ()-&gt;
+  angular
+    .module(&apos;app&apos;)
+    .controller(&apos;Customer&apos;, Customer)
+)()
+-- 推荐方法 --
+(-&gt;
+  Customer = ()-&gt;
+    @name = {}
+    @sendMessage = ()-&gt;
+    return
+
+  angular
+    .module(&apos;app&apos;)
+    .controller(&apos;Customer&apos;, Customer)
+)()
+</code></pre></li>
+</ul>
+<p><strong>controllerAS with vm</strong>当使用<code>controllerAs</code>语法时，用一个变量来代替 this ，找一个统一的变量名来代替视图模型例如 <code>vm</code></p>
+<p><code>this</code>关键字是联系上下文的，当在控制器中使用函数的时候可能会改变上下文，为了避免这样的情况，最好用一个变量来捕获<code>this</code></p>
+<pre><code>-- 不推荐 --
+(-&gt;
+  Customer = ()-&gt;
+    @name = {}
+    @sendMessage = ()-&gt;
+      # here @/this is not the same
+      @stuff = &quot;stuff&quot;
+
+    return
+  angular
+    .module(&apos;app&apos;)
+    .controller(&apos;Customer&apos;, Customer)
+)()
+
+
+-- 推荐方式 --
+(-&gt;
+  Customer = ()-&gt;
+    vm = @
+    vm.name = {}
+    vm.sendMessage = ()-&gt;
+
+    return
+  angular
+    .module(&apos;app&apos;)
+    .controller(&apos;Customer&apos;, Customer)
+)()
+</code></pre><p>【tip】</p>
+<pre><code>### OR use the fat arrow in functions =&gt; ###
+(-&gt;
+  Customer = ()-&gt;
+    @name = {}
+    @sendMessage = ()=&gt;
+      @stuff
+
+    return
+  angular
+    .module(&apos;app&apos;)
+    .controller(&apos;Customer&apos;, Customer)
+)()
+</code></pre><p>【note】：你可以把下面这段代码放到你的代码的最前一行，来避免一些组建的语法检查</p>
+<pre><code>### jshint validthis: true ###
+vm = @
+</code></pre><p><strong>把变量放在控制器的最前面</strong></p>
+<p>把数据绑定的变量成员（按照字母顺序）放在控制器的最前面，而不是遍布在整个控制器中。</p>
+<blockquote>
+<p>把数据绑定的变量成员放在控制器的最前面,使程序更加易读，帮你立即分辨控制器中这个变量成员可以绑定在视图中</p>
+</blockquote>
+<pre><code>-- 不推荐 --
+function SessionsController() {
+    var vm = this;
+
+    vm.gotoSession = function() {
+      /* ... */
+    };
+    vm.refresh = function() {
+      /* ... */
+    };
+    vm.search = function() {
+      /* ... */
+    };
+    vm.sessions = [];
+    vm.title = &apos;Sessions&apos;;
+}
+
+-- 推荐方式 --
+function SessionsController() {
+    var vm = this;
+
+    vm.gotoSession = gotoSession;
+    vm.refresh = refresh;
+    vm.search = search;
+    vm.sessions = [];
+    vm.title = &apos;Sessions&apos;;
+
+    ////////////
+
+    function gotoSession() {
+      /* */
+    }
+
+    function refresh() {
+      /* */
+    }
+
+    function search() {
+      /* */
+    }
+}
+</code></pre><p>【note】 如果函数是一行的就把函数也放在控制器的前面，这样做对代码的阅读性不会有影响</p>
+<pre><code>-- 不推荐--
+function SessionsController(data) {
+    var vm = this;
+
+    vm.gotoSession = gotoSession;
+    vm.refresh = function() {
+        blabla
+    };
+    vm.search = search;
+    vm.sessions = [];
+    vm.title = &apos;Sessions&apos;;
+}
+
+
+
+-- 推荐方法--
+function SessionsController(sessionDataService) {
+    var vm = this;
+
+    vm.gotoSession = gotoSession;
+    vm.refresh = sessionDataService.refresh; // 1 liner is OK
+    vm.search = search;
+    vm.sessions = [];
+    vm.title = &apos;Sessions&apos;;
+}
+</code></pre><h3 id="函数声明，隐藏实现细节"><a href="#函数声明，隐藏实现细节" class="headerlink" title="函数声明，隐藏实现细节"></a>函数声明，隐藏实现细节</h3><p>函数声明，隐藏实现的细节。把用于数据绑定的变量成员的声明，放在控制器的前面，实现放在文件的后面。</p>
+<ul>
+<li>把数据绑定的成员放在前面易于代码的阅读，能让你一眼就分辨出哪个变量用于视图的哪块区域的绑定</li>
+<li>把函数的实现放在文件的后面，把函数实现这部分比较复杂的部分放在后面。能让你直接看到函数声明这部分重要的信息</li>
+<li>因为函数的声明被提升了，所以在函数定义前，你是不需要关心这个函数的</li>
+<li>你不需要担心函数声明的位子移动的问题，你不用担心”因为a函数是依赖于b函数的，a函数移动到b函数前面会让你的代码出错”这样子的问题</li>
+<li><p>顺序在函数表达式中很重要</p>
+<pre><code>--不建议使用函数表达式--
+function AvengersController(avengersService, logger) {
+    var vm = this;
+    vm.avengers = [];
+    vm.title = &apos;Avengers&apos;;
+
+    var activate = function() {
+        return getAvengers().then(function() {
+            logger.info(&apos;Activated Avengers View&apos;);
+        });
+    }
+
+    var getAvengers = function() {
+        return avengersService.getAvengers().then(function(data) {
+            vm.avengers = data;
+            return vm.avengers;
+        });
+    }
+
+    vm.getAvengers = getAvengers;
+
+    activate();
+}
+</code></pre></li>
+</ul>
+<p>主意上面的例子中把重要的函数声明分散在控制器中，但在下面的例子中重要的函数声明都被提升到了顶部。举个栗子，函数绑定变量如<code>vm.avengers</code>和<code>vm.title</code>，把函数实现的细节放在后面，这样更加有利于代码的阅读</p>
+<pre><code>--  推荐方法 --
+function AvengersController(avengersService, logger) {
+    var vm = this;
+    vm.avengers = [];
+    vm.getAvengers = getAvengers;
+    vm.title = &apos;Avengers&apos;;
+
+    activate();
+
+    function activate() {
+        return getAvengers().then(function() {
+            logger.info(&apos;Activated Avengers View&apos;);
+        });
+    }
+
+    function getAvengers() {
+        return avengersService.getAvengers().then(function(data) {
+            vm.avengers = data;
+            return vm.avengers;
+        });
+    }
+}
+</code></pre><p>###把控制器的逻辑定义放到服务中</p>
+<ul>
+<li>逻辑可能会在多个控制器中复用，通过封装在服务中来通过函数暴露给控制器</li>
+<li>把逻辑封装在服务中，能更容易在单元测试中分离成独立作用域，在控制器中调用函数也更容易模拟</li>
+<li>从控制器中移除依赖，把实现细节隐藏起来</li>
+<li><p>让控制器变得简单，苗条，且专注</p>
+<pre><code>-- 不推荐 --
+function OrderController($http, $q, config, userInfo) {
+    var vm = this;
+    vm.checkCredit = checkCredit;
+    vm.isCreditOk;
+    vm.total = 0;
+
+    function checkCredit() {
+        var settings = {};
+        // Get the credit service base URL from config
+        // Set credit service required headers
+        // Prepare URL query string or data object with request data
+        // Add user-identifying info so service gets the right credit limit for this user.
+        // Use JSONP for this browser if it doesn&apos;t support CORS
+        return $http.get(settings)
+            .then(function(data) {
+             // Unpack JSON data in the response object
+               // to find maxRemainingAmount
+               vm.isCreditOk = vm.total &lt;= maxRemainingAmount
+            })
+            .catch(function(error) {
+               // Interpret error
+               // Cope w/ timeout? retry? try alternate service?
+               // Re-reject with appropriate error for a user to see
+            });
+    };
+}
+-- 推荐方法 --
+function OrderController(creditService) {
+    var vm = this;
+    vm.checkCredit = checkCredit;
+    vm.isCreditOk;
+    vm.total = 0;
+
+    function checkCredit() {
+       return creditService.isOrderTotalOk(vm.total)
+          .then(function(isOk) { vm.isCreditOk = isOk; })
+          .catch(showError);
+    };
+}
+</code></pre></li>
+</ul>
+<h3 id="使控制器变得专注"><a href="#使控制器变得专注" class="headerlink" title="使控制器变得专注"></a>使控制器变得专注</h3><p>为一个视图定义一个控制器，不要讲一个控制器为多个视图复用，要把复用的逻辑封装到服务中，保证一个控制器只专注于他的视图</p>
+<p>给多个视图复用的控制器是很脆的，一个好的 E2E测试覆盖率是用来确定一个应用的稳定性的</p>
+<h3 id="路由分配"><a href="#路由分配" class="headerlink" title="路由分配"></a>路由分配</h3><p>当一个控制器必须和某个视图绑定但也有可能和其他视图或者控制器复用，把控制器的定义和路由条状一起定义</p>
+<p>【note】如果一个视图不是通过路由而是通过其他方式加载的，请用<code>ng-controller=&quot;Avengers as vm&quot;</code>语法</p>
+<p>在路由中分配控制器，允许不同的路由去调用不同的控制器和视图，当控制器是在视图中通过<code>ng-controller</code> 进行声明，那么这个视图就要和这个控制器一直关联</p>
+<pre><code>-- 不推荐 --
+
+// route-config.js
+angular
+    .module(&apos;app&apos;)
+    .config(config);
+
+function config($routeProvider) {
+    $routeProvider
+        .when(&apos;/avengers&apos;, {
+          templateUrl: &apos;avengers.html&apos;
+        });
+}
+
+&lt;!-- avengers.html --&gt;
+&lt;div ng-controller=&quot;AvengersController as vm&quot;&gt;
+&lt;/div&gt;
+
+
+
+-- 推荐方式 --
+
+// route-config.js
+angular
+    .module(&apos;app&apos;)
+    .config(config);
+
+function config($routeProvider) {
+    $routeProvider
+        .when(&apos;/avengers&apos;, {
+            templateUrl: &apos;avengers.html&apos;,
+            controller: &apos;Avengers&apos;,
+            controllerAs: &apos;vm&apos;
+        });
+}
+&lt;!-- avengers.html --&gt;
+&lt;div&gt;
+&lt;/div&gt;
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2015/11/10/ng1-style-guide2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -635,7 +1187,7 @@ angular
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
