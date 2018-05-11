@@ -5,7 +5,7 @@ tags: [vue, vue-cli, webpack]
 ---
 ### 前言
 
-使用过 vue 进行项目开发的同学，一定知道或者使用过 vue-cli 脚手架，他能够很好的搭建项目结构和工程，让我们能够把足够的精力放在业务开发上。也正是因为这样，很多时候我们会因为项目工期短等原因来不及或则不会刻意去了解项目工程配置，我们今天不去介绍脚手架的使用，我们去了解下脚手架为我们创建好的打包工程是怎么做的。这篇文章的篇幅有点长，你可能需要花上 10 分钟的样子去理解，毕竟我花了 1 周的业余下时间整理的😂，但都是干货，希望能帮助大家理解
+使用过 vue 进行项目开发的同学，一定知道或者使用过 vue-cli 脚手架，他能够很好的搭建项目结构和工程，让我们能够把足够的精力放在业务开发上。也正是因为这样，很多时候我们会因为项目工期短等原因来不及或则不会刻意去了解项目工程配置，我们今天不去介绍脚手架的使用，我们去了解下脚手架为我们创建好的打包工程是怎么做的。
 
 ### 项目结构
 <code>
@@ -90,24 +90,23 @@ process对象是Node的一个全局对象，提供当前Node进程的信息。
 [ExtractTextWebpackPlugin](https://doc.webpack-china.org/plugins/extract-text-webpack-plugin/) 插件通常用来做样式文件的分离，被分离的文件不会被内嵌到  JS bundle 中，而会被放到一个单独的文件中，在样式文件比较大的时候，能够提前样式的加载,配置示例如下
 
 <pre>
-        const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-        module.exports = {
-          module: {
-            rules: [
-              {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                  fallback: "style-loader",
-                  use: "css-loader"
-                })
-              }
-            ]
-          },
-          plugins: [
+    const ExtractTextPlugin = require("extract-text-webpack-plugin");
+    module.exports = {
+       module: {
+          rules: [
+          {
+             test: /\.css$/,
+             use: ExtractTextPlugin.extract({
+             fallback: "style-loader",
+             use: "css-loader"
+          })
+       }]
+    },
+        plugins: [
             new ExtractTextPlugin("styles.css"),
-          ]
-        }
+        ]
+    }
 
 </pre>
 
@@ -122,6 +121,7 @@ process对象是Node的一个全局对象，提供当前Node进程的信息。
 用来优化从脚本里提炼出来的 css ，配置示例如下
 
 <pre>
+
     var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
     module.exports = {
       module: {
@@ -201,6 +201,7 @@ webpack 项目服务，我们通常会在开发阶段用来配置项目的热刷
 ####  config.js
 
 <pre>
+
 'use strict'
 
 const path = require('path') // 引用项目的 path 模块
@@ -283,65 +284,65 @@ module.exports = {
 
 <pre>
 
-'use strict'
-const chalk = require('chalk')  // 改变命令行中的字体颜色，大致这样用chalk.blue('Hello world')
-const semver = require('semver')  //是用来对特定的版本号做判断的
+    'use strict'
+    const chalk = require('chalk')  // 改变命令行中的字体颜色，大致这样用chalk.blue('Hello world')
+    const semver = require('semver')  //是用来对特定的版本号做判断的
 
-const packageConfig = require('../package.json')  // 项目 npm 配置文件，获取依赖及版本信息，requrie返回的就是json对象
-const shell = require('shelljs') //用来执行Unix系统命令，调用系统命令更加方便
+    const packageConfig = require('../package.json')  // 项目 npm 配置文件，获取依赖及版本信息，requrie返回的就是json对象
+    const shell = require('shelljs') //用来执行Unix系统命令，调用系统命令更加方便
 
-//把cmd这个参数传递的值转化成前后没有空格的字符串，也就是版本号
-function exec (cmd) {
-  return require('child_process').execSync(cmd).toString().trim()
-}
-
-
-const versionRequirements = [
-  {
-    name: 'node',
-    currentVersion: semver.clean(process.version),  // 提取进程版本信息转化成规定格式，也就是 '  =v1.2.3  ' -> '1.2.3' 这种功能
-    versionRequirement: packageConfig.engines.node // package.json 的 node 的版本信息
-  }
-]
-
-if (shell.which('npm')) {
-  versionRequirements.push({
-    name: 'npm',
-    currentVersion: exec('npm --version'),   //当前的版本信息
-    versionRequirement: packageConfig.engines.npm //package.json 的 node 的版本信息
-  })
-}
-
-module.exports = function () {
-  const warnings = []
-
-  for (let i = 0; i < versionRequirements.length; i++) {
-    const mod = versionRequirements[i]
-
-    // 如果当前版本号不符合 package.json 要求的版本号，红色表示当前版本信息，绿色表示要求的版本信息，添加到 warnings 待输出
-    if (!semver.satisfies(mod.currentVersion, mod.versionRequirement)) {
-      warnings.push(mod.name + ': ' +
-        chalk.red(mod.currentVersion) + ' should be ' +
-        chalk.green(mod.versionRequirement)
-      )
-    }
-  }
-
-  //输出版本号不相符的提示 warnings
-  if (warnings.length) {
-    console.log('')
-    console.log(chalk.yellow('To use this template, you must update following to modules:'))
-    console.log()
-
-    for (let i = 0; i < warnings.length; i++) {
-      const warning = warnings[i]
-      console.log('  ' + warning)
+    //把cmd这个参数传递的值转化成前后没有空格的字符串，也就是版本号
+    function exec (cmd) {
+      return require('child_process').execSync(cmd).toString().trim()
     }
 
-    console.log()
-    process.exit(1)
-  }
-}
+
+    const versionRequirements = [
+      {
+        name: 'node',
+        currentVersion: semver.clean(process.version),  // 提取进程版本信息转化成规定格式，也就是 '  =v1.2.3  ' -> '1.2.3' 这种功能
+        versionRequirement: packageConfig.engines.node // package.json 的 node 的版本信息
+      }
+    ]
+
+    if (shell.which('npm')) {
+      versionRequirements.push({
+        name: 'npm',
+        currentVersion: exec('npm --version'),   //当前的版本信息
+        versionRequirement: packageConfig.engines.npm //package.json 的 node 的版本信息
+      })
+    }
+
+    module.exports = function () {
+      const warnings = []
+
+      for (let i = 0; i < versionRequirements.length; i++) {
+        const mod = versionRequirements[i]
+
+        // 如果当前版本号不符合 package.json 要求的版本号，红色表示当前版本信息，绿色表示要求的版本信息，添加到 warnings 待输出
+        if (!semver.satisfies(mod.currentVersion, mod.versionRequirement)) {
+          warnings.push(mod.name + ': ' +
+            chalk.red(mod.currentVersion) + ' should be ' +
+            chalk.green(mod.versionRequirement)
+          )
+        }
+      }
+
+      //输出版本号不相符的提示 warnings
+      if (warnings.length) {
+        console.log('')
+        console.log(chalk.yellow('To use this template, you must update following to modules:'))
+        console.log()
+
+        for (let i = 0; i < warnings.length; i++) {
+          const warning = warnings[i]
+          console.log('  ' + warning)
+        }
+
+        console.log()
+        process.exit(1)
+      }
+    }
 
 
 </pre>
@@ -350,107 +351,108 @@ module.exports = function () {
 
 <pre>
 
-'use strict'
+    'use strict'
 
-//打包前判断当先开发环境的 node 和 npm 版本和 package.json 要求的时候一样
-require('./check-versions')()
+    //打包前判断当先开发环境的 node 和 npm 版本和 package.json 要求的时候一样
+    require('./check-versions')()
 
-process.env.NODE_ENV = 'production'
+    process.env.NODE_ENV = 'production'
 
-const ora = require('ora')  // 在用户打包的时候能够让用户知道正在进行，一个加载中的样式，转啊转
-const rm = require('rimraf') //这个模块是用来清除之前的打的包，因为在vue-cli中每次打包会生成不同的hash
-const path = require('path') //node 路径模块，便于我们操作文件路径
-const chalk = require('chalk') //带颜色的输出模块，能在控制台中输出不同的样色
-const webpack = require('webpack') //webpack 不解释
-const config = require('../config') // 项目中的配置文件，👆上面已经进行了配置介绍
-const webpackConfig = require('./webpack.prod.conf') // 生产环境的配置文件
-
-
-const spinner = ora('building for production...')// 实例一个打包加载中实例
-spinner.start() //开始转圈，营造一个正在打包的场景
-
-// 删除上一次打包的文件，删除成功，开始按照生产环境配置进行打包
-rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
-  if (err) throw err
+    const ora = require('ora')  // 在用户打包的时候能够让用户知道正在进行，一个加载中的样式，转啊转
+    const rm = require('rimraf') //这个模块是用来清除之前的打的包，因为在vue-cli中每次打包会生成不同的hash
+    const path = require('path') //node 路径模块，便于我们操作文件路径
+    const chalk = require('chalk') //带颜色的输出模块，能在控制台中输出不同的样色
+    const webpack = require('webpack') //webpack 不解释
+    const config = require('../config') // 项目中的配置文件，👆上面已经进行了配置介绍
+    const webpackConfig = require('./webpack.prod.conf') // 生产环境的配置文件
 
 
-    //开始打包，打包结束停止 spinner 转圈，有报错则在控制台输出
-  webpack(webpackConfig, (err, stats) => {
-    spinner.stop()
-    if (err) throw err
+    const spinner = ora('building for production...')// 实例一个打包加载中实例
+    spinner.start() //开始转圈，营造一个正在打包的场景
 
-    // node 环境里的输出配置，process.stdout.write 你可以理解成 js 里的 console
-    process.stdout.write(stats.toString({
-      colors: true, //让打包的时候有颜色。
-      modules: false,  //去掉内置模块信息
-      children: false, // 去掉子模块,如果你使用了 ts-loader，设置成 true 会在打包构建阶段展示错误信息
-      chunks: false, // 增加包信息（设置为 false 能允许较少的冗长输出）
-      chunkModules: false //去除包里内置模块的信息
-    }) + '\n\n')
+    // 删除上一次打包的文件，删除成功，开始按照生产环境配置进行打包
+    rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
+      if (err) throw err
 
 
-     //打包出错在控制台输出 Build failed with errors ，退出打包程序
-    if (stats.hasErrors()) {
-      console.log(chalk.red('  Build failed with errors.\n'))
-      process.exit(1)
-    }
+        //开始打包，打包结束停止 spinner 转圈，有报错则在控制台输出
+      webpack(webpackConfig, (err, stats) => {
+        spinner.stop()
+        if (err) throw err
 
-    //打包成功则输出 Build complete 结束打包
-    console.log(chalk.cyan('  Build complete.\n'))
-    console.log(chalk.yellow(
-      '  Tip: built files are meant to be served over an HTTP server.\n' +
-      '  Opening index.html over file:// won\'t work.\n'
-    ))
-  })
-})
+        // node 环境里的输出配置，process.stdout.write 你可以理解成 js 里的 console
+        process.stdout.write(stats.toString({
+          colors: true, //让打包的时候有颜色。
+          modules: false,  //去掉内置模块信息
+          children: false, // 去掉子模块,如果你使用了 ts-loader，设置成 true 会在打包构建阶段展示错误信息
+          chunks: false, // 增加包信息（设置为 false 能允许较少的冗长输出）
+          chunkModules: false //去除包里内置模块的信息
+        }) + '\n\n')
+
+
+         //打包出错在控制台输出 Build failed with errors ，退出打包程序
+        if (stats.hasErrors()) {
+          console.log(chalk.red('  Build failed with errors.\n'))
+          process.exit(1)
+        }
+
+        //打包成功则输出 Build complete 结束打包
+        console.log(chalk.cyan('  Build complete.\n'))
+        console.log(chalk.yellow(
+          '  Tip: built files are meant to be served over an HTTP server.\n' +
+          '  Opening index.html over file:// won\'t work.\n'
+        ))
+      })
+    })
 </pre>
 
 #### webpack.base.conf.js
 
 <pre>
-'use strict'
-const path = require('path')  // node 路径模块
-const utils = require('./utils') //node 内部常用的工具类，其中包括：格式化字符串、对象的序列化、实现对象继承等常用方法
-const config = require('../config') //👆上面我们介绍的，项目配置文件
-const vueLoaderConfig = require('./vue-loader.conf') //👆 上面我们介绍的 vue 加载器配置文件
 
-//返回当前配置文件位置是 build ，该方法放回 build/../dir 的相对路基
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
-}
+    'use strict'
+    const path = require('path')  // node 路径模块
+    const utils = require('./utils') //node 内部常用的工具类，其中包括：格式化字符串、对象的序列化、实现对象继承等常用方法
+    const config = require('../config') //👆上面我们介绍的，项目配置文件
+    const vueLoaderConfig = require('./vue-loader.conf') //👆 上面我们介绍的 vue 加载器配置文件
 
-// eslint 语法检测配置
-const createLintingRule = () => ({
-  test: /\.(js|vue)$/,
-  loader: 'eslint-loader',
-  enforce: 'pre',
-  include: [resolve('src'), resolve('test')],
-  options: {
-    formatter: require('eslint-friendly-formatter'),
-    emitWarning: !config.dev.showEslintErrorsInOverlay
-  }
-})
-
-// webpack 通用配置内容
-module.exports = {
-  context: path.resolve(__dirname, '../'),  // 上下文，基础目录，用于从配置中解析入口起点和 loader
-  entry: {
-    app: './src/main.js'  //起点或是应用程序的起点入口。从这个起点开始，应用程序启动执行。如果传递一个数组，那么数组的每一项都会执行。
-  },
-  output: {
-    path: config.build.assetsRoot,   //输出 bundle 的路径
-    filename: '[name].js',          //输出 bundle 的名称
-    publicPath: process.env.NODE_ENV === 'production' // 指定资源文件引用的目录，例如图片
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
-  },
-  resolve: {
-    extensions: ['.js', '.vue', '.json'], //配置模块如何解析,
-    alias: {                              // 创建应用的别名，
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+    //返回当前配置文件位置是 build ，该方法放回 build/../dir 的相对路基
+    function resolve (dir) {
+      return path.join(__dirname, '..', dir)
     }
-  },
+
+    // eslint 语法检测配置
+    const createLintingRule = () => ({
+      test: /\.(js|vue)$/,
+      loader: 'eslint-loader',
+      enforce: 'pre',
+      include: [resolve('src'), resolve('test')],
+      options: {
+        formatter: require('eslint-friendly-formatter'),
+        emitWarning: !config.dev.showEslintErrorsInOverlay
+      }
+    })
+
+    // webpack 通用配置内容
+    module.exports = {
+      context: path.resolve(__dirname, '../'),  // 上下文，基础目录，用于从配置中解析入口起点和 loader
+      entry: {
+        app: './src/main.js'  //起点或是应用程序的起点入口。从这个起点开始，应用程序启动执行。如果传递一个数组，那么数组的每一项都会执行。
+      },
+      output: {
+        path: config.build.assetsRoot,   //输出 bundle 的路径
+        filename: '[name].js',          //输出 bundle 的名称
+        publicPath: process.env.NODE_ENV === 'production' // 指定资源文件引用的目录，例如图片
+          ? config.build.assetsPublicPath
+          : config.dev.assetsPublicPath
+      },
+      resolve: {
+        extensions: ['.js', '.vue', '.json'], //配置模块如何解析,
+        alias: {                              // 创建应用的别名，
+          'vue$': 'vue/dist/vue.esm.js',
+          '@': resolve('src'),
+        }
+      },
   module: {
     rules: [
       //判断配置中是否要是用 eslint 语法检测，如果使用，就将 createLintingRule 配置对象返回
@@ -497,17 +499,10 @@ module.exports = {
       }
     ]
   },
-
-
-  //TODO node 配置详细内容
-
-
-
   node: {
 
-    //防止因为 vue 资源本身就自带的 无用的 node 注入
+    //防止因为 vue 资源本身就自带的 无用的 node 注入，浏览器兼容处理
     setImmediate: false,
-    //阻止 webpack 注入mocks 到原生的node模块
     dgram: 'empty',
     fs: 'empty',
     net: 'empty',
@@ -522,9 +517,10 @@ module.exports = {
 #### webpack.dev.conf.js
 
 <pre>
+
     'use strict'
     const utils = require('./utils')  //node 工具模块
-    const webpack = require('webpack') //node 不解释
+    const webpack = require('webpack') //webpack 不解释
     const config = require('../config')//👆提到的配置文件
     const merge = require('webpack-merge') // merge 工具，用来合并生产和开发环境通用的基础 webpack 配置
     const path = require('path')            //node 的路径模块
@@ -633,151 +629,158 @@ module.exports = {
 
 #### webpack.prod.conf.js
 <pre>
-'use strict'
-const path = require('path')
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const merge = require('webpack-merge')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const env = require('../config/prod.env')
+    'use strict'
+    const path = require('path') // node 路径模块
+    const utils = require('./utils') //小工具函数
+    const webpack = require('webpack') // webpack 不解释
+    const config = require('../config')//👆提到的配置文件
+    const merge = require('webpack-merge') // merge 工具，用来合并生产和开发环境通用的基础 webpack 配置
+    const baseWebpackConfig = require('./webpack.base.conf')//产和开发环境通用的基础 webpack 配置
+    const CopyWebpackPlugin = require('copy-webpack-plugin') //拷贝插件
+    const HtmlWebpackPlugin = require('html-webpack-plugin')  //动态生成 html 插件
+    const ExtractTextPlugin = require('extract-text-webpack-plugin')//用来做文件分离的插件
+    const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')//优化提炼出来的css
+    const UglifyJsPlugin = require('uglifyjs-webpack-plugin')// 压缩 js 文件插件
 
-const webpackConfig = merge(baseWebpackConfig, {
-  module: {
-    rules: utils.styleLoaders({
-      sourceMap: config.build.productionSourceMap,
-      extract: true,
-      usePostCSS: true
-    })
-  },
-  devtool: config.build.productionSourceMap ? config.build.devtool : false,
-  output: {
-    path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
-  },
-  plugins: [
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
-    new webpack.DefinePlugin({
-      'process.env': env
-    }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false
-        }
+    //生产环境配置
+    const env = require('../config/prod.env')
+
+    //合并基础配置加载器的配置部分
+    const webpackConfig = merge(baseWebpackConfig, {
+    //为独立分离出来的样式配置加载器和source，map
+      module: {
+        rules: utils.styleLoaders({
+          sourceMap: config.build.productionSourceMap,
+          extract: true,
+          usePostCSS: true
+        })
       },
-      sourceMap: config.build.productionSourceMap,
-      parallel: true
-    }),
-    // extract css into its own file
-    new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].[contenthash].css'),
-      // Setting the following option to `false` will not extract CSS from codesplit chunks.
-      // Their CSS will instead be inserted dynamically with styles-loader when the codesplit chunk has been loaded by webpack.
-      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
-      // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
-      allChunks: true,
-    }),
-    // Compress extracted CSS. We are using this plugin so that possible
-    // duplicated CSS from different components can be deduped.
-    new OptimizeCSSPlugin({
-      cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
-        : { safe: true }
-    }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
+      //配置线上的 source map 便于排查问题
+      devtool: config.build.productionSourceMap ? config.build.devtool : false,
+      //配置输出，路径，文件名
+      output: {
+        path: config.build.assetsRoot,
+        filename: utils.assetsPath('js/[name].[chunkhash].js'),
+        chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
       },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),
-    // keep module.id stable when vendor modules does not change
-    new webpack.HashedModuleIdsPlugin(),
-    // enable scope hoisting
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    // split vendor js into its own file
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks (module) {
-        // any required modules inside node_modules are extracted to vendor
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
-          ) === 0
-        )
-      }
-    }),
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      minChunks: Infinity
-    }),
-    // This instance extracts shared chunks from code splitted chunks and bundles them
-    // in a separate chunk, similar to the vendor chunk
-    // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'app',
-      async: 'vendor-async',
-      children: true,
-      minChunks: 3
-    }),
+      plugins: [
+        // DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用
+        new webpack.DefinePlugin({
+          'process.env': env
+        }),
 
-    // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ])
-  ]
-})
+        // 使用 UglifyJsPlugin 插件对 js 进行压缩
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              warnings: false
+            }
+          },
+          //配置插件的source map
+          sourceMap: config.build.productionSourceMap,
+          parallel: true
+        }),
+        // 提取 css 到单独的文件，分离文件异步加载，提高加载速度
+        new ExtractTextPlugin({
+          filename: utils.assetsPath('css/[name].[contenthash].css'),
 
-if (config.build.productionGzip) {
-  const CompressionWebpackPlugin = require('compression-webpack-plugin')
+          //如果把 allChunks 参数设置陈 false ，就不会把css 从代码块中分离出来
+          //代码块加载的时候 css 会被 styles-loader 动态的加载
+          allChunks: true,
+        }),
 
-  webpackConfig.plugins.push(
-    new CompressionWebpackPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: new RegExp(
-        '\\.(' +
-        config.build.productionGzipExtensions.join('|') +
-        ')$'
-      ),
-      threshold: 10240,
-      minRatio: 0.8
+        //使用这个插件，从不同的组件中复制脱离出来，进行 css 压缩
+        new OptimizeCSSPlugin({
+          cssProcessorOptions: config.build.productionSourceMap
+            ? { safe: true, map: { inline: false } }
+            : { safe: true }
+        }),
+
+        //自动生成 html 文件，通常 index.html 文件都会带一个哈希值来清除缓存
+        new HtmlWebpackPlugin({
+          filename: config.build.index,
+          template: 'index.html',
+          inject: true,
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true
+          },
+
+          chunksSortMode: 'dependency'
+        }),
+        //该插件会根据模块的相对路径生成一个四位数的hash作为模块id, 渲染模块没有变化的时候，id 不会变。
+        new webpack.HashedModuleIdsPlugin(),
+
+        // 提升或者预编译所有模块到一个闭包中，提升你的代码在浏览器中的执行速度。
+        new webpack.optimize.ModuleConcatenationPlugin(),
+
+        // 分离渲染的js 到独立的文件中
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'vendor',
+          minChunks (module) {
+            //被引用到的包会从 node_modules 中提取出来
+            return (
+              module.resource &&
+              /\.js$/.test(module.resource) &&
+              module.resource.indexOf(
+                path.join(__dirname, '../node_modules')
+              ) === 0
+            )
+          }
+        }),
+
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'manifest',
+          minChunks: Infinity
+        }),
+
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'app',
+          async: 'vendor-async',
+          children: true,
+          minChunks: 3
+        }),
+
+        // 拷贝自定义的静态资源文件
+        new CopyWebpackPlugin([
+          {
+            from: path.resolve(__dirname, '../static'),
+            to: config.build.assetsSubDirectory,
+            ignore: ['.*']
+          }
+        ])
+      ]
     })
-  )
-}
 
-if (config.build.bundleAnalyzerReport) {
-  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
-}
+    //判断如果配置了生产环境压缩，是则使用插件进行压缩
+    if (config.build.productionGzip) {
+      const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
-module.exports = webpackConfig
+      webpackConfig.plugins.push(
+        new CompressionWebpackPlugin({
+          asset: '[path].gz[query]',
+          algorithm: 'gzip',
+          test: new RegExp(
+            '\\.(' +
+            config.build.productionGzipExtensions.join('|') +
+            ')$'
+          ),
+          threshold: 10240,
+          minRatio: 0.8
+        })
+      )
+    }
+
+    //是否要生成代码打包分析报告
+    if (config.build.bundleAnalyzerReport) {
+      const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+      webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+    }
+
+    module.exports = webpackConfig
+
 
 </pre>
 
