@@ -239,6 +239,454 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/05/15/maidian/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/15/maidian/" itemprop="url">
+                  埋点的实现原理了解一下么
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-15T16:08:20+08:00">
+                2018-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/05/15/maidian/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/05/15/maidian/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>埋点，是网站分析的一种常用的数据采集方法。我们主要用来采集用户行为数据（例如页面访问路径，点击了什么元素）进行数据分析，从而让运营同学更加合理的安排运营计划。现在市面上有很多第三方埋点服务商，百度统计，友盟，growingIO 等大家应该都不太陌生，大多情况下大家都只是使用，最近我研究了下 web 埋点，你要不要了解下。</p>
+<h3 id="现有埋点三大类型"><a href="#现有埋点三大类型" class="headerlink" title="现有埋点三大类型"></a>现有埋点三大类型</h3><blockquote>
+<p>用户行为分析是一个大系统，一个典型的数据平台。由用户数据采集，用户行为建模分析，可视化报表展示几个模块构成。现有的埋点采集方案可以大致被分为三种，手动埋点，可视化埋点，无埋点</p>
+</blockquote>
+<ol>
+<li>手动埋点<br> 手动代码埋点比较常见，需要调用埋点的业务方在需要采集数据的地方调用埋点的方法。优点是流量可控，业务方可以根据需要在任意地点任意场景进行数据采集，采集信息也完全由业务方来控制。这样的有点也带来了一些弊端，需要业务方来写死方法，如果采集方案变了，业务方也需要重新修改代码，重新发布。</li>
+<li>可视化埋点<br> 可是化埋点是近今年的埋点趋势，很多大厂自己的数据埋点部门也都开始做这块。优点是业务方工作量少，缺点则是技术上推广和实现起来有点难（业务方前端代码规范是个大前提）。阿里的活动页很多都是运营通过可视化的界面拖拽配置实现，这些活动控件元素都带有唯一标识。通过埋点配置后台，将元素与要采集事件关联起来，可以自动生成埋点代码嵌入到页面中。</li>
+<li>无埋点<br> 无埋点则是前端自动采集全部事件，上报埋点数据，由后端来过滤和计算出有用的数据，优点是前端只要加载埋点脚本。缺点是流量和采集的数据过于庞大，服务器性能压力山大，主流的 GrowingIO 就是这种实现方案。</li>
+</ol>
+<p>我们暂时放弃可视化埋点的实现，在 <code>手动埋点</code> 和 <code>无埋点</code> 上进行了尝试，为了便于描述，下文我会称采集脚本为 SDK。</p>
+<h3 id="思考几个问题"><a href="#思考几个问题" class="headerlink" title="思考几个问题"></a>思考几个问题</h3><blockquote>
+<p>埋点开发需要考虑很多内容，贯穿着不轻易动手写代码的原则，我们在开发前先思考下面这几个问题</p>
+</blockquote>
+<ol>
+<li>我们要采集什么内容，进行哪些采集接口的约定</li>
+<li>业务方通过什么方式来调用我们的采集脚本</li>
+<li>手动埋点：SDK 需要封装一个方法给业务方进行调用，传参方式业务方可控</li>
+<li>无埋点：考虑到数据量对于服务器的压力，我们需要对无埋点进行开关配置，可以配置进行哪些元素进行无埋点采集</li>
+<li>用户标识：游客用户和登录用户的采集数据怎么进行区分关联</li>
+<li>设备Id：用户通过浏览器来访问 web 页面，设备Id需要存储在浏览器上，同一个用户访问不同的业务方网站，设备Id要保持一样，怎么实现</li>
+<li>单页面应用：现在流行的单页面应用和普通 web 页面的数据采集是否有差异</li>
+<li>混合应用：app 与 h5 的混合应用我们要怎么进行通讯</li>
+</ol>
+<h4 id="我们要采集什么内容，进行哪些采集接口的约定"><a href="#我们要采集什么内容，进行哪些采集接口的约定" class="headerlink" title="我们要采集什么内容，进行哪些采集接口的约定"></a>我们要采集什么内容，进行哪些采集接口的约定</h4><p>第一期我们先实现对 PV（即页面浏览量或点击量） 、UV（一天内同个访客多次访问） 、点击量、用户的访问路径的基础指标的采集。精细化分析的流量转化需要和业务相关，需要和数据分析方做约定，我们预留扩展。所以我们的采集接口需要进行以下的约定</p>
+<pre>
+
+    {
+        "header":{ // HTTP 头部
+            "X-Device-Id":" 550e8400-e29b-41d4-a716-446655440000", //设备ID，用来区分用户设备
+            "X-Source-Url":"https://www.baidu.com/", //源地址，关联用户的整个操作流程，用于用户行为路径分析，例如登录，到首页，进入商品详情，退出这一整个完整的路径
+            "X-Current-Url":"", //当前地址，用户行为发生的页面
+            "X-User-Id":"",//用户ID，统计登录用户行为
+        },
+        "body":[{ // HTTP Body体
+            "PageSessionID":"", //页面标识ID，用来区分页面事件，例如加载和离开我们会发两个事件，这个标识可以让我们知道这个事件是发生在一个页面上
+            "Event":"loaded", //事件类型，区分用户行为事件
+            "PageTitle":  "埋点测试页",  //页面标题，直观看到用户访问页面
+            "CurrentTime":  “1517798922201”,  //事件发生的时间
+            "ExtraInfo":  {
+             }    //扩展字段，对具体业务分析的传参
+        }]
+    }
+
+</pre>
+
+<p>以上就是我们现在约定好了的通用的事件采集的接口，所传的参数基本上会根据采集事件的不同而发生变化。但是在用户的整一个访问行为中，用户的设备是不会变化的，如果你想采集设备信息可以重新约定一个接口，在整个采集开始之前发送设备信息，这样可以避免在事件采集接口上重复采集固定数据。</p>
+<pre>
+
+    {
+        "header":{ // HTTP 头部
+              "X-Device-Id"  ："550e8400-e29b-41d4-a716-446655440000"  ,      //  设备id
+        },
+        "body":{ // HTTP Body体
+                  "DeviceType":  "web" ,   //设备类型
+                 "ScreenWide"  :  768 , //  屏幕宽
+                 "ScreenHigh":  1366 , //  屏幕高
+                 "Language":    "zh-cn"  //语言
+        }
+    }
+
+</pre>
+
+<h4 id="业务方通过什么方式来调用我们的采集脚本"><a href="#业务方通过什么方式来调用我们的采集脚本" class="headerlink" title="业务方通过什么方式来调用我们的采集脚本"></a>业务方通过什么方式来调用我们的采集脚本</h4><p>埋点应该让调用的业务方，尽可能少有工作量，最好是什么都不用做，😁，但是实现起来有点难额。我们采用的方案是让业务方在代码里通过 script 脚本来引用我们的 SDK ，业务方只要配置一些需要的参数进行埋点定制（👆我们讲到过的无埋点的流量控制），然后什么都不做就可以进行基础数据的采集。</p>
+<pre>
+
+    (function() {
+                var collect = document.createElement('script');
+                collect.type = 'text/javascript';
+                collect.async = true;
+                collect.src =  'http://collect.trc.com/index.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(collect, s);
+        })();
+
+
+    //用户自定义要进行无埋点采集的元素，如果不进行无埋点采集，可以不配置
+     var _XT = [];
+      _XT.push(['Target','div']);
+
+</pre>
+
+<h4 id="手动埋点：SDK"><a href="#手动埋点：SDK" class="headerlink" title="手动埋点：SDK"></a>手动埋点：SDK</h4><p>如果业务方需要采集更多业务定制的数据，可以调用我们暴露出的方法进行采集</p>
+<pre>
+
+    //自定义事件
+      sdk.dispatch('customEvent',{extraInfo:'自定义事件的额外信息'})
+
+</pre>
+
+<h4 id="游客与用户关联"><a href="#游客与用户关联" class="headerlink" title="游客与用户关联"></a>游客与用户关联</h4><p>我们使用 userId 来做用户标识，同一个设备的用户，从游客用户切换到登录用户，如果我们要把他们关联起来，需要有一个设备Id 做关联</p>
+<h4 id="web-设备Id"><a href="#web-设备Id" class="headerlink" title="web 设备Id"></a>web 设备Id</h4><p>用户通过浏览器来访问 web 页面，设备Id需要存储在浏览器上，同一个用户访问不同的业务方网站，设备Id要保持一样。web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹</p>
+<p>我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域名上存储设备id，通过跨域共享变量获取设备id，共享变量的原理是采用了iframe 的 contentWindow通讯，通过 postMessage 获取事件状态，调用封装好的回调函数进行数据处理具体的实现方式</p>
+<pre>
+
+    //web 应用，通过嵌入 iframe 进行跨域 cookie 通讯，设置设备id,
+        collect.setIframe = function () {
+            var that = this
+            var iframe = document.createElement('iframe')
+            iframe.id = "frame",
+            iframe.src = 'http://collectiframe.trc.com' // 配置域名代理，目的是让开发测试生产环境代码一致
+            iframe.style.display='none' //iframe 设置的目的是用来生成固定的设备id，不展示
+            document.body.appendChild(iframe)
+
+            iframe.onload = function () {
+                    iframe.contentWindow.postMessage('loaded','*');
+            }
+
+            //监听message事件，iframe 加载完成，获取设备id ，进行相关的数据采集
+            helper.on(window,"message",function(event){
+                that.deviceId = event.data.deviceId
+
+                if(event.data && event.data.type == 'loaded'){
+                    that.sendDevice(that.getDevice(), that.deviceUrl);
+                    setTimeout(function () {
+                        that.send(that.beforeload)
+                        that.send(that.loaded)
+                    },1000)
+                }
+            })
+        }
+
+</pre>
+
+<p>iframe 与 SDK 通讯</p>
+<pre>
+
+    function receiveMessageFromIndex ( event ) {
+        getDeviceInfo() // 获取设备信息
+        var data =  {
+                deviceId: _deviceId,
+                type:event.data
+        }
+
+        event.source.postMessage(data, '*'); // 将设备信息发送给 SDK
+    }
+
+    //监听message事件
+    if(window.addEventListener){
+            window.addEventListener("message", receiveMessageFromIndex, false);
+    }else{
+            window.attachEvent("onmessage", receiveMessageFromIndex, false)
+
+</pre>
+
+<p>如果你想知道可以看我的另一篇博客 <a href="https://bailinlin.github.io/2018/03/05/cookie-share/" target="_blank" rel="external">web 浏览器指纹跨域共享</a></p>
+<h4 id="单页面应用：现在流行的单页面应用和普通-web-页面的数据采集是否有差异"><a href="#单页面应用：现在流行的单页面应用和普通-web-页面的数据采集是否有差异" class="headerlink" title="单页面应用：现在流行的单页面应用和普通 web 页面的数据采集是否有差异"></a>单页面应用：现在流行的单页面应用和普通 web 页面的数据采集是否有差异</h4><blockquote>
+<p>我们知道单页面应用都是无刷新的页面加载，所以我们在页面<code>跳转</code>的处理和我们的普通的页面会有所不同。单页面应用的路由插件运用了 window 自带的无刷新修改用户浏览记录的方法，pushState 和 replaceState。</p>
+</blockquote>
+<p>window 的 history 对象 提供了两个方法，能够无刷新的修改用户的浏览记录，pushSate，和 replaceState，区别的 pushState 在用户访问页面后面添加一个访问记录， replaceState 则是直接替换了当前访问记录，所以我们只要改写 history 的方法，在方法执行前执行我们的采集方法就能实现对单页面应用的页面跳转事件的采集了</p>
+<pre>
+
+     // 改写思路：拷贝 window 默认的 replaceState 函数，重写 history.replaceState 在方法里插入我们的采集行为，在重写的 replaceState 方法最后调用，window 默认的 replaceState 方法
+
+        collect = {}
+        collect.onPushStateCallback : function(){}  // 自定义的采集方法
+
+        (function(history){
+            var replaceState = history.replaceState;   // 存储原生 replaceState
+            history.replaceState = function(state, param) {     // 改写 replaceState
+               var url = arguments[2];
+               if (typeof collect.onPushStateCallback == "function") {
+                     collect.onPushStateCallback({state: state, param: param, url: url});   //自定义的采集行为方法
+               }
+               return replaceState.apply(history, arguments);    // 调用原生的 replaceState
+            };
+         })(window.history);
+
+</pre>
+
+
+<p>这块介绍起来也比较的复杂，如果你想了解更多，可以看我的另一篇博客<a href="https://bailinlin.github.io/2018/04/28/history/" target="_blank" rel="external">你需要知道的单页面路由实现原理</a></p>
+<h4 id="混合应用：app-与-h5-的混合应用我们要怎么进行通讯"><a href="#混合应用：app-与-h5-的混合应用我们要怎么进行通讯" class="headerlink" title="混合应用：app 与 h5 的混合应用我们要怎么进行通讯"></a>混合应用：app 与 h5 的混合应用我们要怎么进行通讯</h4><blockquote>
+<p>现在大部分的应用都不是纯原生的应用， app 与 h5 的混合的应用是现在的一种主流。</p>
+</blockquote>
+<p>纯 web 数据采集我们考虑到前端存储数据容易丢失，我们在每一次事件触发的时候都用采集接口传输采集到的数据。考虑到现在很多用户的手机会有流量管家的软件监控，如果在 App 中 h5 还是采集到数据就传输给服务端，很有可能会让流量管家检测到，给用户报警，从而使得用户不再信任你的 App , 所以我们在用户操作的时候将数据传给 app 端，存储到 app。用户切换应用到后台的时候，通过 app 端的 SDK 打包传输到服务器，我们给 app 提供的方法封装了一个适配器</p>
+<pre>
+
+    // app 与 h5 混合应用，直接将数信息发给 app
+    collect.saveEvent = function (jsonString) {
+
+        collect.dcpDeviceType && setTimeout(function () {
+            if(collect.dcpDeviceType=='android'){
+                android.saveEvent(jsonString)
+            } else {
+                window.webkit && window.webkit.messageHandlers ? window.webkit.messageHandlers.nativeBridge.postMessage(jsonString) : window.postBridgeMessage(jsonString)
+            }
+
+        },1000)
+        }
+
+</pre>
+
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><blockquote>
+<p>通过上面几个问题的思考，我们对埋点的实现大致已经有了一些想法，我们使用思维导图来还原下我们即将要做的事情，图片记得放大看哦，太小了可能看不清。</p>
+</blockquote>
+<ol>
+<li>我们需要暴露给业务方调用的方法<br><img src="/images/sdk/method.jpeg" alt="nginx作用域"></li>
+<li>我们需要处理的事件类型<br><img src="/images/sdk/event.jpeg" alt="nginx作用域"></li>
+<li>SDK 的基本实现思路<br><img src="/images/sdk/logic.jpeg" alt="nginx作用域"></li>
+</ol>
+<h3 id="我们来看下几个核心代码的实现"><a href="#我们来看下几个核心代码的实现" class="headerlink" title="我们来看下几个核心代码的实现"></a>我们来看下几个核心代码的实现</h3><h4 id="工具方法"><a href="#工具方法" class="headerlink" title="工具方法"></a>工具方法</h4><p>我们定义了几个工具方法，提高开发的幸福指数 😝</p>
+<pre>
+
+        var helper = {};
+
+        // 生成一个唯一的标识，pageSessionId （用这个变量来关联开始加载、加载完成、离开页面的事件，计算出页面加菜时间，停留时间）
+        helper.uuid = function(){}
+
+        // 元素绑定事件监听，兼容浏览器到IE8
+        helper.on = function(){}
+
+        //元素移除事件监听的适配器函数，兼容浏览器到IE8
+        helper.remove = function(){}
+
+        //将json转为字符串,事件传输的参数类型转化
+        helper.changeJSON2Query = function(){}
+
+        //将相对路径解析成文档全路径
+        helper.normalize = function(){}
+</pre>
+
+<h4 id="采集逻辑"><a href="#采集逻辑" class="headerlink" title="采集逻辑"></a>采集逻辑</h4><pre>
+
+        var collect = {
+            deviceUrl:'http://collect.trc.com/rest/collect/device/h5/v1',
+            eventUrl:'http://collect.trc.com/rest/collect/event/h5/v1',
+            isuploadUrl:'http://collect.trc.com/rest/collect/isupload/app/v1',
+            parmas:{ ExtraInfo:{} },
+            device:{}
+        };
+
+        //获取埋点配置
+        collect.setParames = function(){}
+
+        //更新访问路径及页面信息
+        collect.updatePageInfo = function(){}
+
+        //获取事件参数
+        collect.getParames = function(){}
+
+        //获取设备信息
+        collect.getDevice = function(){}
+
+        //事件采集
+        collect.send = function(){}
+
+        //设备采集
+        collect.sendDevice = function(){}
+
+        //判断才否采集，埋点采集的开关
+        collect.isupload = function(){
+
+            1. 判断是否采集，不采集就注销事件监听（项目中区分游客身份和用户身份的采集情况，这个方法会被判断两次）
+            2. 采集则判断是否已经采集过
+                a.已经采集过不做任何操作
+                b.没有采集过添加事件监听
+            3. 判断是 混合应用还是纯 web 应用
+                a.如果是web 应用，调用 collect.setIframe 设置 iframe
+                b.如果是混合应用 将开始加载和加载完成事件传输给 app
+        }
+
+        //点击事件处理函数
+        collect.clickHandler = function(){}
+
+        //离开页面的事件处理函数
+        collect.beforeUnloadHandler = function(){}
+
+        //页面回退事件处理函数
+        collect.onPopStateHandler = function(){}
+
+        //系统事件初始化，注册离开事件，浏览器后退事件
+        collect.event = function(){}
+
+        //获取记录开始加载数据信息
+        collect.getBeforeload = function(){}
+
+        //存储加载完成，获取设备类型，记录加载完成信息
+        collect.onload = function(){
+
+            1. 判断cookie是否有存设备类型信息，有表示混合应用
+            2. 采集加载完成时间等信息
+            3. 调用 collect.isupload 判断是否进行采集
+        }
+
+        //web 应用，通过嵌入 iframe 进行跨域 cookie 通讯，设置设备id
+        collect.setIframe = function(){}
+
+        //app 与 h5 混合应用，直接将数信息发给 app,判断设备类型做原生方法适配器
+        collect.saveEvent = function(){}
+
+        //采集自定义事件类型
+        collect.dispatch = function(){}
+
+        //将参数 userId 存入sessionStorage
+        collect.storeUserId = function(){}
+
+        //采集H5信息,如果是混合应用，将采集到的信息发送给 app 端
+        collect.saveEventInfo = function(){}
+
+        //页面初始化调用方法
+        collect.init = function(){
+
+            1. 获取开始加载的采集信息
+            2. 获取 SDK 配置信息，设备信息
+            3. 改写 history 两个方法，单页面应用页面跳转前调用我们自己的方法
+            4. 页面加载完成，调用 collect.onload 方法
+
+        }
+
+
+        collect.init(); // 初始化
+
+        //暴露给业务方调用的方法
+        return {
+            dispatch:collect.dispatch,
+            storeUserId:collect.storeUserId,
+        }
+</pre>
+
+
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><blockquote>
+<p>代码的篇幅比较长，就不放在博客里了，感兴趣的同学可以在 <a href="https://github.com/bailinlin/web-sdk" target="_blank" rel="external">github</a> 上看完整的项目。如果你有什么不懂的或者想和我交流的，欢迎在文章下面留言联系我</p>
+</blockquote>
+<p><a href="https://bailinlin.github.io/2018/03/05/cookie-share/" target="_blank" rel="external">web 浏览器指纹跨域共享</a><br><a href="https://bailinlin.github.io/2018/04/28/history/" target="_blank" rel="external">你需要知道的单页面路由实现原理</a></p>
+<p><a href="https://www.zhihu.com/question/36411025" target="_blank" rel="external">数据埋点是什么？设置埋点的意义是什么？</a><br><a href="https://sensorsdata.cn/blog/shu-ju-jie-ru-yu-mai-dian/" target="_blank" rel="external">数据采集与埋点</a><br><a href="https://tech.meituan.com/mt-mobile-analytics-practice.html" target="_blank" rel="external">美团点评前端无痕埋点实践</a><br><a href="https://www.zhihu.com/question/20448467" target="_blank" rel="external">如何清楚易懂的解释“UV和PV＂的定义</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/05/07/vue-cli-webpack/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3130,157 +3578,6 @@ console.log("listen at http://localhost:9090")
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2016/06/30/init-blog/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/30/init-blog/" itemprop="url">
-                  使用 hexo 搭建你的 github.io 博客网站
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-30T20:37:03+08:00">
-                2016-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/06/30/init-blog/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/30/init-blog/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>作为前端er,我们每天都要保持学习,前阵子有一片文章很火<a href="https://zhuanlan.zhihu.com/p/22782487" target="_blank" rel="external">在 2016 年学 JavaScript 是一种什么样的体验？</a>,前端技术日新月异,我们不仅要保持学习,还需要掌握一个好的,适合自己的学习方式.在这个信息这个发达的时代,你不缺输入的机会,却少的反而是我们的输出机会.大多数的前端没有去记录自己的所学,所用,即使有记录,也都是在一些第三方的博客网站, 这就会有这么一个情况.持续性不够,发布过的文章没有去回顾,这个博客网站发一篇,那个博客网站发一篇,而且很没归属感.</p>
-<p>然而,github 作为我们的程序员圈子的同性交友社区,面试必看的内容,我们为什么不在 github 上搭一个自己的博客呢,在 github 上你可以直接建立一个仓库,然后在 issue 里写博客,我个人比较建议的是,搭一个属于你自己的 github pages,在 github pages 上记录你的博客. 首先是外观上比较好看,而且你可以依照你的心情改变你的博客主题,其次,你可以通过你的 github 用户名点 github.io 的方式来直接访问你的博客网站,感觉有了一个属于自己的网站一样,不要钱,还在一定程度上满足了你的虚荣心.</p>
-<h2 id="快速搭建"><a href="#快速搭建" class="headerlink" title="快速搭建"></a>快速搭建</h2><p>如果你是有一定开发经验的前端,你的电脑一定已经安装了 git 和 node ,那你在搭建博客之前你只要先全局安装 hexo 的命令行工具,命令如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo-cli</div></pre></td></tr></table></figure>
-<p>然后你在你的电脑里新建一个空的文件夹命名就按照 userName.github.io 的方式来命名 例如我的项目我命名为 bailinlin.github.io, 其次,你需要进入你新建的这个文件夹,执行命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div></pre></td></tr></table></figure>
-<p>等待一定时间,你会看到你新建的文件夹里出现了好多初始化文件,现在这个时候一个基本的简单博客搭建成功了,你运行以下命令</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo s -p 3000</div></pre></td></tr></table></figure>
-<p> 就能在 localhost:3000 中看到一个博客网站了,现在你要做的就是为你的博客网站做一些个性化的定制,打开_config.yml 文件.修改文件内的参数,</p>
-<pre><code><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">title: 白霸天的博客              //博客网站的title</div><div class="line">subtitle:                      //子标题</div><div class="line">description: 前端,白霸天,博客   //网站描述</div><div class="line">author: bailinlin             //网站作者</div><div class="line">language: zh-Hans            //网站语言,用于本地化</div><div class="line">...                          // 等其它配置</div></pre></td></tr></table></figure>
-</code></pre><h2 id="发布博客"><a href="#发布博客" class="headerlink" title="发布博客"></a>发布博客</h2><h3 id="关联远程仓库"><a href="#关联远程仓库" class="headerlink" title="关联远程仓库"></a>关联远程仓库</h3><p>博客搭建好之后,你需要做的是把博客发布到 github 上,首先你需要在 github 上新建一个仓库,命名和你新建的文件夹一样, username.githhub.io 值得注意的是,这里的 username 必须和你的github 用户名一样,大小写也要一样.然后你需要进入你的本地文件夹,关联你的远程仓库.</p>
-<p>首先<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git init</div></pre></td></tr></table></figure></p>
-<p>然后<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git remote add origin git@github.com:username/username.github.io.git</div></pre></td></tr></table></figure></p>
-<p>然后我们只要把代码推到远程仓库就行了,不过这里我们要有个约定,我们在 master 上发布博客,在 dev 分支上修改我们的博客内容和项目配置,也就是说我们发布博客后,master 分支上就是我们的博客的静态文件,dev 分支上的代码就是我们世纪维护的博客内容,如图<br>master 分支:<br><img src="/images/blog/master.png" alt="master分支"><br>dev 分支:<br><img src="/images/blog/master.png" alt="master分支"></p>
-<h3 id="安装-hexo-的一键部署命令工具"><a href="#安装-hexo-的一键部署命令工具" class="headerlink" title="安装 hexo 的一键部署命令工具"></a>安装 hexo 的一键部署命令工具</h3><p> 通过npm 安装<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
-<p> 修改部署配置,在 _config.yml 中添加如下配置</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="built_in">type</span>: git</div><div class="line">  branch: master</div><div class="line">  repo: git@github.com:bailinlin/bailinlin.github.io.git  //此处记得改成你的 github 仓库的地址</div></pre></td></tr></table></figure>
-<h3 id="你的-first-commit"><a href="#你的-first-commit" class="headerlink" title="你的 first commit"></a>你的 first commit</h3><p>按照约定我们先切分支,通过命令把项目切换到 dev 分支<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git checkout -b dev</div></pre></td></tr></table></figure></p>
-<p>然后 add 你的项目代码<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git add .</div></pre></td></tr></table></figure></p>
-<p>你的 first commit<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git commit -m <span class="string">":tada: init blog"</span></div></pre></td></tr></table></figure></p>
-<p>然后 push 你的代码到远程<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$  git push --set-upstream origin dev</div></pre></td></tr></table></figure></p>
-<h3 id="你的第一次博客发布"><a href="#你的第一次博客发布" class="headerlink" title="你的第一次博客发布"></a>你的第一次博客发布</h3><p>发布其实很简单的,我们之前也说是一个命令行发布的,所以你只要<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure></p>
-<p>然后你就可以看到一个属于你的 github.io 的网站了</p>
-<h2 id="改变你的博客网站主题"><a href="#改变你的博客网站主题" class="headerlink" title="改变你的博客网站主题"></a>改变你的博客网站主题</h2><p>个人比较推荐的是 next ,大量的留白,让你的博客看起来简洁大方,或则你喜欢其它的主题也行,你需要在你的博客文件夹里clone 下你需要的主题</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</div></pre></td></tr></table></figure>
-<p> 然后在 _config.yml 文件夹里修改你的主题配置</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ theme: next</div></pre></td></tr></table></figure>
-<p> 然后 hexo s 就能看到你修改的主题生效了,为了防止 clone 下来的主题文件和自己的博客文件冲突,我删除了clone 下来的 .git 文件.你再按照你的 first commit 的操作提交你的修改就行了,然后别忘记了 deploy</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -3326,7 +3623,7 @@ console.log("listen at http://localhost:9090")
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -3336,7 +3633,7 @@ console.log("listen at http://localhost:9090")
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
