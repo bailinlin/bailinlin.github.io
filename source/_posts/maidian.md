@@ -1,23 +1,23 @@
 ---
-title: 埋点的实现原理了解一下
+title: 埋点的实现原理了解一下么
 date: 2018-05-15 16:08:20
 tags: [埋点, javascript ]
 ---
 ### 前言
-埋点分析，是网站分析的一种常用的数据采集方法。我们主要用来采集用户行为数据（例如页面访问路径，点击了什么元素）进行数据分析，从而让运营同学更加合理的安排运营计划。现在市面上有很多第三方埋点服务商，百度统计，友盟，growingIO 等大家应该都不太陌生，大多情况下大家都只是使用，没有去研究埋点是怎么实现的，对埋点的实现也比较摸不到头脑，刚好我最近研究了下 web 埋点，你要不要了解下。
+埋点，是网站分析的一种常用的数据采集方法。我们主要用来采集用户行为数据（例如页面访问路径，点击了什么元素）进行数据分析，从而让运营同学更加合理的安排运营计划。现在市面上有很多第三方埋点服务商，百度统计，友盟，growingIO 等大家应该都不太陌生，大多情况下大家都只是使用，最近我研究了下 web 埋点，你要不要了解下。
 
 ### 现有埋点三大类型
 >用户行为分析是一个大系统，一个典型的数据平台。由用户数据采集，用户行为建模分析，可视化报表展示几个模块构成。现有的埋点采集方案可以大致被分为三种，手动埋点，可视化埋点，无埋点
 
 1. 手动埋点
     手动代码埋点比较常见，需要调用埋点的业务方在需要采集数据的地方调用埋点的方法。优点是流量可控，业务方可以根据需要在任意地点任意场景进行数据采集，采集信息也完全由业务方来控制。这样的有点也带来了一些弊端，需要业务方来写死方法，如果采集方案变了，业务方也需要重新修改代码，重新发布。
-2. 可视化埋点 //TODO 阿里埋点细节
-    可是化埋点是近今年的埋点趋势，很多大厂自己的数据埋点部门也都开始做这块。优点：前端没啥工作量，只要引用埋点脚本，甚至啥都不用做，缺点：技术上推广和实现起来有点难（大厂另当别论）。阿里的活动页很多都是运营通过可视化的界面拖拽配置实现，这些活动控件元素都带有唯一标识。通过埋点配置后台，将元素与要采集事件关联起来，可以自动生成埋点代码嵌入到页面中。
+2. 可视化埋点
+    可是化埋点是近今年的埋点趋势，很多大厂自己的数据埋点部门也都开始做这块。优点是业务方工作量少，缺点则是技术上推广和实现起来有点难（业务方前端代码规范是个大前提）。阿里的活动页很多都是运营通过可视化的界面拖拽配置实现，这些活动控件元素都带有唯一标识。通过埋点配置后台，将元素与要采集事件关联起来，可以自动生成埋点代码嵌入到页面中。
 3. 无埋点
-    无埋点则是前端自动采集全部事件，上报埋点数据，由后端来过滤和计算出有用的数据，优点：前端没有什么工作量，只要加载埋点脚本。缺点：流量和采集的数据过于庞大，服务器性能压力山大，GrowingIO 就是这种实现方案。
+    无埋点则是前端自动采集全部事件，上报埋点数据，由后端来过滤和计算出有用的数据，优点是前端只要加载埋点脚本。缺点是流量和采集的数据过于庞大，服务器性能压力山大，主流的 GrowingIO 就是这种实现方案。
 
 
-因为我们现有的业务上没有可以通过拖拽配置的控件，不同部门的同学也不会专门为了我们的埋点项目为每个元素上加上唯一标识，我们选择暂时放弃可视化埋点的实现。第一期我们在 `手动埋点` 和 `无埋点` 上进行了尝试，为了便于描述，下文我会称采集脚本为 SDK
+我们暂时放弃可视化埋点的实现，在 `手动埋点` 和 `无埋点` 上进行了尝试，为了便于描述，下文我会称采集脚本为 SDK。
 
 
 ### 思考几个问题
@@ -28,8 +28,8 @@ tags: [埋点, javascript ]
 2. 业务方通过什么方式来调用我们的采集脚本
 3. 手动埋点：SDK 需要封装一个方法给业务方进行调用，传参方式业务方可控
 4. 无埋点：考虑到数据量对于服务器的压力，我们需要对无埋点进行开关配置，可以配置进行哪些元素进行无埋点采集
-5. 用户标识：游客用户和登录用户的采集数据的区分及关联
-6. 设备Id：用户通过浏览器来访问 web 页面，设备Id需要存储在浏览器上，同一个用户访问不同的业务方网站，设备Id要保持一样
+5. 用户标识：游客用户和登录用户的采集数据怎么进行区分关联
+6. 设备Id：用户通过浏览器来访问 web 页面，设备Id需要存储在浏览器上，同一个用户访问不同的业务方网站，设备Id要保持一样，怎么实现
 7. 单页面应用：现在流行的单页面应用和普通 web 页面的数据采集是否有差异
 8. 混合应用：app 与 h5 的混合应用我们要怎么进行通讯
 
@@ -37,26 +37,26 @@ tags: [埋点, javascript ]
 
 #### 我们要采集什么内容，进行哪些采集接口的约定
 
-第一期我们先实现对 PV（即页面浏览量或点击量） 、UV（一天内同个访客多次访问） 、点击量、用户的访问路径的基础指标的采集，精细化分析的流量转化需要和业务相关，我们不做重点关注，但要预留扩展。所以我们的采集接口需要进行以下的约定
+第一期我们先实现对 PV（即页面浏览量或点击量） 、UV（一天内同个访客多次访问） 、点击量、用户的访问路径的基础指标的采集。精细化分析的流量转化需要和业务相关，需要和数据分析方做约定，我们预留扩展。所以我们的采集接口需要进行以下的约定
 
 <pre>
 
-{
-    "header":{ // HTTP 头部
-        "X-Device-Id":" 550e8400-e29b-41d4-a716-446655440000", //设备ID，用来区分用户设备
-		"X-Source-Url":"https://www.baidu.com/", //源地址，关联用户的整个操作流程，用于用户行为路径分析，例如登录，到首页，进入商品详情，退出这一整个完整的路径
-		"X-Current-Url":"", //当前地址，用户行为发生的页面
-		"X-User-Id":"",//用户ID，统计登录用户行为
-    },
-    "body":[{ // HTTP Body体
-        "PageSessionID":"", //页面标识ID，用来区分页面事件，例如加载和离开我们会发两个事件，这个标识可以让我们知道这个事件是发生在一个页面上
-        "Event":"loaded", //事件类型，区分用户行为事件
-        "PageTitle":  "埋点测试页",  //页面标题，直观看到用户访问页面
-        "CurrentTime":  “1517798922201”,  //事件发生的时间
-      	"ExtraInfo":  {
-     	 }    //扩展字段，对具体业务分析的传参
-	}]
-}
+    {
+        "header":{ // HTTP 头部
+            "X-Device-Id":" 550e8400-e29b-41d4-a716-446655440000", //设备ID，用来区分用户设备
+            "X-Source-Url":"https://www.baidu.com/", //源地址，关联用户的整个操作流程，用于用户行为路径分析，例如登录，到首页，进入商品详情，退出这一整个完整的路径
+            "X-Current-Url":"", //当前地址，用户行为发生的页面
+            "X-User-Id":"",//用户ID，统计登录用户行为
+        },
+        "body":[{ // HTTP Body体
+            "PageSessionID":"", //页面标识ID，用来区分页面事件，例如加载和离开我们会发两个事件，这个标识可以让我们知道这个事件是发生在一个页面上
+            "Event":"loaded", //事件类型，区分用户行为事件
+            "PageTitle":  "埋点测试页",  //页面标题，直观看到用户访问页面
+            "CurrentTime":  “1517798922201”,  //事件发生的时间
+            "ExtraInfo":  {
+             }    //扩展字段，对具体业务分析的传参
+        }]
+    }
 
 </pre>
 
@@ -64,17 +64,18 @@ tags: [埋点, javascript ]
 
 <pre>
 
-{
-    "header":{ // HTTP 头部
-          "X-Device-Id"  ："550e8400-e29b-41d4-a716-446655440000"  ,      //  设备id
-    },
-    "body":{ // HTTP Body体
-              "DeviceType":  "web" ,   //设备类型
-             "ScreenWide"  :  768 , //  屏幕宽
-             "ScreenHigh":  1366 , //  屏幕高
-             "Language":    "zh-cn"  //语言
-	}
-}
+    {
+        "header":{ // HTTP 头部
+              "X-Device-Id"  ："550e8400-e29b-41d4-a716-446655440000"  ,      //  设备id
+        },
+        "body":{ // HTTP Body体
+                  "DeviceType":  "web" ,   //设备类型
+                 "ScreenWide"  :  768 , //  屏幕宽
+                 "ScreenHigh":  1366 , //  屏幕高
+                 "Language":    "zh-cn"  //语言
+        }
+    }
+
 </pre>
 
 #### 业务方通过什么方式来调用我们的采集脚本
@@ -185,20 +186,15 @@ window 的 history 对象 提供了两个方法，能够无刷新的修改用户
      // 改写思路：拷贝 window 默认的 replaceState 函数，重写 history.replaceState 在方法里插入我们的采集行为，在重写的 replaceState 方法最后调用，window 默认的 replaceState 方法
 
         collect = {}
-
         collect.onPushStateCallback : function(){}  // 自定义的采集方法
 
         (function(history){
-
             var replaceState = history.replaceState;   // 存储原生 replaceState
-
             history.replaceState = function(state, param) {     // 改写 replaceState
                var url = arguments[2];
-
                if (typeof collect.onPushStateCallback == "function") {
                      collect.onPushStateCallback({state: state, param: param, url: url});   //自定义的采集行为方法
                }
-
                return replaceState.apply(history, arguments);    // 调用原生的 replaceState
             };
          })(window.history);
@@ -242,10 +238,136 @@ window 的 history 对象 提供了两个方法，能够无刷新的修改用户
 3. SDK 的基本实现思路
 ![nginx作用域](/images/sdk/logic.jpeg)
 
+### 我们来看下几个核心代码的实现
 
-### 去 github 上看代码吗
+#### 工具方法
 
-> 代码的篇幅比较长，就不放在博客里了，感兴趣的同学可以在 github 上看完整的项目。如果你有什么不懂的或者想和我交流的，欢迎在文章下面留言联系我
+我们定义了几个工具方法，提高开发的幸福指数 😝
+
+<pre>
+
+        var helper = {};
+
+        // 生成一个唯一的标识，pageSessionId （用这个变量来关联开始加载、加载完成、离开页面的事件，计算出页面加菜时间，停留时间）
+        helper.uuid = function(){}
+
+        // 元素绑定事件监听，兼容浏览器到IE8
+        helper.on = function(){}
+
+        //元素移除事件监听的适配器函数，兼容浏览器到IE8
+        helper.remove = function(){}
+
+        //将json转为字符串,事件传输的参数类型转化
+        helper.changeJSON2Query = function(){}
+
+        //将相对路径解析成文档全路径
+        helper.normalize = function(){}
+</pre>
+
+#### 采集逻辑
+
+<pre>
+
+        var collect = {
+            deviceUrl:'http://collect.trc.com/rest/collect/device/h5/v1',
+            eventUrl:'http://collect.trc.com/rest/collect/event/h5/v1',
+            isuploadUrl:'http://collect.trc.com/rest/collect/isupload/app/v1',
+            parmas:{ ExtraInfo:{} },
+            device:{}
+        };
+
+        //获取埋点配置
+        collect.setParames = function(){}
+
+        //更新访问路径及页面信息
+        collect.updatePageInfo = function(){}
+
+        //获取事件参数
+        collect.getParames = function(){}
+
+        //获取设备信息
+        collect.getDevice = function(){}
+
+        //事件采集
+        collect.send = function(){}
+
+        //设备采集
+        collect.sendDevice = function(){}
+
+        //判断才否采集，埋点采集的开关
+        collect.isupload = function(){
+
+            1. 判断是否采集，不采集就注销事件监听（项目中区分游客身份和用户身份的采集情况，这个方法会被判断两次）
+            2. 采集则判断是否已经采集过
+                a.已经采集过不做任何操作
+                b.没有采集过添加事件监听
+            3. 判断是 混合应用还是纯 web 应用
+                a.如果是web 应用，调用 collect.setIframe 设置 iframe
+                b.如果是混合应用 将开始加载和加载完成事件传输给 app
+        }
+
+        //点击事件处理函数
+        collect.clickHandler = function(){}
+
+        //离开页面的事件处理函数
+        collect.beforeUnloadHandler = function(){}
+
+        //页面回退事件处理函数
+        collect.onPopStateHandler = function(){}
+
+        //系统事件初始化，注册离开事件，浏览器后退事件
+        collect.event = function(){}
+
+        //获取记录开始加载数据信息
+        collect.getBeforeload = function(){}
+
+        //存储加载完成，获取设备类型，记录加载完成信息
+        collect.onload = function(){
+
+            1. 判断cookie是否有存设备类型信息，有表示混合应用
+            2. 采集加载完成时间等信息
+            3. 调用 collect.isupload 判断是否进行采集
+        }
+
+        //web 应用，通过嵌入 iframe 进行跨域 cookie 通讯，设置设备id
+        collect.setIframe = function(){}
+
+        //app 与 h5 混合应用，直接将数信息发给 app,判断设备类型做原生方法适配器
+        collect.saveEvent = function(){}
+
+        //采集自定义事件类型
+        collect.dispatch = function(){}
+
+        //将参数 userId 存入sessionStorage
+        collect.storeUserId = function(){}
+
+        //采集H5信息,如果是混合应用，将采集到的信息发送给 app 端
+        collect.saveEventInfo = function(){}
+
+        //页面初始化调用方法
+        collect.init = function(){
+
+            1. 获取开始加载的采集信息
+            2. 获取 SDK 配置信息，设备信息
+            3. 改写 history 两个方法，单页面应用页面跳转前调用我们自己的方法
+            4. 页面加载完成，调用 collect.onload 方法
+
+        }
+
+
+        collect.init(); // 初始化
+
+        //暴露给业务方调用的方法
+        return {
+            dispatch:collect.dispatch,
+            storeUserId:collect.storeUserId,
+        }
+</pre>
+
+
+### 扩展
+
+> 代码的篇幅比较长，就不放在博客里了，感兴趣的同学可以在 [github](https://github.com/bailinlin/web-sdk) 上看完整的项目。如果你有什么不懂的或者想和我交流的，欢迎在文章下面留言联系我
 
 [web 浏览器指纹跨域共享](https://bailinlin.github.io/2018/03/05/cookie-share/)
 [你需要知道的单页面路由实现原理](https://bailinlin.github.io/2018/04/28/history/)
