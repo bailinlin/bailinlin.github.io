@@ -239,6 +239,203 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/05/28/javascript1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/28/javascript1/" itemprop="url">
+                  精度《你不知道的javascript》上卷
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-28T14:04:36+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/05/28/javascript1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/05/28/javascript1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>《你不知道的 javascript》是一个前端学习必读的系列，让不求甚解的JavaScript开发者迎难而上，深入语言内部，弄清楚JavaScript每一个零部件的用途。本书介绍了该系列的两个主题：“作用域和闭包”以及“this和对象原型”。这两块也是值得我们反复去学习琢磨的两块只是内容，今天我们用思维导图的方式来精读一遍。（思维导图图片可能有点小，记得点开看，你会有所收获）</p>
+<h3 id="第一部分-作用域和闭包"><a href="#第一部分-作用域和闭包" class="headerlink" title="第一部分 作用域和闭包"></a>第一部分 作用域和闭包</h3><h4 id="作用域是什么"><a href="#作用域是什么" class="headerlink" title="作用域是什么"></a>作用域是什么</h4><p><img src="/images/javascript/part1/zyy.jpeg" alt="this"></p>
+<p>作用域是一套规则,用于确定在何处以及如何查找变量(标识符)。如果查找的目的是对 变量进行赋值,那么就会使用 LHS 查询;如果目的是获取变量的值,就会使用 RHS 查询。赋值操作符会导致 LHS 查询。 的赋值操作。 =操作符或调用函数时传入参数的操作都会导致关联作用域的赋值操作。<br>JavaScript 引擎首先会在代码执行前对其进行编译,在这个过程中,像 var a = 2 这样的声 明会被分解成两个独立的步骤：</p>
+<ol>
+<li>首先, var a 在其作用域中声明新变量。这会在最开始的阶段,也就是代码执行前进行。</li>
+<li>接下来, a = 2 会查询(LHS 查询)变量 a 并对其进行赋值。</li>
+</ol>
+<p>LHS 和 RHS 查询都会在当前执行作用域中开始,如果有需要(也就是说它们没有找到所 需的标识符),就会向上级作用域继续查找目标标识符,这样每次上升一级作用域(一层 楼),最后抵达全局作用域(顶层),无论找到或没找到都将停止。</p>
+<p>不成功的RHS引用会导致抛出 ReferenceError 异常。不成功的 LHS 引用会导致自动隐式地创建一个全局变量(非严格模式下),该变量使用 LHS 引用的目标作为标识符,或者抛 出 ReferenceError 异常(严格模式下)。</p>
+<h4 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h4><p><img src="/images/javascript/part1/cfzyy.jpeg" alt="this"></p>
+<p>词法作用域意味着作用域是由书写代码时函数声明的位置来决定的。编译的词法分析阶段 基本能够知道全部标识符在哪里以及是如何声明的,从而能够预测在执行过程中如何对它 们进行查找。</p>
+<p>JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 with 。 前者可以对一段包 含一个或多个声明的“代码”字符串进行演算,并借此来修改已经存在的词法作用域(在 运行时)。后者本质上是通过将一个对象的引用 当作 作用域来处理,将对象的属性当作作 用域中的标识符来处理,从而创建了一个新的词法作用域(同样是在运行时)。</p>
+<p>这两个机制的副作用是引擎无法在编译时对作用域查找进行优化,因为引擎只能谨慎地认 为这样的优化是无效的。使用这其中任何一个机制都 将 导致代码运行变慢。 不要使用它们。</p>
+<h4 id="函数作用域和块作用域"><a href="#函数作用域和块作用域" class="headerlink" title="函数作用域和块作用域"></a>函数作用域和块作用域</h4><p><img src="/images/javascript/part1/hszyyhkzyy.jpeg" alt="this"></p>
+<p>函数是 JavaScript 中最常见的作用域单元。本质上,声明在一个函数内部的变量或函数会 在所处的作用域中“隐藏”起来,这是有意为之的良好软件的设计原则。</p>
+<p>但函数不是唯一的作用域单元。块作用域指的是变量和函数不仅可以属于所处的作用域, 也可以属于某个代码块(通常指 { .. } 内部)。</p>
+<p>从 ES3 开始, try/catch 结构在 catch 分句中具有块作用域。在 ES6 中引入了 let 关键字( var 关键字的表亲), 用来在任意代码块中声明变量。 if(..) { let a = 2; } 会声明一个劫持了 if 的 { .. } 块的变量,并且将变量添加到这个块 中。</p>
+<p>有些人认为块作用域不应该完全作为函数作用域的替代方案。两种功能应该同时存在,开 发者可以并且也应该根据需要选择使用何种作用域,创造可读、可维护的优良代码。</p>
+<h4 id="提升"><a href="#提升" class="headerlink" title="提升"></a>提升</h4><p><img src="/images/javascript/part1/ts.jpeg" alt="this"></p>
+<p>我们习惯将 var a = 2; 看作一个声明,而实际上 JavaScript 引擎并不这么认为。它将 var a 和 a = 2 当作两个单独的声明,第一个是编译阶段的任务,而第二个则是执行阶段的任务。</p>
+<p>这意味着无论作用域中的声明出现在什么地方,都将在代码本身被执行前 首先 进行处理。 可以将这个过程形象地想象成所有的声明(变量和函数)都会被“移动”到各自作用域的最顶端,这个过程被称为提升。</p>
+<p>声明本身会被提升,而包括函数表达式的赋值在内的赋值操作并不会提升。</p>
+<p>要注意避免重复声明,特别是当普通的 var 声明和函数声明混合在一起的时候,否则会引 起很多危险的问题!</p>
+<h4 id="作用域闭包"><a href="#作用域闭包" class="headerlink" title="作用域闭包"></a>作用域闭包</h4><p><img src="/images/javascript/part1/zyybb.jpeg" alt="this"></p>
+<p>闭包就好像从 JavaScript 中分离出来的一个充满神秘色彩的未开化世界,只有最勇敢的人 才能够到达那里。但实际上它只是一个标准,显然就是关于如何在函数作为值按需传递的 词法环境中书写代码的。</p>
+<p>当函数可以记住并访问所在的词法作用域,即使函数是在当前词法作用域之外执行,这时 就产生了闭包。</p>
+<p>如果没能认出闭包,也不了解它的工作原理,在使用它的过程中就很容易犯错,比如在循 环中。但同时闭包也是一个非常强大的工具,可以用多种形式来实现 模块 等模式。模块有两个主要特征:</p>
+<p>(1)为创建内部作用域而调用了一个包装函数;<br>(2)包装函数的返回 值必须至少包括一个对内部函数的引用,这样就会创建涵盖整个包装函数内部作用域的闭 包。</p>
+<p>现在我们会发现代码中到处都有闭包存在,并且我们能够识别闭包然后用它来做一些有用 的事!</p>
+<h3 id="第二部分-this-和对象原型"><a href="#第二部分-this-和对象原型" class="headerlink" title="第二部分 this 和对象原型"></a>第二部分 this 和对象原型</h3><h4 id="this-全面解析"><a href="#this-全面解析" class="headerlink" title="this 全面解析"></a>this 全面解析</h4><p><img src="/images/javascript/part2/this.jpeg" alt="this"></p>
+<p>如果要判断一个运行中函数的 this 绑定,就需要找到这个函数的直接调用位置。找到之后 就可以顺序应用下面这四条规则来判断 this 的绑定对象。</p>
+<ol>
+<li><p>由 new 调用?绑定到新创建的对象。</p>
+</li>
+<li><p>由 call 或者 apply (或者 bind )调用?绑定到指定的对象。</p>
+</li>
+<li><p>由上下文对象调用?绑定到那个上下文对象。</p>
+</li>
+<li><p>默认:在严格模式下绑定到 undefined ,否则绑定到全局对象。</p>
+</li>
+</ol>
+<p>一定要注意,有些调用可能在无意中使用默认绑定规则。如果想“更安全”地忽略 this 绑 定,你可以使用一个 DMZ 对象,比如 ø = Object.create(null) ,以保护全局对象。ES6中的箭头函数并不会使用四条标准的绑定规则, 而是根据当前的词法作用域来决定 this ,具体来说,箭头函数会继承外层函数调用的 this 绑定(无论 this 绑定到什么)。这 其实和 ES6 之前代码中的 self = this 机制一样。</p>
+<h4 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h4><p><img src="/images/javascript/part2/dx.jpeg" alt="this"></p>
+<p>JavaScript 中的对象有字面形式(比如 var a = { .. } )和构造形式(比如 var a = new Array(..) )。字面形式更常用,不过有时候构造形式可以提供更多选项。</p>
+<p>许多人都以为“JavaScript 中万物都是对象”,这是错误的。对象是 6 个(或者是 7 个,取 决于你的观点)基础类型之一。对象有包括 function 在内的子类型,不同子类型具有不同 的行为,比如内部标签 [object Array] 表示这是对象的子类型数组。</p>
+<p>对象就是键 / 值对的集合。可以通过 .propName 或者 [“propName”] 语法来获取属性值。访 问属性时, 引擎实际上会调用内部的默认 [[Get]] 操作(在设置属性值时是 [[Put]] ), [[Get]] 操作会检查对象本身是否包含这个属性,如果没找到的话还会查找 [[Prototype]] 链(参见第 5 章)。</p>
+<p>属性的特性可以通过属性描述符来控制,比如 writable 和 configurable 。此外,可以使用 Object.preventExtensions(..) 、 Object.seal(..) 和 Object.freeze(..) 来设置对象(及其 属性)的不可变性级别。</p>
+<p>属性不一定包含值——它们可能是具备 getter/setter 的“访问描述符”。此外,属性可以是 可枚举或者不可枚举的,这决定了它们是否会出现在 for..in 循环中。</p>
+<p>你可以使用 ES6 的 for..of 语法来遍历数据结构(数组、对象, 等等)中的值, for..of 会寻找内置或者自定义的 @@iterator 对象并调用它的 next() 方法来遍历数据值。</p>
+<h4 id="混合对象”类”"><a href="#混合对象”类”" class="headerlink" title="混合对象”类”"></a>混合对象”类”</h4><p><img src="/images/javascript/part2/hhdxl.jpeg" alt="this"></p>
+<p>类是一种设计模式。 许多语言提供了对于面向类软件设计的原生语法。 JavaScript 也有类 似的语法,但是和其他语言中的类完全不同。</p>
+<p>类意味着复制。</p>
+<p>传统的类被实例化时,它的行为会被复制到实例中。类被继承时,行为也会被复制到子类 中。</p>
+<p>多态(在继承链的不同层次名称相同但是功能不同的函数)看起来似乎是从子类引用父 类,但是本质上引用的其实是复制的结果。</p>
+<p>JavaScript 并不会(像类那样)自动创建对象的副本。</p>
+<p>混入模式(无论显式还是隐式)可以用来模拟类的复制行为,但是通常会产生丑陋并且脆 弱的语法,比如显式伪多态( OtherObj.methodName.call(this, …) ),这会让代码更加难 懂并且难以维护。</p>
+<p>此外, 显式混入实际上无法完全模拟类的复制行为, 因为对象(和函数!别忘了函数也 是对象)只能复制引用, 无法复制被引用的对象或者函数本身。 忽视这一点会导致许多 问题。</p>
+<p>总地来说,在 JavaScript 中模拟类是得不偿失的,虽然能解决当前的问题,但是可能会埋下更多的隐患。</p>
+<h4 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h4><p><img src="/images/javascript/part2/yx1.jpeg" alt="this"><br><img src="/images/javascript/part2/yx2.jpeg" alt="this"></p>
+<p>如果要访问对象中并不存在的一个属性, [[Get]] 操作(参见第 3 章)就会查找对象内部 [[Prototype]] 关联的对象。这个关联关系实际上定义了一条“原型链”(有点像嵌套的作用域链),在查找属性时会对它进行遍历。</p>
+<p>所有普通对象都有内置的 Object.prototype ,指向原型链的顶端(比如说全局作用域),如 果在原型链中找不到指定的属性就会停止。 toString() 、 valueOf() 和其他一些通用的功能 都存在于 Object.prototype 对象上,因此语言中所有的对象都可以使用它们。</p>
+<p>关联两个对象最常用的方法是使用 new 关键词进行函数调用, 在调用的 章)中会创建一个关联其他对象的新对象。4个步骤(第2章)中会创建一个关联其他对象的新对象。</p>
+<p>使用 new 调用函数时会把新对象的 .prototype 属性关联到“其他对象”。带 new 的函数调用 通常被称为“构造函数调用”,尽管它们实际上和传统面向类语言中的 类构造函数 不一样。</p>
+<p>JavaScript 是 中的机制有一个核心区别, 那就是不会进行复制, 对象之间是通过内部的</p>
+<p>虽然这些 机制和传统面向类语言中的“类初始化”和“类继承”很相似, 但是  javascript 机制和传统面向对象类语言中的“类初始化”和“类继承”很相似但是 javascript 中的机制有一个核心区别，就是不会进行复制，对象之间是通过内部的 [[Prototype]] 链关联的。</p>
+<p>出于各种原因,以“继承”结尾的术语(包括“原型继承”)和其他面向对象的术语都无 法帮助你理解 JavaScript 的 真实 机制(不仅仅是限制我们的思维模式)。</p>
+<p>相比之下,“委托”是一个更合适的术语,因为对象之间的关系不是 复制 而是委托。</p>
+<h4 id="行为委托"><a href="#行为委托" class="headerlink" title="行为委托"></a>行为委托</h4><p><img src="/images/javascript/part2/xwwt.jpeg" alt="this"></p>
+<p>在软件架构中你可以 选择是否 使用类和继承设计模式。大多数开发者理所当然地认为类是 唯一(合适)的代码组织方式,但是本章中我们看到了另一种更少见但是更强大的设计模式: 行为委托 。</p>
+<p>行为委托认为对象之间是兄弟关系, 互相委托, 而不是父类和子类的关系。 JavaScript 的 [[Prototype]] 机制本质上就是行为委托机制。也就是说,我们可以选择在 JavaScript 中努 力实现类机制(参见第 4 和第 5 章),也可以拥抱更自然的 [[Prototype]] 委托机制。</p>
+<p>当你只用对象来设计代码时,不仅可以让语法更加简洁,而且可以让代码结构更加清晰。</p>
+<p>对象关联(对象之前互相关联)是一种编码风格,它倡导的是直接创建和关联对象,不把 它们抽象成类。对象关联可以用基于 [[Prototype]] 的行为委托非常自然地实现。</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>思维导图能比较清晰的还原整本书的知识结构体系，如果你还没用看过这本书，可以按照这个思维导图的思路快速预习一遍，提高学习效率。学习新事物总容易遗忘，我比较喜欢在看书的时候用思维导图做些记录，便于自己后期复习，如果你已经看过了这本书，也建议你收藏复习。如果你有神马建议或则想法，欢迎留言或加我微信交流：646321933</p>
+<p><a href="https://www.kancloud.cn/kancloud/you-dont-know-js-this-object-prototypes/516674" target="_blank" rel="external">你不知道的javascript上卷第二部分在线文档</a><br><a href="https://github.com/threerocks/studyFiles/blob/master/js/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript%EF%BC%88%E4%B8%8A%E5%8D%B7%EF%BC%89.pdf" target="_blank" rel="external">你不知道的 javascript（上卷）PDF 下载地址</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/05/15/maidian/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3391,193 +3588,6 @@ console.log("listen at http://localhost:9090")
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2016/11/01/learn-wxapp/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/01/learn-wxapp/" itemprop="url">
-                  你需要知道的小程序开发基础
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-01T20:38:15+08:00">
-                2016-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/11/01/learn-wxapp/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/01/learn-wxapp/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>微信小程序出来已有段时间，虽还在内测阶段。利用空闲时间，我把蜂贷微信项目部分迁移到小程序上。</p>
-<p>##1.目录结构</p>
-<p>   小程序的主体由三个文件组成，这三个文件要放在项目的根目录下，分别是</p>
-<ol>
-<li>app.js 配置小程序的逻辑</li>
-<li>app.json 公共设置</li>
-<li><p>app.wxss 公共样式</p>
-<p>小程序可以自定义 page，但是 page 需要在 app.json 中做出声明，不然IDE会报错，找不到页面。小程序的页面由四个文件组成，分别是</p>
-</li>
-<li><p>.js文件 页面逻辑</p>
-</li>
-<li>.wxml 视图层文件，页面结构</li>
-<li>.wxss 样式文件，页面样式表</li>
-<li>.json 文件，配置文件，页面配置</li>
-</ol>
-<h2 id="2-小程序配置"><a href="#2-小程序配置" class="headerlink" title="2.小程序配置"></a>2.小程序配置</h2><p>app.json 决定页面文件的路径、窗口表现、设置网络超时时间、设置多少 tab 。</p>
-<p>在 pages 对象里定义页面路径，pages 接受由字符串组成的数组，pages数组的第一个元素就是小程序的首页。</p>
-<ol>
-<li>window 用于设置小程序的状态栏、导航条、标题、窗口背景色。</li>
-<li>tabBar 配置项指定 tab 栏的表现，以及 tab 切换时显示的对应页面。</li>
-<li>networkTimeout 用来设置各种网络请求超时时间</li>
-<li>debug 是布尔类型，用来配置是否在开发者工具中开启 debug 模式</li>
-</ol>
-<h2 id="3-小程序视图"><a href="#3-小程序视图" class="headerlink" title="3.小程序视图"></a>3.小程序视图</h2><p>在小程序中，你不能继续用 html 中的标签来构造你的页面，MANA 框架有特定的容器组件，view，scroll-view  以及 swiper。</p>
-<ol>
-<li>view 是视图容器，类似于 html 中的 div ，但是不同的是，用 view 包裹的内容，在超出设备窗口的时候，它实现的效果如 css 样式设置的 overflow：hidden</li>
-<li>如果你需要实现类似通讯录或则聊天列表的滚动效果，你需要使用 scroll-view 滚动容器组件，它实现的效果如 css 样式设置的 overflow:scroll 。</li>
-<li>swiper 是滑块视图组件，如果你要实现类似轮播图的效果的话，他是你的不二之选，你能通过属性配置来控制是否显示圆点，是否自动播放，切换时间，以及切换间隔时间等。<br>小程序的MANA也实现了数据的绑定，写法类似于 Angular 和 Vue，通过双括号的形式 如： 即可，值得注意的是，如果你写在容器（为了便于描述和理解，下文会以标签来描述）于之间的话，你直接把变量写在双括号里即可，如：<view></view> ，但是如果你给标签的属性绑定变量，你需要将双括号放在双引号内，如：<view wx:if="””&gt;</view">,类似于Angular 和 Vue，你也能在双括号内进行简单的运算，如：<view hidden="”{flag?true:false}”"></view>。</view></li>
-</ol>
-<p>细心的同学可能发现了在介绍数据绑定的时候我们用了wx:if  的属性，这是 MANA 提供的条件渲染，通过判断 wx:if 传布尔值（非布尔类型进行隐士转化）来控制是否渲染标签中的内容。在 MANA 中还有一个属性能控制内容的显隐，不同的是，wx:if 只有在为 true 的时候才回去渲染标签中的内容，而 hidden 始终会渲染内容，只是根据条件来控制内容的显示与否。</p>
-<p>此外MANA 也为我们提供了较为实用的列表渲染，wx:for 接受一个数组,在页面中能根据数组中的值来渲染页面列表</p>
-<p>除了使用列表渲染来复用一块视图外，你还可以通过模版来进行复用，你能在 template 中定义一块代码片段，然后在不同的页面中引用，如：</p>
-<pre><code>&lt;template name=&quot;odd&quot;&gt;
-  &lt;view&gt; odd &lt;/view&gt;
-&lt;/template&gt;
-&lt;template name=&quot;even&quot;&gt;
-  &lt;view&gt; even &lt;/view&gt;
-&lt;/template&gt;
-
-&lt;block wx:for=&quot;{{[1, 2, 3, 4, 5]}}&quot;&gt;
-    &lt;template is=&quot;{{item % 2 == 0 ? 'even' : 'odd'}}&quot;/&gt;
-&lt;/block&gt;
-</code></pre><p>除了 template 外，MANA 还提供了另外两种方式来进行应用和复用，import 和 include ，import 有作用域的概念，他只会引用目标文件中定义的模版。include可以将目标文件除了<template>的整个代码引入，相当于是拷贝到include位置上。</template></p>
-<p>除MANA 同样也定义了常用的事件分类，如</p>
-<ol>
-<li>touchstart 手指触摸动作开始</li>
-<li>touchmove 手指触摸后移动</li>
-<li>touchcancel 手指触摸动作被打断，如来电提醒，弹窗</li>
-<li>touchend 手指触摸动作结束</li>
-<li>tap 手指触摸后马上离开</li>
-<li>longtap 手指触摸后，超过350ms再离开<h2 id="4-组件样式"><a href="#4-组件样式" class="headerlink" title="4.组件样式"></a>4.组件样式</h2></li>
-</ol>
-<p>定义在 app.wxss 中的样式为全局样式，作用于每一个页面。在 page 的 wxss 文件中定义的样式为局部样式，只作用在对应的页面，并会覆盖 app.wxss 中相同的选择器。如果你写过 css ，那你就能轻松驾驭 wxss,wxss 在选择器上做了限制，目前支持的选择器有：</p>
-<ol>
-<li>.class 如：.intro    选择所有拥有 class=”intro” 的组件</li>
-<li><code>#id</code> 如：<code>#firstname</code>    选择拥有 id=”firstname” 的组件</li>
-<li>element  如：    view    选择所有 view 组件</li>
-<li>element, 如： element    view checkbox    选择所有文档的 view 组件和所有的 checkbox 组件</li>
-<li>::after     如：view::after    在 view 组件后边插入内容</li>
-<li>::before     如：view::before    在 view 组件前边插入内容</li>
-</ol>
-<p>开发过移动端的前端er 都知道，苹果手机有物理像素和逻辑像素的区别，比如设备的像素是350px，设计稿的像素是750px；一般在开发过程中，我们会使用自动化构建工具去做像素转化，或则是使用预处理器定义像素转化函数进行处理，在小程序的开发中，大可不必这么麻烦，小程序提供了一个 rpx 的单位，你可以直接写上你在设计稿中测量的数值即可，小程序开发工具在编译过程中会自动帮你做转换。</p>
-<p>在下次小程序分享《小程序开发踩坑（二）》的时候，会教大家如何与后端进行数据交互，欢迎感兴趣的小伙伴订阅博客。</p>
-<p><img src="/img/bVEXHS" alt="蜂贷微信端"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -3623,7 +3633,7 @@ console.log("listen at http://localhost:9090")
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -3633,7 +3643,7 @@ console.log("listen at http://localhost:9090")
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
