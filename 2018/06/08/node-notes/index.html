@@ -1,0 +1,715 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,思维导图,node," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精读《深入浅出Node.js》">
+<meta property="og:url" content="https://bailinlin.github.com/2018/06/08/node-notes/index.html">
+<meta property="og:site_name" content="白霸天的博客">
+<meta property="og:description" content="前言如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过N">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf797e5ca946?w=1087&h=694&f=jpeg&s=112844">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf7beac28eea?w=1088&h=445&f=jpeg&s=39820">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf7f53fdae09?w=1180&h=393&f=jpeg&s=36439">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf823d7036bf?w=1180&h=734&f=jpeg&s=141761">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf850d0a355e?w=1183&h=745&f=jpeg&s=164967">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf8757804e03?w=1180&h=527&f=jpeg&s=80154">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de079a7e88a57?w=1193&h=658&f=jpeg&s=118066">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfd11745edcd?w=1383&h=613&f=jpeg&s=152907">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdac0a96cb2?w=1399&h=495&f=jpeg&s=102103">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdd1303d454?w=1406&h=853&f=jpeg&s=174451">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe11d4c18bf?w=1300&h=652&f=jpeg&s=146539">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe348e932ee?w=1299&h=605&f=jpeg&s=122392">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe55087601b?w=1298&h=432&f=jpeg&s=78207">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe98fb8c9f0?w=1533&h=851&f=jpeg&s=223698">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfeb90a7b4da?w=1359&h=666&f=jpeg&s=143355">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfed8f83f59e?w=1358&h=637&f=jpeg&s=135994">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddfef9f26bd46?w=1361&h=540&f=jpeg&s=99116">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddff1c8ff5a06?w=1369&h=888&f=jpeg&s=177861">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddff418f4c4fb?w=1398&h=795&f=jpeg&s=140972">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddff6116649da?w=1181&h=743&f=jpeg&s=82401">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddff80146b539?w=1303&h=512&f=jpeg&s=125278">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddffa1aadabca?w=1235&h=703&f=jpeg&s=82074">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddffdefa50b13?w=1067&h=809&f=jpeg&s=87670">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de00028a10fe2?w=1401&h=841&f=jpeg&s=148561">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de002c49d1e0b?w=1300&h=863&f=jpeg&s=125172">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de00594223971?w=1309&h=234&f=jpeg&s=34731">
+<meta property="og:updated_time" content="2018-06-08T06:31:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="精读《深入浅出Node.js》">
+<meta name="twitter:description" content="前言如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过N">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163ddf797e5ca946?w=1087&h=694&f=jpeg&s=112844">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://bailinlin.github.com/2018/06/08/node-notes/"/>
+
+
+
+
+
+  <title> 精读《深入浅出Node.js》 | 白霸天的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">白霸天的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/08/node-notes/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                精读《深入浅出Node.js》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-08T14:04:36+08:00">
+                2018-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/06/08/node-notes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/08/node-notes/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过Node 构建产品需要的注意事项。最后的附录介绍了Node 的安装、调试、编码规范和NPM 仓库等事宜。在读这本书的过程中我收获颇多，并用思维导图的方式记录下来，方便自己后期温故。如果你刚好没有读过，可以当做度这本书的预习阅读，相信你也会有所收获（思维导图图片可能有点小，记得点开看）</p>
+<h3 id="第1章-Node简介"><a href="#第1章-Node简介" class="headerlink" title="第1章　Node简介"></a>第1章　Node简介</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf797e5ca946?w=1087&amp;h=694&amp;f=jpeg&amp;s=112844" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf7beac28eea?w=1088&amp;h=445&amp;f=jpeg&amp;s=39820" alt=""></p>
+<h3 id="第2章-模块机制"><a href="#第2章-模块机制" class="headerlink" title="第2章　模块机制"></a>第2章　模块机制</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf7f53fdae09?w=1180&amp;h=393&amp;f=jpeg&amp;s=36439" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf823d7036bf?w=1180&amp;h=734&amp;f=jpeg&amp;s=141761" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf850d0a355e?w=1183&amp;h=745&amp;f=jpeg&amp;s=164967" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf8757804e03?w=1180&amp;h=527&amp;f=jpeg&amp;s=80154" alt=""><br>CommonJS提出的规范均十分简单,但是现实意义却十分强大。Node通过模块规范,组织了 自身的原生模块,弥补JavaScript弱结构性的问题,形成了稳定的结构,并向外提供服务。NPM 通过对包规范的支持,有效地组织了第三方模块,这使得项目开发中的依赖问题得到很好的解决, 并有效提供了分享和传播的平台,借助第三方开源力量,使得Node第三方模块的发展速度前所未 有,这对于其他后端JavaScript语言实现而言是从未有过的。从一定的角度上讲,CommonJS规范 帮助Node形成了它的骨骼。只有茁壮的根,才能培养出茂盛的枝叶,并成长为参天大树。正是这 些底层的规范和实践,使得Node有序地发展着,摆脱掉过去JavaScript纷乱和被误解的局面,进 而进化成良性的生态系统。</p>
+<h3 id="第3章-异步I-O"><a href="#第3章-异步I-O" class="headerlink" title="第3章　异步I/O"></a>第3章　异步I/O</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de079a7e88a57?w=1193&amp;h=658&amp;f=jpeg&amp;s=118066" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfd11745edcd?w=1383&amp;h=613&amp;f=jpeg&amp;s=152907" alt=""><br>本章介绍了异步I/O和另一些非I/O的异步方法。可以看出,事件循环是异步实现的核心,它 与浏览器中的执行模型基本保持了一致。而像古老的Rhino,尽管是较早就能在服务器端运行的 JavaScript运行时,但是执行模型并不像浏览器采用事件驱动,而是像其他语言一般采用同步I/O 作为主要模型,这造成它在性能上无所发挥。Node正是依靠构建了一套完善的高性能异步I/O框 架,打破了JavaScript在服务器端止步不前的局面。</p>
+<h3 id="第4章-异步编程"><a href="#第4章-异步编程" class="headerlink" title="第4章　异步编程"></a>第4章　异步编程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdac0a96cb2?w=1399&amp;h=495&amp;f=jpeg&amp;s=102103" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdd1303d454?w=1406&amp;h=853&amp;f=jpeg&amp;s=174451" alt=""><br>在接触Node的过程中,很多人粗略地接触了几个回调函数之后就放弃了。尽管异步编程略微 艰难,但是并非一无是处,一旦习惯,就显得自然。从社区和过往的经验而言,JavaScript异步编 程的难题已经基本解决,无论是通过事件,还是通过Promise/Deferred模式,或者流程控制库。相 信在掌握以上技巧之后,异步编程不是难事,习惯异步编程之后,将会收获许多值得享受的编程 体验。</p>
+<p>本章主要介绍了主流的几种异步编程解决方案,这是目前JavaScript中主要使用的方案。但对 于其他语言而言,还有协程(coroutine)等方式。但是由于Node基于V8的原因,在目前EMCAScript5 的实现下还不支持协程。这些标准和规范还在制定中,所以暂时不作介绍。未来的V8如果支持 Generator,也将在Node中能直接使用。</p>
+<p>最后,因为人们总是习惯性地以线性的方式进行思考,以致异步编程相对较为难以掌握。这 个世界以异步运行的本质是不会因为大家线性思维的惯性而改变。就像日出月落不会因为你的心 情而改变其自有的运行轨迹。</p>
+<h3 id="第5章-内存控制"><a href="#第5章-内存控制" class="headerlink" title="第5章　内存控制"></a>第5章　内存控制</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe11d4c18bf?w=1300&amp;h=652&amp;f=jpeg&amp;s=146539" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe348e932ee?w=1299&amp;h=605&amp;f=jpeg&amp;s=122392" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe55087601b?w=1298&amp;h=432&amp;f=jpeg&amp;s=78207" alt=""></p>
+<p>Node将JavaScript的主要应用场景扩展到了服务器端,相应要考虑的细节也与浏览器端不同, 需要更严谨地为每一份资源作出安排。总的来说,内存在Node中不能随心所欲地使用,但也不是 完全不擅长。本章介绍了内存的各种限制,希望读者可以在使用中规避禁忌,与生态系统中的各 种软件搭配,发挥Node的长处。</p>
+<h3 id="第6章-理解Buffer"><a href="#第6章-理解Buffer" class="headerlink" title="第6章　理解Buffer"></a>第6章　理解Buffer</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe98fb8c9f0?w=1533&amp;h=851&amp;f=jpeg&amp;s=223698" alt=""><br>体验过JavaScript友好的字符串操作后,有些开发者可能会形成思维定势,将Buffer当做字 符串来理解。但字符串与Buffer之间有实质上的差异,即Buffer是二进制数据,字符串与Buffer 之间存在编码关系。因此,理解Buffer的诸多细节十分必要,对于如何高效处理二进制数据十 分有用。</p>
+<h3 id="第7章-网络编程"><a href="#第7章-网络编程" class="headerlink" title="第7章　网络编程"></a>第7章　网络编程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfeb90a7b4da?w=1359&amp;h=666&amp;f=jpeg&amp;s=143355" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfed8f83f59e?w=1358&amp;h=637&amp;f=jpeg&amp;s=135994" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfef9f26bd46?w=1361&amp;h=540&amp;f=jpeg&amp;s=99116" alt=""><br>Node基于事件驱动和非阻塞设计,在分布式环境中尤其能发挥出它的特长,基于事件驱动可 以实现与大量的客户端进行连接,非阻塞设计则让它可以更好地提升网络的响应吞吐。Node提供 了相对底层的网络调用,以及基于事件的编程接口,使得开发者在这些模块上十分轻松地构建网 络应用。下一章我们将在本章的基础上探讨具体的Web应用。</p>
+<h3 id="第8章-构建Web应用"><a href="#第8章-构建Web应用" class="headerlink" title="第8章　构建Web应用"></a>第8章　构建Web应用</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff1c8ff5a06?w=1369&amp;h=888&amp;f=jpeg&amp;s=177861" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff418f4c4fb?w=1398&amp;h=795&amp;f=jpeg&amp;s=140972" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff6116649da?w=1181&amp;h=743&amp;f=jpeg&amp;s=82401" alt=""><br>本章涉及的内容较为丰富,在Web应用的整个构建过程中,从处理请求到响应请求的整个过 程都有原理性阐述,整理本章细节就可以完成一个功能完备的Web开发框架。过去的各种Web技 术,随着框架和库的成型,开发者往往迷糊地知道应用框架和库,却不知道细节的实现,这好比 没有地图却在野地里行进。本章的内容希望能为Node开发者带来地图似的启发,在开发Web应用 时能够心有轮廓,明了细微。</p>
+<p>现在知名和成熟的Web框架有Connect、Express等,本章中的内容在这些框架中都有实现, 因为行文的原因,本章中的代码实现得较为粗糙,实际使用请使用这些成熟的框架。</p>
+<h3 id="第9章-玩转进程"><a href="#第9章-玩转进程" class="headerlink" title="第9章　玩转进程"></a>第9章　玩转进程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff80146b539?w=1303&amp;h=512&amp;f=jpeg&amp;s=125278" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddffa1aadabca?w=1235&amp;h=703&amp;f=jpeg&amp;s=82074" alt=""></p>
+<p>尽管Node从单线程的角度来讲它有够脆弱的:既不能充分利用多核CPU资源,稳定性也无 法得到保障。但是群体的力量是强大的,通过简单的主从模式,就可以将应用的质量提升一个 档次。在实际的复杂业务中,我们可能要启动很多子进程来处理任务,结构甚至远比主从模式 复杂,但是每个子进程应当是简单到只做好一件事,然后通过进程间通信技术将它们连接起来 即可。这符合Unix的设计理念,每个进程只做一件事,并做好一件事,将复杂分解为简单,将 简单组合成强大。</p>
+<p>尽管通过 child_process 模块可以大幅提升Node的稳定性,但是一旦主进程出现问题, 所 有子进程将会失去管理。在Node的进程管理之外,还需要用监听进程数量或监听日志的方式确 保整个系统的稳定性,即使主进程出错退出,也能及时得到监控警报,使得开发者可以及时处 理故障。</p>
+<h3 id="第10章-测试"><a href="#第10章-测试" class="headerlink" title="第10章　测试"></a>第10章　测试</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddffdefa50b13?w=1067&amp;h=809&amp;f=jpeg&amp;s=87670" alt=""></p>
+<p>测试是应用或者系统最重要的质量保证手段。有单元测试实践的项目,必然对代码的粒度和 层次都掌握得较好。单元测试能够保证项目每个局部的正确性,也能够在项目迭代过程中很好地 监督和反馈迭代质量。如果没有单元测试,就如同黑夜里没有秉烛的行走。</p>
+<p>对于性能,在编码过程中一定存在部分感性认知,与实际情况有部分偏差,而性能测试则能 很好地斧正这种差异。</p>
+<h3 id="第11章-产品化"><a href="#第11章-产品化" class="headerlink" title="第11章　产品化"></a>第11章　产品化</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de00028a10fe2?w=1401&amp;h=841&amp;f=jpeg&amp;s=148561" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de002c49d1e0b?w=1300&amp;h=863&amp;f=jpeg&amp;s=125172" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de00594223971?w=1309&amp;h=234&amp;f=jpeg&amp;s=34731" alt=""><br>一般而言,决定用一项技术进行产品开发时,只有最早期是与这门技术完全相关的。随着时 间的迁移,要解决的已经不是原来的问题了,一门技术只能在一定层面上发挥出它的优势来。用 Node也是一样,随着开发的进展、涉及层面的增多,我们看到在产品的角度要解决的问题依然是 大部分技术都要解决的问题。我们希望读者能够将Node纳入到新的层面上进行考虑,使它更适应 产品,在产品中发挥出更大的优势来。</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>思维导图能比较清晰的还原整本书的知识结构体系，如果你还没用看过这本书，可以按照这个思维导图的思路快速预习一遍，提高学习效率。学习新事物总容易遗忘，我比较喜欢在看书的时候用思维导图做些记录，便于自己后期复习，如果你已经看过了这本书，也建议你收藏复习。如果你有神马建议或则想法，欢迎留言或加我微信交流：646321933</p>
+<p><a href="chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf" target="_blank" rel="external">《深入浅出Node.js》PDF</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/思维导图/" rel="tag"># 思维导图</a>
+          
+            <a href="/tags/node/" rel="tag"># node</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/28/javascript1/" rel="next" title="精度《你不知道的javascript》上卷">
+                <i class="fa fa-chevron-left"></i> 精度《你不知道的javascript》上卷
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/06/08/node-notes/"
+           data-title="精读《深入浅出Node.js》" data-url="https://bailinlin.github.com/2018/06/08/node-notes/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/bbt.jpeg"
+               alt="bailinlin" />
+          <p class="site-author-name" itemprop="name">bailinlin</p>
+          <p class="site-description motion-element" itemprop="description">前端,白霸天,博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第1章-Node简介"><span class="nav-number">2.</span> <span class="nav-text">第1章　Node简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第2章-模块机制"><span class="nav-number">3.</span> <span class="nav-text">第2章　模块机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第3章-异步I-O"><span class="nav-number">4.</span> <span class="nav-text">第3章　异步I/O</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第4章-异步编程"><span class="nav-number">5.</span> <span class="nav-text">第4章　异步编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第5章-内存控制"><span class="nav-number">6.</span> <span class="nav-text">第5章　内存控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第6章-理解Buffer"><span class="nav-number">7.</span> <span class="nav-text">第6章　理解Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第7章-网络编程"><span class="nav-number">8.</span> <span class="nav-text">第7章　网络编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第8章-构建Web应用"><span class="nav-number">9.</span> <span class="nav-text">第8章　构建Web应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第9章-玩转进程"><span class="nav-number">10.</span> <span class="nav-text">第9章　玩转进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第10章-测试"><span class="nav-number">11.</span> <span class="nav-text">第10章　测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第11章-产品化"><span class="nav-number">12.</span> <span class="nav-text">第11章　产品化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展"><span class="nav-number">13.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bailinlin</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"baibatian"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
