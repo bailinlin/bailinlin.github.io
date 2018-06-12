@@ -116,7 +116,7 @@
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de00028a10fe2?w=1401&h=841&f=jpeg&s=148561">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de002c49d1e0b?w=1300&h=863&f=jpeg&s=125172">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/8/163de00594223971?w=1309&h=234&f=jpeg&s=34731">
-<meta property="og:updated_time" content="2018-06-08T06:31:15.000Z">
+<meta property="og:updated_time" content="2018-06-11T06:05:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="精读《深入浅出Node.js》">
 <meta name="twitter:description" content="前言如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过N">
@@ -354,6 +354,7 @@
 <p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf8757804e03?w=1180&amp;h=527&amp;f=jpeg&amp;s=80154" alt=""><br>CommonJS提出的规范均十分简单,但是现实意义却十分强大。Node通过模块规范,组织了 自身的原生模块,弥补JavaScript弱结构性的问题,形成了稳定的结构,并向外提供服务。NPM 通过对包规范的支持,有效地组织了第三方模块,这使得项目开发中的依赖问题得到很好的解决, 并有效提供了分享和传播的平台,借助第三方开源力量,使得Node第三方模块的发展速度前所未 有,这对于其他后端JavaScript语言实现而言是从未有过的。从一定的角度上讲,CommonJS规范 帮助Node形成了它的骨骼。只有茁壮的根,才能培养出茂盛的枝叶,并成长为参天大树。正是这 些底层的规范和实践,使得Node有序地发展着,摆脱掉过去JavaScript纷乱和被误解的局面,进 而进化成良性的生态系统。</p>
 <h3 id="第3章-异步I-O"><a href="#第3章-异步I-O" class="headerlink" title="第3章　异步I/O"></a>第3章　异步I/O</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de079a7e88a57?w=1193&amp;h=658&amp;f=jpeg&amp;s=118066" alt=""></p>
 <p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfd11745edcd?w=1383&amp;h=613&amp;f=jpeg&amp;s=152907" alt=""><br>本章介绍了异步I/O和另一些非I/O的异步方法。可以看出,事件循环是异步实现的核心,它 与浏览器中的执行模型基本保持了一致。而像古老的Rhino,尽管是较早就能在服务器端运行的 JavaScript运行时,但是执行模型并不像浏览器采用事件驱动,而是像其他语言一般采用同步I/O 作为主要模型,这造成它在性能上无所发挥。Node正是依靠构建了一套完善的高性能异步I/O框 架,打破了JavaScript在服务器端止步不前的局面。</p>
+<a id="more"></a>
 <h3 id="第4章-异步编程"><a href="#第4章-异步编程" class="headerlink" title="第4章　异步编程"></a>第4章　异步编程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdac0a96cb2?w=1399&amp;h=495&amp;f=jpeg&amp;s=102103" alt=""></p>
 <p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdd1303d454?w=1406&amp;h=853&amp;f=jpeg&amp;s=174451" alt=""><br>在接触Node的过程中,很多人粗略地接触了几个回调函数之后就放弃了。尽管异步编程略微 艰难,但是并非一无是处,一旦习惯,就显得自然。从社区和过往的经验而言,JavaScript异步编 程的难题已经基本解决,无论是通过事件,还是通过Promise/Deferred模式,或者流程控制库。相 信在掌握以上技巧之后,异步编程不是难事,习惯异步编程之后,将会收获许多值得享受的编程 体验。</p>
 <p>本章主要介绍了主流的几种异步编程解决方案,这是目前JavaScript中主要使用的方案。但对 于其他语言而言,还有协程(coroutine)等方式。但是由于Node基于V8的原因,在目前EMCAScript5 的实现下还不支持协程。这些标准和规范还在制定中,所以暂时不作介绍。未来的V8如果支持 Generator,也将在Node中能直接使用。</p>
@@ -428,6 +429,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/06/12/trash/" rel="prev" title="你需要知道的 javascript 垃圾回收机制">
+                你需要知道的 javascript 垃圾回收机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -498,7 +503,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

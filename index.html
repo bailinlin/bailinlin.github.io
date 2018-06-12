@@ -239,6 +239,150 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/12/trash/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/06/12/trash/" itemprop="url">
+                  你需要知道的 javascript 垃圾回收机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T15:11:38+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/06/12/trash/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/trash/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。</p>
+</blockquote>
+<h3 id="敲黑板：v8引擎的垃圾回收算法"><a href="#敲黑板：v8引擎的垃圾回收算法" class="headerlink" title="敲黑板：v8引擎的垃圾回收算法"></a>敲黑板：v8引擎的垃圾回收算法</h3><p><img src="/images/blog/v8/fds.jpg" alt="this"></p>
+<p>V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内存分为新生代和老生代两代。新生代中的对象为存活时间较短的对象, 老生代中的对象为存活时间较长或常驻内存的对象。</p>
+<h3 id="Scavenge算法"><a href="#Scavenge算法" class="headerlink" title="Scavenge算法"></a>Scavenge算法</h3><blockquote>
+<p>在分代的基础上,新生代中的对象主要通过Scavenge算法进行垃圾回收,在Scavenge的具体 实现中,主要采用了Cheney算法</p>
+</blockquote>
+<p><img src="/images/blog/v8/csf.jpg" alt="this"></p>
+<p>Cheney 算法是一种采用复制的方式实现的垃圾回收算法。它将堆内存一分为二,每一部分空间称为 semispace。在这两个 semispace 空间中,只有一个处于使用中,另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间,处于闲置状态的空间称为 To 空间。当我们分配对象时,先是在 From 空间中进行分配。当开始进行垃圾回收时,会检查 From 空间中的存活对象,这 些存活对象将被复制到 To 空间中,而非存活对象占用的空间将会被释放。完成复制后,From 空 间和To空间的角色发生对换。 简而言之, 在垃圾回收的过程中, 就是通过将存活对象在两个 semispace 空间之间进行复制。</p>
+<h3 id="Mark-Sweep-amp-Mark-Compact"><a href="#Mark-Sweep-amp-Mark-Compact" class="headerlink" title="Mark-Sweep &amp; Mark-Compact"></a>Mark-Sweep &amp; Mark-Compact</h3><blockquote>
+<p>Scavenge算法通过牺牲空间换时间的算法非常适合生命周期短的新生代，但是，当一个对象经过多次复制，生命周期较长的时候或则To空间不足的时候，对象会被分配到进入到老生代中，需要采用新的算法进行垃圾回收。</p>
+</blockquote>
+<p><img src="/images/blog/v8/mssf.jpg" alt="this"></p>
+<p>Mark-Sweep 并不将内存空间划分为两半,所以不存在浪费一半空间的行为。与 Scavenge 复制活着的对象不同, Mark-Sweep 在标记阶段遍历堆中的所有对象,并标记活着的对象,在随后的清除阶段中,只清除没有被标记的对象。可以看出,Scavenge 中只复制活着的对象,而 Mark-Sweep 只清理死亡对象。</p>
+<p>Mark-Sweep 在进行一次标记清除回收后,内存空间会出现不连续的状态。这种内存碎片会对后续的内存分配造成问题,因为很可能出现需要分配一个大对象的情况,这时所有的碎片空间都无法完成此次分配,就会提前触发垃圾回收,而这次回收是不必要的。Mark-Compact 对象在标记为死亡后,在整理的过程中,将活着的对象往一端移动,移动完成后,直接清理掉边界外的内存</p>
+<h3 id="增量标记"><a href="#增量标记" class="headerlink" title="增量标记"></a>增量标记</h3><p>为了避免出现 JavaScript 应用逻辑与垃圾回收器看到的不一致的情况,垃圾回收的 3 种基本算法都需要将应用逻辑暂停下来,待执行完垃圾回收后再恢复执行应用逻辑,这种行为被称为“全停顿”，长时间的”全停顿”垃圾回收会让用户感受到明显的卡顿，带来体验的影响。以1.5 GB的垃圾回收堆内存为例,V8做一次小的垃圾回收需要50毫秒以上,做一次非增量式的垃圾回收甚至要1秒以上。这是垃圾回收中引起JavaScript线程暂停执行的时间,在 这样的时间花销下,应用的性能和响应能力都会直线下降。</p>
+<p>为了降低全堆垃圾回收带来的停顿时间,V8先从标记阶段入手,将原本要一口气停顿完成的动作改为增量标记(incremental marking),也就是拆分为许多小“步进”,每做完一“步进” 就让 JavaScript 应用逻辑执行一小会儿,垃圾回收与应用逻辑交替执行直到标记阶段完成</p>
+<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://www.ruanyifeng.com/blog/2017/04/memory-leak.html" target="_blank" rel="external">JavaScript 内存泄漏教程</a></p>
+<p><a href="https://bailinlin.github.io/2018/06/08/node-notes/" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
+<p><a href="chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf" target="_blank" rel="external">《深入浅出Node.js》PDF</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/08/node-notes/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -323,8 +467,7 @@
 
       
         
-          
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过Node 构建产品需要的注意事项。最后的附录介绍了Node 的安装、调试、编码规范和NPM 仓库等事宜。在读这本书的过程中我收获颇多，并用思维导图的方式记录下来，方便自己后期温故。如果你刚好没有读过，可以当做度这本书的预习阅读，相信你也会有所收获（思维导图图片可能有点小，记得点开看）</p>
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>如果你想要深入学习Node，那你不能错过《深入浅出Node.js》这本书，它从不同的视角介绍了 Node 内在的特点和结构。由首章Node 介绍为索引，涉及Node 的各个方面，主要内容包含模块机制的揭示、异步I/O 实现原理的展现、异步编程的探讨、内存控制的介绍、二进制数据Buffer 的细节、Node 中的网络编程基础、Node 中的Web 开发、进程间的消息传递、Node 测试以及通过Node 构建产品需要的注意事项。最后的附录介绍了Node 的安装、调试、编码规范和NPM 仓库等事宜。在读这本书的过程中我收获颇多，并用思维导图的方式记录下来，方便自己后期温故。如果你刚好没有读过，可以当做度这本书的预习阅读，相信你也会有所收获（思维导图图片可能有点小，记得点开看）</p>
 <h3 id="第1章-Node简介"><a href="#第1章-Node简介" class="headerlink" title="第1章　Node简介"></a>第1章　Node简介</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf797e5ca946?w=1087&amp;h=694&amp;f=jpeg&amp;s=112844" alt=""></p>
 <p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf7beac28eea?w=1088&amp;h=445&amp;f=jpeg&amp;s=39820" alt=""></p>
 <h3 id="第2章-模块机制"><a href="#第2章-模块机制" class="headerlink" title="第2章　模块机制"></a>第2章　模块机制</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf7f53fdae09?w=1180&amp;h=393&amp;f=jpeg&amp;s=36439" alt=""></p>
@@ -333,36 +476,13 @@
 <p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddf8757804e03?w=1180&amp;h=527&amp;f=jpeg&amp;s=80154" alt=""><br>CommonJS提出的规范均十分简单,但是现实意义却十分强大。Node通过模块规范,组织了 自身的原生模块,弥补JavaScript弱结构性的问题,形成了稳定的结构,并向外提供服务。NPM 通过对包规范的支持,有效地组织了第三方模块,这使得项目开发中的依赖问题得到很好的解决, 并有效提供了分享和传播的平台,借助第三方开源力量,使得Node第三方模块的发展速度前所未 有,这对于其他后端JavaScript语言实现而言是从未有过的。从一定的角度上讲,CommonJS规范 帮助Node形成了它的骨骼。只有茁壮的根,才能培养出茂盛的枝叶,并成长为参天大树。正是这 些底层的规范和实践,使得Node有序地发展着,摆脱掉过去JavaScript纷乱和被误解的局面,进 而进化成良性的生态系统。</p>
 <h3 id="第3章-异步I-O"><a href="#第3章-异步I-O" class="headerlink" title="第3章　异步I/O"></a>第3章　异步I/O</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de079a7e88a57?w=1193&amp;h=658&amp;f=jpeg&amp;s=118066" alt=""></p>
 <p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfd11745edcd?w=1383&amp;h=613&amp;f=jpeg&amp;s=152907" alt=""><br>本章介绍了异步I/O和另一些非I/O的异步方法。可以看出,事件循环是异步实现的核心,它 与浏览器中的执行模型基本保持了一致。而像古老的Rhino,尽管是较早就能在服务器端运行的 JavaScript运行时,但是执行模型并不像浏览器采用事件驱动,而是像其他语言一般采用同步I/O 作为主要模型,这造成它在性能上无所发挥。Node正是依靠构建了一套完善的高性能异步I/O框 架,打破了JavaScript在服务器端止步不前的局面。</p>
-<h3 id="第4章-异步编程"><a href="#第4章-异步编程" class="headerlink" title="第4章　异步编程"></a>第4章　异步编程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdac0a96cb2?w=1399&amp;h=495&amp;f=jpeg&amp;s=102103" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfdd1303d454?w=1406&amp;h=853&amp;f=jpeg&amp;s=174451" alt=""><br>在接触Node的过程中,很多人粗略地接触了几个回调函数之后就放弃了。尽管异步编程略微 艰难,但是并非一无是处,一旦习惯,就显得自然。从社区和过往的经验而言,JavaScript异步编 程的难题已经基本解决,无论是通过事件,还是通过Promise/Deferred模式,或者流程控制库。相 信在掌握以上技巧之后,异步编程不是难事,习惯异步编程之后,将会收获许多值得享受的编程 体验。</p>
-<p>本章主要介绍了主流的几种异步编程解决方案,这是目前JavaScript中主要使用的方案。但对 于其他语言而言,还有协程(coroutine)等方式。但是由于Node基于V8的原因,在目前EMCAScript5 的实现下还不支持协程。这些标准和规范还在制定中,所以暂时不作介绍。未来的V8如果支持 Generator,也将在Node中能直接使用。</p>
-<p>最后,因为人们总是习惯性地以线性的方式进行思考,以致异步编程相对较为难以掌握。这 个世界以异步运行的本质是不会因为大家线性思维的惯性而改变。就像日出月落不会因为你的心 情而改变其自有的运行轨迹。</p>
-<h3 id="第5章-内存控制"><a href="#第5章-内存控制" class="headerlink" title="第5章　内存控制"></a>第5章　内存控制</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe11d4c18bf?w=1300&amp;h=652&amp;f=jpeg&amp;s=146539" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe348e932ee?w=1299&amp;h=605&amp;f=jpeg&amp;s=122392" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe55087601b?w=1298&amp;h=432&amp;f=jpeg&amp;s=78207" alt=""></p>
-<p>Node将JavaScript的主要应用场景扩展到了服务器端,相应要考虑的细节也与浏览器端不同, 需要更严谨地为每一份资源作出安排。总的来说,内存在Node中不能随心所欲地使用,但也不是 完全不擅长。本章介绍了内存的各种限制,希望读者可以在使用中规避禁忌,与生态系统中的各 种软件搭配,发挥Node的长处。</p>
-<h3 id="第6章-理解Buffer"><a href="#第6章-理解Buffer" class="headerlink" title="第6章　理解Buffer"></a>第6章　理解Buffer</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfe98fb8c9f0?w=1533&amp;h=851&amp;f=jpeg&amp;s=223698" alt=""><br>体验过JavaScript友好的字符串操作后,有些开发者可能会形成思维定势,将Buffer当做字 符串来理解。但字符串与Buffer之间有实质上的差异,即Buffer是二进制数据,字符串与Buffer 之间存在编码关系。因此,理解Buffer的诸多细节十分必要,对于如何高效处理二进制数据十 分有用。</p>
-<h3 id="第7章-网络编程"><a href="#第7章-网络编程" class="headerlink" title="第7章　网络编程"></a>第7章　网络编程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfeb90a7b4da?w=1359&amp;h=666&amp;f=jpeg&amp;s=143355" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfed8f83f59e?w=1358&amp;h=637&amp;f=jpeg&amp;s=135994" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddfef9f26bd46?w=1361&amp;h=540&amp;f=jpeg&amp;s=99116" alt=""><br>Node基于事件驱动和非阻塞设计,在分布式环境中尤其能发挥出它的特长,基于事件驱动可 以实现与大量的客户端进行连接,非阻塞设计则让它可以更好地提升网络的响应吞吐。Node提供 了相对底层的网络调用,以及基于事件的编程接口,使得开发者在这些模块上十分轻松地构建网 络应用。下一章我们将在本章的基础上探讨具体的Web应用。</p>
-<h3 id="第8章-构建Web应用"><a href="#第8章-构建Web应用" class="headerlink" title="第8章　构建Web应用"></a>第8章　构建Web应用</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff1c8ff5a06?w=1369&amp;h=888&amp;f=jpeg&amp;s=177861" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff418f4c4fb?w=1398&amp;h=795&amp;f=jpeg&amp;s=140972" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff6116649da?w=1181&amp;h=743&amp;f=jpeg&amp;s=82401" alt=""><br>本章涉及的内容较为丰富,在Web应用的整个构建过程中,从处理请求到响应请求的整个过 程都有原理性阐述,整理本章细节就可以完成一个功能完备的Web开发框架。过去的各种Web技 术,随着框架和库的成型,开发者往往迷糊地知道应用框架和库,却不知道细节的实现,这好比 没有地图却在野地里行进。本章的内容希望能为Node开发者带来地图似的启发,在开发Web应用 时能够心有轮廓,明了细微。</p>
-<p>现在知名和成熟的Web框架有Connect、Express等,本章中的内容在这些框架中都有实现, 因为行文的原因,本章中的代码实现得较为粗糙,实际使用请使用这些成熟的框架。</p>
-<h3 id="第9章-玩转进程"><a href="#第9章-玩转进程" class="headerlink" title="第9章　玩转进程"></a>第9章　玩转进程</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddff80146b539?w=1303&amp;h=512&amp;f=jpeg&amp;s=125278" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddffa1aadabca?w=1235&amp;h=703&amp;f=jpeg&amp;s=82074" alt=""></p>
-<p>尽管Node从单线程的角度来讲它有够脆弱的:既不能充分利用多核CPU资源,稳定性也无 法得到保障。但是群体的力量是强大的,通过简单的主从模式,就可以将应用的质量提升一个 档次。在实际的复杂业务中,我们可能要启动很多子进程来处理任务,结构甚至远比主从模式 复杂,但是每个子进程应当是简单到只做好一件事,然后通过进程间通信技术将它们连接起来 即可。这符合Unix的设计理念,每个进程只做一件事,并做好一件事,将复杂分解为简单,将 简单组合成强大。</p>
-<p>尽管通过 child_process 模块可以大幅提升Node的稳定性,但是一旦主进程出现问题, 所 有子进程将会失去管理。在Node的进程管理之外,还需要用监听进程数量或监听日志的方式确 保整个系统的稳定性,即使主进程出错退出,也能及时得到监控警报,使得开发者可以及时处 理故障。</p>
-<h3 id="第10章-测试"><a href="#第10章-测试" class="headerlink" title="第10章　测试"></a>第10章　测试</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163ddffdefa50b13?w=1067&amp;h=809&amp;f=jpeg&amp;s=87670" alt=""></p>
-<p>测试是应用或者系统最重要的质量保证手段。有单元测试实践的项目,必然对代码的粒度和 层次都掌握得较好。单元测试能够保证项目每个局部的正确性,也能够在项目迭代过程中很好地 监督和反馈迭代质量。如果没有单元测试,就如同黑夜里没有秉烛的行走。</p>
-<p>对于性能,在编码过程中一定存在部分感性认知,与实际情况有部分偏差,而性能测试则能 很好地斧正这种差异。</p>
-<h3 id="第11章-产品化"><a href="#第11章-产品化" class="headerlink" title="第11章　产品化"></a>第11章　产品化</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de00028a10fe2?w=1401&amp;h=841&amp;f=jpeg&amp;s=148561" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de002c49d1e0b?w=1300&amp;h=863&amp;f=jpeg&amp;s=125172" alt=""></p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/6/8/163de00594223971?w=1309&amp;h=234&amp;f=jpeg&amp;s=34731" alt=""><br>一般而言,决定用一项技术进行产品开发时,只有最早期是与这门技术完全相关的。随着时 间的迁移,要解决的已经不是原来的问题了,一门技术只能在一定层面上发挥出它的优势来。用 Node也是一样,随着开发的进展、涉及层面的增多,我们看到在产品的角度要解决的问题依然是 大部分技术都要解决的问题。我们希望读者能够将Node纳入到新的层面上进行考虑,使它更适应 产品,在产品中发挥出更大的优势来。</p>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>思维导图能比较清晰的还原整本书的知识结构体系，如果你还没用看过这本书，可以按照这个思维导图的思路快速预习一遍，提高学习效率。学习新事物总容易遗忘，我比较喜欢在看书的时候用思维导图做些记录，便于自己后期复习，如果你已经看过了这本书，也建议你收藏复习。如果你有神马建议或则想法，欢迎留言或加我微信交流：646321933</p>
-<p><a href="chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf" target="_blank" rel="external">《深入浅出Node.js》PDF</a></p>
-
-          
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/06/08/node-notes/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -3137,160 +3257,6 @@ console.log('Listening on port 3000...');
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2017/05/18/nginx-basic/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/18/nginx-basic/" itemprop="url">
-                  你需要知道的 nginx 基础配置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-18T14:23:31+08:00">
-                2017-05-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/05/18/nginx-basic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/18/nginx-basic/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="初探nginx"><a href="#初探nginx" class="headerlink" title="初探nginx"></a>初探nginx</h2><blockquote>
-<p>今天给大家讲下nginx的基础配置,很多小伙伴在开发的过程中会使用到 nginx ,但是确对 nginx 的配置其实并不了解,今天我给大家讲下基础的配置项.nginx 的功能很多,但是说到 nginx 大家最先想到的是反向代理和负载均衡.</p>
-</blockquote>
-<p>“负载均衡”在开发环境体现的不太明显,主要是为了解决生产环境的客户端请求很多的时候,动态的去分散给各个服务器,缓解服务器压力,充 分利用资源.而说到 “反向代理”,你的第一反应应该是”正向代理”,简称”代理”,你可以把代理想象成客户端和服务端的中介,代理的种类很多,比较常见的是,客户端对服务端进行请求的时候,代理会对请求的内容进行下载缓存,从而提高客户端的请求速度,代理还有多重代理,加密处理等功能,”反向代理”的作用和正项代理的功能相辅相成,原理也类似,反向代理将字符串和相应的服务器和端口匹配上,从而获取用户想要获取的内容,那么这两者的区分是什么呢,”正向代理”作用于客户端,”反向代理”作用于服务器.</p>
-<h2 id="生动的-nginx-反向代理解释"><a href="#生动的-nginx-反向代理解释" class="headerlink" title="生动的 nginx 反向代理解释"></a>生动的 nginx 反向代理解释</h2><p>为了让大家能够更加深刻的理解代理和反向代理的模式,我们引用下知乎上<a href="https://www.zhihu.com/question/24723688/answer/160252724" target="_blank" rel="external">车小胖</a>的回答</p>
-<blockquote>
-<p>有了第三方订餐外卖平台（代理），老王懒得动身前往饭店，老王打个电话或用APP，先选好某个饭店，再点好菜，外卖小哥会送上门来。由于某个品牌的饭店口碑特别好，食客络绎不绝涌入，第三方订餐电话也不绝于耳，但是限于饭店接待能力有限，无法提供及时服务，很多食客等得不耐烦了，纷纷铩羽而归，饭店老总看着煮熟的鸭子飞走了，心疼不已。痛定思痛，老总又成立了几个连锁饭店，形成一个集群，对外提供统一标准的菜品服务，电话订餐电话400-xxx-7777，当食客涌入饭店总台，总台将食客用大巴运到各个连锁店，这样食客既不需要排队，各连锁店都能高速运转起来，一举两得，老总乐开了花，并为此种运作模式起名为“反向代理”（Reverse Proxy)。</p>
-</blockquote>
-<h2 id="nginx-基础配置"><a href="#nginx-基础配置" class="headerlink" title="nginx 基础配置"></a>nginx 基础配置</h2><p>好了,了解了 nginx 的一些概念之后,我们要开始切入今天的主题,”ngix 的基础配置”,安装好 nginx 配置之后,你对 nginx 的配置都写在 nginx.conf 的文件里,从 nginx 的配置指令作用域来讲,我们分为 5 个作用域块,分别是:</p>
-<ul>
-<li>全局作用域块</li>
-<li>event 作用域块</li>
-<li>http 指令作用域块</li>
-<li>server 指令作用域块</li>
-<li>location 指令作用域块</li>
-</ul>
-<p><img src="/images/nginx/nd.jpeg" alt="nginx基础配置"></p>
-<p>在 “全局作用域块” 作用域块中配置通用的nginx 配置,比如 nginx 的用户组信息,nginx 的并发进程数,日志存放位置等,nginx 的用户组信息配置,用来控制启动 nginx 的权限,服务并发一般情况下是越多越好,但是当超过硬件的承受范围时会适得其反,所以一般我们会配置为 auto,这样 nginx 会去检查硬件的信息,启用适当的进程数量.</p>
-<p>日志存放位置你也可以配置在 http 作用域块,”http 作用域块”作用域通常是配置请求相关的内容,比如数据的传输,对同一个接口的请求次数上线,配置请求的潮湿时间,还有是否要对请求进行 gzip 压缩等.在之前讲 web性能优化的时候,我记得和大家讲过 gzip 压缩是提高 web 性能优化的一种手段,gzip 能对 http 请求的请求头和请求体进行压缩,从而达到优化.但是不是所有的请求都要去压缩,有些压缩之后的请求体积可能会更大,从而达不到压缩的效果.那怎么办呢,在 nginx 的配置中,你可以进行配置,设置当请求大于一定值的时候,才触发 gzip 压缩 gzip 的内容这里就深入讲解了,想要了解的同学可以去谷歌下,或则在下次 nginx 的高级配置的分享的时候我们再来细讲.</p>
-<p>在 event 模块我们通常会配置进程的连接数量,就是每一个worker进程能并发处理（发起）的最大连接数.在 “server 指令作用域块” 我们可以进行独立项目的代理配置,</p>
-<p>一个 http 指令中可以包含多个 server ,每一个 server 你可以看做是一个虚拟机,部署过网站的同学应该知道,若果你没有做代理,你的服务器只能部署一个项目的内容,默认是80端口,使用代理,能将客户端的请求根据端口作为区分,发散到不同的项目中.nginx 这一点,能让我们更好的利用服务器资源</p>
-<p>在server 指令中,我们同样可以配置多个 location 指令,location 指令能将我们的字符串请求解析到对应的IP和端口,从而去获取正确的资源,location 也可以进行特殊配置,定制 网站的 404 ,500 等页面.</p>
-<h2 id="nginx-的项目配置示例"><a href="#nginx-的项目配置示例" class="headerlink" title="nginx 的项目配置示例"></a>nginx 的项目配置示例</h2><p><img src="/images/nginx/l1.jpeg" alt="nginx作用域"><br><img src="/images/nginx/l2.jpeg" alt="nginx作用域"><br>我们简单的看下,我目前使用到的两个项目的 nginx 配置,在fengdai_pc 项目中我们通过 listen 来配置项目监听端口,通过 root 来配置前端项目文件的地址,我们还通过 location 来配置了几个模块代理,account 和 funds ,定制了 404 页面,在 另一个 nginx 配置项目中我们做了https 配置,配置了域名 <code>baibatianpc.com</code>,并且指定了证书的位置,这样配置后,我们能通过 访问 <a href="https://baibatianpc.com/" target="_blank" rel="external">https://baibatianpc.com/</a> 来查看我们的项目.这里对于如何搭建 https 环境就不细讲了,不同的开发系统证书的获取和配置方式也不太一样,想要深入了解的同学继续谷歌.</p>
-<h2 id="复习"><a href="#复习" class="headerlink" title="复习"></a>复习</h2><p>好了,我们今天讲了nginx 的基础配置,我们现在来复习一下,我们今天讲的知识点有哪些</p>
-<ol>
-<li>nginx 常用的功能的概念,负载均衡,反向代理</li>
-<li>nginx 指令配置的5个作用域空间</li>
-<li>nginx 的每个配置作用域的基础配置项目</li>
-<li>简单的两个项目配置示例</li>
-</ol>
-<p>你都掌握了吗,联系我进行交流,WeChat:646321933</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -3336,7 +3302,7 @@ console.log('Listening on port 3000...');
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
