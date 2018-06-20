@@ -447,6 +447,151 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/12/ljhs/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/06/12/ljhs/" itemprop="url">
+                  你需要知道的 javascript 垃圾回收机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T15:11:38+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/06/12/ljhs/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/ljhs/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。</p>
+</blockquote>
+<h3 id="敲黑板：v8引擎的垃圾回收算法"><a href="#敲黑板：v8引擎的垃圾回收算法" class="headerlink" title="敲黑板：v8引擎的垃圾回收算法"></a>敲黑板：v8引擎的垃圾回收算法</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f306c4254c932?w=1064&amp;h=492&amp;f=jpeg&amp;s=114417" alt=""></p>
+<p>V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内存分为新生代和老生代两代。新生代中的对象为存活时间较短的对象, 老生代中的对象为存活时间较长或常驻内存的对象。</p>
+<h3 id="Scavenge算法"><a href="#Scavenge算法" class="headerlink" title="Scavenge算法"></a>Scavenge算法</h3><blockquote>
+<p>在分代的基础上,新生代中的对象主要通过Scavenge算法进行垃圾回收,在Scavenge的具体 实现中,主要采用了Cheney算法</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f30742b0bf065?w=1130&amp;h=568&amp;f=jpeg&amp;s=175952" alt=""></p>
+<p>Cheney 算法是一种采用复制的方式实现的垃圾回收算法。它将堆内存一分为二,每一部分空间称为 semispace。在这两个 semispace 空间中,只有一个处于使用中,另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间,处于闲置状态的空间称为 To 空间。当我们分配对象时,先是在 From 空间中进行分配。当开始进行垃圾回收时,会检查 From 空间中的存活对象,这 些存活对象将被复制到 To 空间中,而非存活对象占用的空间将会被释放。完成复制后,From 空 间和To空间的角色发生对换。 简而言之, 在垃圾回收的过程中, 就是通过将存活对象在两个 semispace 空间之间进行复制。</p>
+<h3 id="Mark-Sweep-amp-Mark-Compact"><a href="#Mark-Sweep-amp-Mark-Compact" class="headerlink" title="Mark-Sweep &amp; Mark-Compact"></a>Mark-Sweep &amp; Mark-Compact</h3><blockquote>
+<p>Scavenge算法通过牺牲空间换时间的算法非常适合生命周期短的新生代，但是，当一个对象经过多次复制，生命周期较长的时候或则To空间不足的时候，对象会被分配到进入到老生代中，需要采用新的算法进行垃圾回收。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f307747161f7d?w=1175&amp;h=609&amp;f=jpeg&amp;s=184055" alt=""></p>
+<p>Mark-Sweep 并不将内存空间划分为两半,所以不存在浪费一半空间的行为。与 Scavenge 复制活着的对象不同, Mark-Sweep 在标记阶段遍历堆中的所有对象,并标记活着的对象,在随后的清除阶段中,只清除没有被标记的对象。可以看出,Scavenge 中只复制活着的对象,而 Mark-Sweep 只清理死亡对象。</p>
+<p>Mark-Sweep 在进行一次标记清除回收后,内存空间会出现不连续的状态。这种内存碎片会对后续的内存分配造成问题,因为很可能出现需要分配一个大对象的情况,这时所有的碎片空间都无法完成此次分配,就会提前触发垃圾回收,而这次回收是不必要的。Mark-Compact 对象在标记为死亡后,在整理的过程中,将活着的对象往一端移动,移动完成后,直接清理掉边界外的内存</p>
+<h3 id="增量标记"><a href="#增量标记" class="headerlink" title="增量标记"></a>增量标记</h3><p>为了避免出现 JavaScript 应用逻辑与垃圾回收器看到的不一致的情况,垃圾回收的 3 种基本算法都需要将应用逻辑暂停下来,待执行完垃圾回收后再恢复执行应用逻辑,这种行为被称为“全停顿”，长时间的”全停顿”垃圾回收会让用户感受到明显的卡顿，带来体验的影响。以1.5 GB的垃圾回收堆内存为例,V8做一次小的垃圾回收需要50毫秒以上,做一次非增量式的垃圾回收甚至要1秒以上。这是垃圾回收中引起JavaScript线程暂停执行的时间,在 这样的时间花销下,应用的性能和响应能力都会直线下降。</p>
+<p>为了降低全堆垃圾回收带来的停顿时间,V8先从标记阶段入手,将原本要一口气停顿完成的动作改为增量标记(incremental marking),也就是拆分为许多小“步进”,每做完一“步进” 就让 JavaScript 应用逻辑执行一小会儿,垃圾回收与应用逻辑交替执行直到标记阶段完成</p>
+<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://www.ruanyifeng.com/blog/2017/04/memory-leak.html" target="_blank" rel="external">JavaScript 内存泄漏教程</a></p>
+<p><a href="https://bailinlin.github.io/2018/06/08/node-notes/" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
+<p><a href="chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf" target="_blank" rel="external">《深入浅出Node.js》PDF</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/08/node-notes/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3147,184 +3292,6 @@ module.exports = {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/02/26/cookie-set/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/02/26/cookie-set/" itemprop="url">
-                  跨域问题导致设置 cookie 不生效的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-26T16:18:09+08:00">
-                2018-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2018/02/26/cookie-set/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/26/cookie-set/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我们看下跨域不生效的问题，首先抛出两个问题：</p>
-<blockquote>
-<ol>
-<li>我们如何设置 cookie ？</li>
-<li>又如何确定 cookie 设置是否生效了 ？</li>
-</ol>
-</blockquote>
-<p>首先，我们实现一个简单的接口,新建一个 test.js 文件，将如下代码复制进去，通过 <code>node test.js</code> 启动服务，在本地就可以通过 <code>http://localhost:3000/rest/collect/event/h5/v1/</code> 来访问了我们创建的接口了（node 环境安装的教程网上有很多详细的教程，本文不再赘述）</p>
-<pre>
-var express = require('express');
-var app = express();
-var URL = require('url')
-var path = require('path');
-
-
-app.post('/rest/collect/event/h5/v1/', function(req, res) {
-        res.cookie('token','11111112222222224444444444')
-        res.cookie('httpOnly-token','11111112222222224444444444',{ httpOnly: true })
-
-        function User() {
-                this.name;
-                this.city;
-                this.age;
-        }
-
-        var user = new User();
-
-        if(params.id == '1') {
-
-                user.name = "ligh";
-                user.age = "1";
-                user.city = "北京市";
-
-        }else{
-                user.name = "SPTING";
-                user.age = "1";
-                user.city = "杭州市";
-        }
-
-        var response = {status:1,data:user};
-        res.send(JSON.stringify(response));
-});
-
-app.listen(3000);
-console.log('Listening on port 3000...');
-</pre>
-
-<p>访问效果如下</p>
-<p><img src="/images/cookie/3.jpeg" alt="接口访问效果如下"></p>
-<p>在前端代码中访问我们的接口<br><img src="/images/cookie/4.jpeg" alt="cookie设置"><br><img src="/images/cookie/5.jpeg" alt="cookie查看"><br>在浏览器中我们可以看到请求的 Resopnse Headers 里，有两个 <code>set-cookie</code>头部，区别在于一个带有 <code>HttpOnly</code>的标识，我们打开浏览器的调试窗口<code>Application</code>我们可以看到，两个数值都被设置到浏览器里了，<code>httpOnly</code>的值在浏览器调试窗口的<code>http</code>一栏，打了个小勾，说明这个变量是只能通过 http 请求来获取到这个cookie ，前端无法通过 js 的 <code>document.cookie</code>来获取到<br><img src="/images/cookie/7.jpeg" alt="就是无法操作的cookie"><br>讲到这块内容，我们顺便讲下 cookie 设置的其他参数的作用</p>
-<p><img src="/images/cookie/6.jpeg" alt="其他参数"><br>cookie 和域名相关的哟，<code>Domain</code> 变量表示 cookie 生效的域名，<code>expries</code>和<code>max-age</code>表示 cookie 的有效时间</p>
-<h4 id="问题描述及解决"><a href="#问题描述及解决" class="headerlink" title="问题描述及解决"></a>问题描述及解决</h4><p>在开发阶段我自己用node 简单的写了一个接口，便于联调前端传参问题，希望通过 http 的set-cookie 存储变量， 但是却始终没有把 cookie 成功设置到浏览器里，经过排查发现是跨域导致的 cookie 设置不生效<br><img src="/images/cookie/1.jpeg" alt="cookie设置"><br><img src="/images/cookie/2.jpeg" alt="cookie查看"></p>
-<p>不生效的原因是我本地项目启动在 <code>http://localhost:70</code>,但是调用的接口在 <code>http://localhost:3000</code>上，端口不一样，存在跨域的问题，所以虽然在 Response Header 里看到了<code>set-cookie</code>的操作，但是在浏览器的 <code>application</code>里看到，并没有被设置进来，解决办法，通过nginx 代理（最长用的跨域解决办法）</p>
-<h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><p>跨域的问题在开发过程中比较常见，我们经常会碰到，简单来说<code>只要请求资源的协议，域名，端口不一致，都会导致跨域</code>，网上的解决方法也比较多，比较成熟，本文不做扩展，附带几个链接供大家参考</p>
-<p><a href="http://harttle.land/2016/12/30/cors-preflight.html" target="_blank" rel="external">跨域中的预检测请求</a><br><a href="https://www.jianshu.com/p/13d53acc124f" target="_blank" rel="external">CORS 跨域中的 Cookie</a><br><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="external">跨域资源共享 CORS 详解</a><br><a href="http://harttle.land/2015/10/10/cross-origin.html" target="_blank" rel="external">Web开发中跨域的几种解决方案</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -3370,7 +3337,7 @@ console.log('Listening on port 3000...');
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="小程序," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,39 +84,29 @@
 
 
 
-<meta name="description" content="微信小程序出来已有段时间，虽还在内测阶段。利用空闲时间，我把蜂贷微信项目部分迁移到小程序上。
-##1.目录结构
-   小程序的主体由三个文件组成，这三个文件要放在项目的根目录下，分别是
+<meta name="description" content="我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。
 
-app.js 配置小程序的逻辑
-app.json 公共设置
-app.wxss 公共样式
-小程序可以自定义 page，但是 page 需要在 app.json 中做出声明，不然IDE会报错，找不到页面。小程序的页面">
+敲黑板：v8引擎的垃圾回收算法
+V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你需要知道的小程序开发基础">
-<meta property="og:url" content="https://bailinlin.github.com/2016/11/01/learn-wxapp/index.html">
+<meta property="og:title" content="你需要知道的 javascript 垃圾回收机制">
+<meta property="og:url" content="https://bailinlin.github.com/2018/06/12/ljhs/index.html">
 <meta property="og:site_name" content="白霸天的博客">
-<meta property="og:description" content="微信小程序出来已有段时间，虽还在内测阶段。利用空闲时间，我把蜂贷微信项目部分迁移到小程序上。
-##1.目录结构
-   小程序的主体由三个文件组成，这三个文件要放在项目的根目录下，分别是
+<meta property="og:description" content="我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。
 
-app.js 配置小程序的逻辑
-app.json 公共设置
-app.wxss 公共样式
-小程序可以自定义 page，但是 page 需要在 app.json 中做出声明，不然IDE会报错，找不到页面。小程序的页面">
-<meta property="og:image" content="https://bailinlin.github.com/img/bVEXHS">
-<meta property="og:updated_time" content="2018-03-06T02:15:18.000Z">
+敲黑板：v8引擎的垃圾回收算法
+V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/12/163f306c4254c932?w=1064&h=492&f=jpeg&s=114417">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/12/163f30742b0bf065?w=1130&h=568&f=jpeg&s=175952">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/12/163f307747161f7d?w=1175&h=609&f=jpeg&s=184055">
+<meta property="og:updated_time" content="2018-06-20T08:38:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你需要知道的小程序开发基础">
-<meta name="twitter:description" content="微信小程序出来已有段时间，虽还在内测阶段。利用空闲时间，我把蜂贷微信项目部分迁移到小程序上。
-##1.目录结构
-   小程序的主体由三个文件组成，这三个文件要放在项目的根目录下，分别是
+<meta name="twitter:title" content="你需要知道的 javascript 垃圾回收机制">
+<meta name="twitter:description" content="我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。
 
-app.js 配置小程序的逻辑
-app.json 公共设置
-app.wxss 公共样式
-小程序可以自定义 page，但是 page 需要在 app.json 中做出声明，不然IDE会报错，找不到页面。小程序的页面">
-<meta name="twitter:image" content="https://bailinlin.github.com/img/bVEXHS">
+敲黑板：v8引擎的垃圾回收算法
+V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/6/12/163f306c4254c932?w=1064&h=492&f=jpeg&s=114417">
 
 
 
@@ -144,13 +134,13 @@ app.wxss 公共样式
 
 
 
-  <link rel="canonical" href="https://bailinlin.github.com/2016/11/01/learn-wxapp/"/>
+  <link rel="canonical" href="https://bailinlin.github.com/2018/06/12/ljhs/"/>
 
 
 
 
 
-  <title> 你需要知道的小程序开发基础 | 白霸天的博客 </title>
+  <title> 你需要知道的 javascript 垃圾回收机制 | 白霸天的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -261,7 +251,7 @@ app.wxss 公共样式
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2016/11/01/learn-wxapp/">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/12/ljhs/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="bailinlin">
@@ -285,7 +275,7 @@ app.wxss 公共样式
             
             
               
-                你需要知道的小程序开发基础
+                你需要知道的 javascript 垃圾回收机制
               
             
           </h1>
@@ -298,8 +288,8 @@ app.wxss 公共样式
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-01T20:38:15+08:00">
-                2016-11-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T15:11:38+08:00">
+                2018-06-12
               </time>
             
 
@@ -314,8 +304,8 @@ app.wxss 公共样式
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/11/01/learn-wxapp/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/01/learn-wxapp/" itemprop="commentCount"></span>
+                <a href="/2018/06/12/ljhs/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/ljhs/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -341,70 +331,28 @@ app.wxss 公共样式
       
 
       
-        <p>微信小程序出来已有段时间，虽还在内测阶段。利用空闲时间，我把蜂贷微信项目部分迁移到小程序上。</p>
-<p>##1.目录结构</p>
-<p>   小程序的主体由三个文件组成，这三个文件要放在项目的根目录下，分别是</p>
-<ol>
-<li>app.js 配置小程序的逻辑</li>
-<li>app.json 公共设置</li>
-<li><p>app.wxss 公共样式</p>
-<p>小程序可以自定义 page，但是 page 需要在 app.json 中做出声明，不然IDE会报错，找不到页面。小程序的页面由四个文件组成，分别是</p>
-</li>
-<li><p>.js文件 页面逻辑</p>
-</li>
-<li>.wxml 视图层文件，页面结构</li>
-<li>.wxss 样式文件，页面样式表</li>
-<li>.json 文件，配置文件，页面配置</li>
-</ol>
-<h2 id="2-小程序配置"><a href="#2-小程序配置" class="headerlink" title="2.小程序配置"></a>2.小程序配置</h2><p>app.json 决定页面文件的路径、窗口表现、设置网络超时时间、设置多少 tab 。</p>
-<p>在 pages 对象里定义页面路径，pages 接受由字符串组成的数组，pages数组的第一个元素就是小程序的首页。</p>
-<ol>
-<li>window 用于设置小程序的状态栏、导航条、标题、窗口背景色。</li>
-<li>tabBar 配置项指定 tab 栏的表现，以及 tab 切换时显示的对应页面。</li>
-<li>networkTimeout 用来设置各种网络请求超时时间</li>
-<li>debug 是布尔类型，用来配置是否在开发者工具中开启 debug 模式</li>
-</ol>
-<h2 id="3-小程序视图"><a href="#3-小程序视图" class="headerlink" title="3.小程序视图"></a>3.小程序视图</h2><p>在小程序中，你不能继续用 html 中的标签来构造你的页面，MANA 框架有特定的容器组件，view，scroll-view  以及 swiper。</p>
-<ol>
-<li>view 是视图容器，类似于 html 中的 div ，但是不同的是，用 view 包裹的内容，在超出设备窗口的时候，它实现的效果如 css 样式设置的 overflow：hidden</li>
-<li>如果你需要实现类似通讯录或则聊天列表的滚动效果，你需要使用 scroll-view 滚动容器组件，它实现的效果如 css 样式设置的 overflow:scroll 。</li>
-<li>swiper 是滑块视图组件，如果你要实现类似轮播图的效果的话，他是你的不二之选，你能通过属性配置来控制是否显示圆点，是否自动播放，切换时间，以及切换间隔时间等。<br>小程序的MANA也实现了数据的绑定，写法类似于 Angular 和 Vue，通过双括号的形式 如： 即可，值得注意的是，如果你写在容器（为了便于描述和理解，下文会以标签来描述）于之间的话，你直接把变量写在双括号里即可，如：<view></view> ，但是如果你给标签的属性绑定变量，你需要将双括号放在双引号内，如：<view wx:if="””&gt;</view">,类似于Angular 和 Vue，你也能在双括号内进行简单的运算，如：<view hidden="”{flag?true:false}”"></view>。</view></li>
-</ol>
-<p>细心的同学可能发现了在介绍数据绑定的时候我们用了wx:if  的属性，这是 MANA 提供的条件渲染，通过判断 wx:if 传布尔值（非布尔类型进行隐士转化）来控制是否渲染标签中的内容。在 MANA 中还有一个属性能控制内容的显隐，不同的是，wx:if 只有在为 true 的时候才回去渲染标签中的内容，而 hidden 始终会渲染内容，只是根据条件来控制内容的显示与否。</p>
-<p>此外MANA 也为我们提供了较为实用的列表渲染，wx:for 接受一个数组,在页面中能根据数组中的值来渲染页面列表</p>
-<p>除了使用列表渲染来复用一块视图外，你还可以通过模版来进行复用，你能在 template 中定义一块代码片段，然后在不同的页面中引用，如：</p>
-<pre><code>&lt;template name=&quot;odd&quot;&gt;
-  &lt;view&gt; odd &lt;/view&gt;
-&lt;/template&gt;
-&lt;template name=&quot;even&quot;&gt;
-  &lt;view&gt; even &lt;/view&gt;
-&lt;/template&gt;
-
-&lt;block wx:for=&quot;{{[1, 2, 3, 4, 5]}}&quot;&gt;
-    &lt;template is=&quot;{{item % 2 == 0 ? 'even' : 'odd'}}&quot;/&gt;
-&lt;/block&gt;
-</code></pre><p>除了 template 外，MANA 还提供了另外两种方式来进行应用和复用，import 和 include ，import 有作用域的概念，他只会引用目标文件中定义的模版。include可以将目标文件除了<template>的整个代码引入，相当于是拷贝到include位置上。</template></p>
-<p>除MANA 同样也定义了常用的事件分类，如</p>
-<ol>
-<li>touchstart 手指触摸动作开始</li>
-<li>touchmove 手指触摸后移动</li>
-<li>touchcancel 手指触摸动作被打断，如来电提醒，弹窗</li>
-<li>touchend 手指触摸动作结束</li>
-<li>tap 手指触摸后马上离开</li>
-<li>longtap 手指触摸后，超过350ms再离开<h2 id="4-组件样式"><a href="#4-组件样式" class="headerlink" title="4.组件样式"></a>4.组件样式</h2></li>
-</ol>
-<p>定义在 app.wxss 中的样式为全局样式，作用于每一个页面。在 page 的 wxss 文件中定义的样式为局部样式，只作用在对应的页面，并会覆盖 app.wxss 中相同的选择器。如果你写过 css ，那你就能轻松驾驭 wxss,wxss 在选择器上做了限制，目前支持的选择器有：</p>
-<ol>
-<li>.class 如：.intro    选择所有拥有 class=”intro” 的组件</li>
-<li><code>#id</code> 如：<code>#firstname</code>    选择拥有 id=”firstname” 的组件</li>
-<li>element  如：    view    选择所有 view 组件</li>
-<li>element, 如： element    view checkbox    选择所有文档的 view 组件和所有的 checkbox 组件</li>
-<li>::after     如：view::after    在 view 组件后边插入内容</li>
-<li>::before     如：view::before    在 view 组件前边插入内容</li>
-</ol>
-<p>开发过移动端的前端er 都知道，苹果手机有物理像素和逻辑像素的区别，比如设备的像素是350px，设计稿的像素是750px；一般在开发过程中，我们会使用自动化构建工具去做像素转化，或则是使用预处理器定义像素转化函数进行处理，在小程序的开发中，大可不必这么麻烦，小程序提供了一个 rpx 的单位，你可以直接写上你在设计稿中测量的数值即可，小程序开发工具在编译过程中会自动帮你做转换。</p>
-<p>在下次小程序分享《小程序开发踩坑（二）》的时候，会教大家如何与后端进行数据交互，欢迎感兴趣的小伙伴订阅博客。</p>
-<p><img src="/img/bVEXHS" alt="蜂贷微信端"></p>
+        <blockquote>
+<p>我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。</p>
+</blockquote>
+<h3 id="敲黑板：v8引擎的垃圾回收算法"><a href="#敲黑板：v8引擎的垃圾回收算法" class="headerlink" title="敲黑板：v8引擎的垃圾回收算法"></a>敲黑板：v8引擎的垃圾回收算法</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f306c4254c932?w=1064&amp;h=492&amp;f=jpeg&amp;s=114417" alt=""></p>
+<p>V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内存分为新生代和老生代两代。新生代中的对象为存活时间较短的对象, 老生代中的对象为存活时间较长或常驻内存的对象。</p>
+<h3 id="Scavenge算法"><a href="#Scavenge算法" class="headerlink" title="Scavenge算法"></a>Scavenge算法</h3><blockquote>
+<p>在分代的基础上,新生代中的对象主要通过Scavenge算法进行垃圾回收,在Scavenge的具体 实现中,主要采用了Cheney算法</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f30742b0bf065?w=1130&amp;h=568&amp;f=jpeg&amp;s=175952" alt=""></p>
+<p>Cheney 算法是一种采用复制的方式实现的垃圾回收算法。它将堆内存一分为二,每一部分空间称为 semispace。在这两个 semispace 空间中,只有一个处于使用中,另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间,处于闲置状态的空间称为 To 空间。当我们分配对象时,先是在 From 空间中进行分配。当开始进行垃圾回收时,会检查 From 空间中的存活对象,这 些存活对象将被复制到 To 空间中,而非存活对象占用的空间将会被释放。完成复制后,From 空 间和To空间的角色发生对换。 简而言之, 在垃圾回收的过程中, 就是通过将存活对象在两个 semispace 空间之间进行复制。</p>
+<h3 id="Mark-Sweep-amp-Mark-Compact"><a href="#Mark-Sweep-amp-Mark-Compact" class="headerlink" title="Mark-Sweep &amp; Mark-Compact"></a>Mark-Sweep &amp; Mark-Compact</h3><blockquote>
+<p>Scavenge算法通过牺牲空间换时间的算法非常适合生命周期短的新生代，但是，当一个对象经过多次复制，生命周期较长的时候或则To空间不足的时候，对象会被分配到进入到老生代中，需要采用新的算法进行垃圾回收。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f307747161f7d?w=1175&amp;h=609&amp;f=jpeg&amp;s=184055" alt=""></p>
+<p>Mark-Sweep 并不将内存空间划分为两半,所以不存在浪费一半空间的行为。与 Scavenge 复制活着的对象不同, Mark-Sweep 在标记阶段遍历堆中的所有对象,并标记活着的对象,在随后的清除阶段中,只清除没有被标记的对象。可以看出,Scavenge 中只复制活着的对象,而 Mark-Sweep 只清理死亡对象。</p>
+<p>Mark-Sweep 在进行一次标记清除回收后,内存空间会出现不连续的状态。这种内存碎片会对后续的内存分配造成问题,因为很可能出现需要分配一个大对象的情况,这时所有的碎片空间都无法完成此次分配,就会提前触发垃圾回收,而这次回收是不必要的。Mark-Compact 对象在标记为死亡后,在整理的过程中,将活着的对象往一端移动,移动完成后,直接清理掉边界外的内存</p>
+<h3 id="增量标记"><a href="#增量标记" class="headerlink" title="增量标记"></a>增量标记</h3><p>为了避免出现 JavaScript 应用逻辑与垃圾回收器看到的不一致的情况,垃圾回收的 3 种基本算法都需要将应用逻辑暂停下来,待执行完垃圾回收后再恢复执行应用逻辑,这种行为被称为“全停顿”，长时间的”全停顿”垃圾回收会让用户感受到明显的卡顿，带来体验的影响。以1.5 GB的垃圾回收堆内存为例,V8做一次小的垃圾回收需要50毫秒以上,做一次非增量式的垃圾回收甚至要1秒以上。这是垃圾回收中引起JavaScript线程暂停执行的时间,在 这样的时间花销下,应用的性能和响应能力都会直线下降。</p>
+<p>为了降低全堆垃圾回收带来的停顿时间,V8先从标记阶段入手,将原本要一口气停顿完成的动作改为增量标记(incremental marking),也就是拆分为许多小“步进”,每做完一“步进” 就让 JavaScript 应用逻辑执行一小会儿,垃圾回收与应用逻辑交替执行直到标记阶段完成</p>
+<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://www.ruanyifeng.com/blog/2017/04/memory-leak.html" target="_blank" rel="external">JavaScript 内存泄漏教程</a></p>
+<p><a href="https://bailinlin.github.io/2018/06/08/node-notes/" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
+<p><a href="chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf" target="_blank" rel="external">《深入浅出Node.js》PDF</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
 
       
     </div>
@@ -426,19 +374,13 @@ app.wxss 公共样式
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/小程序/" rel="tag"># 小程序</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/30/init-blog/" rel="next" title="使用 hexo 搭建你的 github.io 博客网站">
-                <i class="fa fa-chevron-left"></i> 使用 hexo 搭建你的 github.io 博客网站
+              <a href="/2018/06/08/node-notes/" rel="next" title="精读《深入浅出Node.js》">
+                <i class="fa fa-chevron-left"></i> 精读《深入浅出Node.js》
               </a>
             
           </div>
@@ -447,8 +389,8 @@ app.wxss 公共样式
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/09/webpack/" rel="prev" title="你需要知道的 webpack 配置">
-                你需要知道的 webpack 配置 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/20/javascript2/" rel="prev" title="精读《你不知道的javascript》中卷">
+                精读《你不知道的javascript》中卷 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -475,8 +417,8 @@ app.wxss 公共样式
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/01/learn-wxapp/"
-           data-title="你需要知道的小程序开发基础" data-url="https://bailinlin.github.com/2016/11/01/learn-wxapp/">
+      <div class="ds-thread" data-thread-key="2018/06/12/ljhs/"
+           data-title="你需要知道的 javascript 垃圾回收机制" data-url="https://bailinlin.github.com/2018/06/12/ljhs/">
       </div>
     
   </div>
@@ -566,7 +508,7 @@ app.wxss 公共样式
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-小程序配置"><span class="nav-number">1.</span> <span class="nav-text">2.小程序配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-小程序视图"><span class="nav-number">2.</span> <span class="nav-text">3.小程序视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-组件样式"><span class="nav-number">3.</span> <span class="nav-text">4.组件样式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#敲黑板：v8引擎的垃圾回收算法"><span class="nav-number">1.</span> <span class="nav-text">敲黑板：v8引擎的垃圾回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scavenge算法"><span class="nav-number">2.</span> <span class="nav-text">Scavenge算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mark-Sweep-amp-Mark-Compact"><span class="nav-number">3.</span> <span class="nav-text">Mark-Sweep & Mark-Compact</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增量标记"><span class="nav-number">4.</span> <span class="nav-text">增量标记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展阅读"><span class="nav-number">5.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
             
 
           </div>

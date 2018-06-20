@@ -239,6 +239,184 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/02/26/cookie-set/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/02/26/cookie-set/" itemprop="url">
+                  跨域问题导致设置 cookie 不生效的问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-26T16:18:09+08:00">
+                2018-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/02/26/cookie-set/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/26/cookie-set/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我们看下跨域不生效的问题，首先抛出两个问题：</p>
+<blockquote>
+<ol>
+<li>我们如何设置 cookie ？</li>
+<li>又如何确定 cookie 设置是否生效了 ？</li>
+</ol>
+</blockquote>
+<p>首先，我们实现一个简单的接口,新建一个 test.js 文件，将如下代码复制进去，通过 <code>node test.js</code> 启动服务，在本地就可以通过 <code>http://localhost:3000/rest/collect/event/h5/v1/</code> 来访问了我们创建的接口了（node 环境安装的教程网上有很多详细的教程，本文不再赘述）</p>
+<pre>
+var express = require('express');
+var app = express();
+var URL = require('url')
+var path = require('path');
+
+
+app.post('/rest/collect/event/h5/v1/', function(req, res) {
+        res.cookie('token','11111112222222224444444444')
+        res.cookie('httpOnly-token','11111112222222224444444444',{ httpOnly: true })
+
+        function User() {
+                this.name;
+                this.city;
+                this.age;
+        }
+
+        var user = new User();
+
+        if(params.id == '1') {
+
+                user.name = "ligh";
+                user.age = "1";
+                user.city = "北京市";
+
+        }else{
+                user.name = "SPTING";
+                user.age = "1";
+                user.city = "杭州市";
+        }
+
+        var response = {status:1,data:user};
+        res.send(JSON.stringify(response));
+});
+
+app.listen(3000);
+console.log('Listening on port 3000...');
+</pre>
+
+<p>访问效果如下</p>
+<p><img src="/images/cookie/3.jpeg" alt="接口访问效果如下"></p>
+<p>在前端代码中访问我们的接口<br><img src="/images/cookie/4.jpeg" alt="cookie设置"><br><img src="/images/cookie/5.jpeg" alt="cookie查看"><br>在浏览器中我们可以看到请求的 Resopnse Headers 里，有两个 <code>set-cookie</code>头部，区别在于一个带有 <code>HttpOnly</code>的标识，我们打开浏览器的调试窗口<code>Application</code>我们可以看到，两个数值都被设置到浏览器里了，<code>httpOnly</code>的值在浏览器调试窗口的<code>http</code>一栏，打了个小勾，说明这个变量是只能通过 http 请求来获取到这个cookie ，前端无法通过 js 的 <code>document.cookie</code>来获取到<br><img src="/images/cookie/7.jpeg" alt="就是无法操作的cookie"><br>讲到这块内容，我们顺便讲下 cookie 设置的其他参数的作用</p>
+<p><img src="/images/cookie/6.jpeg" alt="其他参数"><br>cookie 和域名相关的哟，<code>Domain</code> 变量表示 cookie 生效的域名，<code>expries</code>和<code>max-age</code>表示 cookie 的有效时间</p>
+<h4 id="问题描述及解决"><a href="#问题描述及解决" class="headerlink" title="问题描述及解决"></a>问题描述及解决</h4><p>在开发阶段我自己用node 简单的写了一个接口，便于联调前端传参问题，希望通过 http 的set-cookie 存储变量， 但是却始终没有把 cookie 成功设置到浏览器里，经过排查发现是跨域导致的 cookie 设置不生效<br><img src="/images/cookie/1.jpeg" alt="cookie设置"><br><img src="/images/cookie/2.jpeg" alt="cookie查看"></p>
+<p>不生效的原因是我本地项目启动在 <code>http://localhost:70</code>,但是调用的接口在 <code>http://localhost:3000</code>上，端口不一样，存在跨域的问题，所以虽然在 Response Header 里看到了<code>set-cookie</code>的操作，但是在浏览器的 <code>application</code>里看到，并没有被设置进来，解决办法，通过nginx 代理（最长用的跨域解决办法）</p>
+<h4 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h4><p>跨域的问题在开发过程中比较常见，我们经常会碰到，简单来说<code>只要请求资源的协议，域名，端口不一致，都会导致跨域</code>，网上的解决方法也比较多，比较成熟，本文不做扩展，附带几个链接供大家参考</p>
+<p><a href="http://harttle.land/2016/12/30/cors-preflight.html" target="_blank" rel="external">跨域中的预检测请求</a><br><a href="https://www.jianshu.com/p/13d53acc124f" target="_blank" rel="external">CORS 跨域中的 Cookie</a><br><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="external">跨域资源共享 CORS 详解</a><br><a href="http://harttle.land/2015/10/10/cross-origin.html" target="_blank" rel="external">Web开发中跨域的几种解决方案</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2017/05/18/nginx-basic/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2333,7 +2511,7 @@ angular
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
