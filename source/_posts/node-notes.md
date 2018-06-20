@@ -1,7 +1,7 @@
 ---
 title: 精读《深入浅出Node.js》
 date: 2018-06-08 14:04:36
-tags: [javascript,node, 思维导图 ]
+tags: [javascript, 思维导图 ]
 ---
 
 ### 前言

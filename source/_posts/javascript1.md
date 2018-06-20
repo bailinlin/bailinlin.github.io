@@ -1,5 +1,5 @@
 ---
-title: 精度《你不知道的javascript》上卷
+title: 精读《你不知道的javascript》上卷
 date: 2018-05-28 14:04:36
 tags: [javascript, 思维导图 ]
 ---
