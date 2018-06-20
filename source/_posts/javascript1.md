@@ -4,6 +4,7 @@ date: 2018-05-28 14:04:36
 tags: [javascript, 思维导图 ]
 ---
 
+
 ###  前言
 
 《你不知道的 javascript》是一个前端学习必读的系列，让不求甚解的JavaScript开发者迎难而上，深入语言内部，弄清楚JavaScript每一个零部件的用途。本书介绍了该系列的两个主题：“作用域和闭包”以及“this和对象原型”。这两块也是值得我们反复去学习琢磨的两块只是内容，今天我们用思维导图的方式来精读一遍。（思维导图图片可能有点小，记得点开看，你会有所收获）
@@ -11,7 +12,9 @@ tags: [javascript, 思维导图 ]
 ### 第一部分 作用域和闭包
 
 #### 作用域是什么
-![this](/images/javascript/part1/zyy.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a99495f8829f7?w=1377&h=872&f=jpeg&s=209079)
+
 
 作用域是一套规则,用于确定在何处以及如何查找变量(标识符)。如果查找的目的是对 变量进行赋值,那么就会使用 LHS 查询;如果目的是获取变量的值,就会使用 RHS 查询。赋值操作符会导致 LHS 查询。 的赋值操作。 =操作符或调用函数时传入参数的操作都会导致关联作用域的赋值操作。
 JavaScript 引擎首先会在代码执行前对其进行编译,在这个过程中,像 var a = 2 这样的声 明会被分解成两个独立的步骤：
@@ -23,7 +26,9 @@ LHS 和 RHS 查询都会在当前执行作用域中开始,如果有需要(也就
 不成功的RHS引用会导致抛出 ReferenceError 异常。不成功的 LHS 引用会导致自动隐式地创建一个全局变量(非严格模式下),该变量使用 LHS 引用的目标作为标识符,或者抛 出 ReferenceError 异常(严格模式下)。
 
 #### 词法作用域
-![this](/images/javascript/part1/cfzyy.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a994edf51a32f?w=1105&h=471&f=jpeg&s=50305)
+
 
 词法作用域意味着作用域是由书写代码时函数声明的位置来决定的。编译的词法分析阶段 基本能够知道全部标识符在哪里以及是如何声明的,从而能够预测在执行过程中如何对它 们进行查找。
 
@@ -32,7 +37,9 @@ JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 wit
 这两个机制的副作用是引擎无法在编译时对作用域查找进行优化,因为引擎只能谨慎地认 为这样的优化是无效的。使用这其中任何一个机制都 将 导致代码运行变慢。 不要使用它们。
 
 #### 函数作用域和块作用域
-![this](/images/javascript/part1/hszyyhkzyy.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a9954593cc366?w=1689&h=828&f=jpeg&s=160928)
+
 
 函数是 JavaScript 中最常见的作用域单元。本质上,声明在一个函数内部的变量或函数会 在所处的作用域中“隐藏”起来,这是有意为之的良好软件的设计原则。
 
@@ -44,7 +51,9 @@ JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 wit
 
 
 #### 提升
-![this](/images/javascript/part1/ts.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a995873202ea4?w=1651&h=539&f=jpeg&s=98748)
+
 
 我们习惯将 var a = 2; 看作一个声明,而实际上 JavaScript 引擎并不这么认为。它将 var a 和 a = 2 当作两个单独的声明,第一个是编译阶段的任务,而第二个则是执行阶段的任务。
 
@@ -55,7 +64,8 @@ JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 wit
 要注意避免重复声明,特别是当普通的 var 声明和函数声明混合在一起的时候,否则会引 起很多危险的问题!
 
 #### 作用域闭包
-![this](/images/javascript/part1/zyybb.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a995bb92570eb?w=1549&h=731&f=jpeg&s=158866)
 
 闭包就好像从 JavaScript 中分离出来的一个充满神秘色彩的未开化世界,只有最勇敢的人 才能够到达那里。但实际上它只是一个标准,显然就是关于如何在函数作为值按需传递的 词法环境中书写代码的。
 
@@ -72,7 +82,8 @@ JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 wit
 ### 第二部分 this 和对象原型
 
 #### this 全面解析
-![this](/images/javascript/part2/this.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a996bcbf28e91)
 
 如果要判断一个运行中函数的 this 绑定,就需要找到这个函数的直接调用位置。找到之后 就可以顺序应用下面这四条规则来判断 this 的绑定对象。
 
@@ -88,8 +99,11 @@ JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 wit
 一定要注意,有些调用可能在无意中使用默认绑定规则。如果想“更安全”地忽略 this 绑 定,你可以使用一个 DMZ 对象,比如 ø = Object.create(null) ,以保护全局对象。ES6中的箭头函数并不会使用四条标准的绑定规则, 而是根据当前的词法作用域来决定 this ,具体来说,箭头函数会继承外层函数调用的 this 绑定(无论 this 绑定到什么)。这 其实和 ES6 之前代码中的 self = this 机制一样。
 
 #### 对象
-![this](/images/javascript/part2/dx1.jpeg)
-![this](/images/javascript/part2/dx2.jpeg)
+
+
+![](https://user-gold-cdn.xitu.io/2018/6/4/163c85faf904cf73?w=1378&h=708&f=jpeg&s=79898)
+
+![](https://user-gold-cdn.xitu.io/2018/6/4/163c85fd6750a810?w=1260&h=798&f=jpeg&s=138155)
 
 JavaScript 中的对象有字面形式(比如 var a = { .. } )和构造形式(比如 var a = new Array(..) )。字面形式更常用,不过有时候构造形式可以提供更多选项。
 
@@ -104,7 +118,8 @@ JavaScript 中的对象有字面形式(比如 var a = { .. } )和构造形式(�
 你可以使用 ES6 的 for..of 语法来遍历数据结构(数组、对象, 等等)中的值, for..of 会寻找内置或者自定义的 @@iterator 对象并调用它的 next() 方法来遍历数据值。
 
 #### 混合对象"类"
-![this](/images/javascript/part2/hhdxl.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a9977ad530352?w=1428&h=862&f=jpeg&s=135448)
 
 类是一种设计模式。 许多语言提供了对于面向类软件设计的原生语法。 JavaScript 也有类 似的语法,但是和其他语言中的类完全不同。
 
@@ -123,8 +138,10 @@ JavaScript 并不会(像类那样)自动创建对象的副本。
 总地来说,在 JavaScript 中模拟类是得不偿失的,虽然能解决当前的问题,但是可能会埋下更多的隐患。
 
 #### 原型
-![this](/images/javascript/part2/yx1.jpeg)
-![this](/images/javascript/part2/yx2.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a997b039a7ade?w=1458&h=603&f=jpeg&s=159321)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a997def15b21f?w=1458&h=781&f=jpeg&s=178700)
 
 如果要访问对象中并不存在的一个属性, [[Get]] 操作(参见第 3 章)就会查找对象内部 [[Prototype]] 关联的对象。这个关联关系实际上定义了一条“原型链”(有点像嵌套的作用域链),在查找属性时会对它进行遍历。
 
@@ -143,7 +160,8 @@ JavaScript 是 中的机制有一个核心区别, 那就是不会进行复制, �
 相比之下,“委托”是一个更合适的术语,因为对象之间的关系不是 复制 而是委托。
 
 #### 行为委托
-![this](/images/javascript/part2/xwwt.jpeg)
+
+![](https://user-gold-cdn.xitu.io/2018/5/29/163a998194b182d8?w=1754&h=763&f=jpeg&s=132903)
 
 在软件架构中你可以 选择是否 使用类和继承设计模式。大多数开发者理所当然地认为类是 唯一(合适)的代码组织方式,但是本章中我们看到了另一种更少见但是更强大的设计模式: 行为委托 。
 
@@ -158,4 +176,8 @@ JavaScript 是 中的机制有一个核心区别, 那就是不会进行复制, �
 思维导图能比较清晰的还原整本书的知识结构体系，如果你还没用看过这本书，可以按照这个思维导图的思路快速预习一遍，提高学习效率。学习新事物总容易遗忘，我比较喜欢在看书的时候用思维导图做些记录，便于自己后期复习，如果你已经看过了这本书，也建议你收藏复习。如果你有神马建议或则想法，欢迎留言或加我微信交流：646321933
 
 [你不知道的javascript上卷第二部分在线文档](https://www.kancloud.cn/kancloud/you-dont-know-js-this-object-prototypes/516674)
+
 [你不知道的 javascript（上卷）PDF 下载地址](https://github.com/threerocks/studyFiles/blob/master/js/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript%EF%BC%88%E4%B8%8A%E5%8D%B7%EF%BC%89.pdf)
+
+
+[思维导图下载地址](https://github.com/bailinlin/Awsome-Front-End-Xmind)
