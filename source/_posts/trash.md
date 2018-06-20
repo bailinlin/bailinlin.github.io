@@ -8,7 +8,9 @@ tags:[javascript, 思维导图 ]
 
 
 ### 敲黑板：v8引擎的垃圾回收算法
-![this](/images/blog/v8/fds.jpg)
+
+
+![](https://user-gold-cdn.xitu.io/2018/6/12/163f306c4254c932?w=1064&h=492&f=jpeg&s=114417)
 
 V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内存分为新生代和老生代两代。新生代中的对象为存活时间较短的对象, 老生代中的对象为存活时间较长或常驻内存的对象。
 
@@ -17,7 +19,7 @@ V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾
 
 >在分代的基础上,新生代中的对象主要通过Scavenge算法进行垃圾回收,在Scavenge的具体 实现中,主要采用了Cheney算法
 
-![this](/images/blog/v8/csf.jpg)
+![](https://user-gold-cdn.xitu.io/2018/6/12/163f30742b0bf065?w=1130&h=568&f=jpeg&s=175952)
 
 Cheney 算法是一种采用复制的方式实现的垃圾回收算法。它将堆内存一分为二,每一部分空间称为 semispace。在这两个 semispace 空间中,只有一个处于使用中,另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间,处于闲置状态的空间称为 To 空间。当我们分配对象时,先是在 From 空间中进行分配。当开始进行垃圾回收时,会检查 From 空间中的存活对象,这 些存活对象将被复制到 To 空间中,而非存活对象占用的空间将会被释放。完成复制后,From 空 间和To空间的角色发生对换。 简而言之, 在垃圾回收的过程中, 就是通过将存活对象在两个 semispace 空间之间进行复制。
 
@@ -26,7 +28,7 @@ Cheney 算法是一种采用复制的方式实现的垃圾回收算法。它将�
 
 >Scavenge算法通过牺牲空间换时间的算法非常适合生命周期短的新生代，但是，当一个对象经过多次复制，生命周期较长的时候或则To空间不足的时候，对象会被分配到进入到老生代中，需要采用新的算法进行垃圾回收。
 
-![this](/images/blog/v8/mssf.jpg)
+![](https://user-gold-cdn.xitu.io/2018/6/12/163f307747161f7d?w=1175&h=609&f=jpeg&s=184055)
 
 Mark-Sweep 并不将内存空间划分为两半,所以不存在浪费一半空间的行为。与 Scavenge 复制活着的对象不同, Mark-Sweep 在标记阶段遍历堆中的所有对象,并标记活着的对象,在随后的清除阶段中,只清除没有被标记的对象。可以看出,Scavenge 中只复制活着的对象,而 Mark-Sweep 只清理死亡对象。
 
@@ -47,4 +49,4 @@ Mark-Sweep 在进行一次标记清除回收后,内存空间会出现不连续�
 
 [《深入浅出Node.js》PDF](chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf)
 
-
+[思维导图下载地址](https://github.com/bailinlin/Awsome-Front-End-Xmind)
