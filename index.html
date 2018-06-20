@@ -239,7 +239,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/12/trash/">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/20/javascript2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="bailinlin">
@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2018/06/12/trash/" itemprop="url">
-                  你需要知道的 javascript 垃圾回收机制
+                <a class="post-title-link" href="/2018/06/20/javascript2/" itemprop="url">
+                  精读《你不知道的javascript》中卷
                 </a>
               
             
@@ -279,8 +279,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-12T15:11:38+08:00">
-                2018-06-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-20T14:04:36+08:00">
+                2018-06-20
               </time>
             
 
@@ -295,8 +295,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2018/06/12/trash/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/12/trash/" itemprop="commentCount"></span>
+                <a href="/2018/06/20/javascript2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/20/javascript2/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -324,27 +324,91 @@
       
         
           
-            <blockquote>
-<p>我们通常理解的 javascript 垃圾回收机制都停留在表面，”会释放不被引用变量内存”，最近在读《深入浅出node.js》的书，详细了解了下 v8 垃圾回收的算法，记录了一些学习笔记。</p>
-</blockquote>
-<h3 id="敲黑板：v8引擎的垃圾回收算法"><a href="#敲黑板：v8引擎的垃圾回收算法" class="headerlink" title="敲黑板：v8引擎的垃圾回收算法"></a>敲黑板：v8引擎的垃圾回收算法</h3><p><img src="/images/blog/v8/fds.jpg" alt="this"></p>
-<p>V8的垃圾回收策略主要基于分代式垃圾回收机制，现代的垃圾回收算法中按对象的存活时间将内存的垃圾回收进行不同的分代,然后分别对不同分代的内存施以更高效的算法。在V8中,主要将内存分为新生代和老生代两代。新生代中的对象为存活时间较短的对象, 老生代中的对象为存活时间较长或常驻内存的对象。</p>
-<h3 id="Scavenge算法"><a href="#Scavenge算法" class="headerlink" title="Scavenge算法"></a>Scavenge算法</h3><blockquote>
-<p>在分代的基础上,新生代中的对象主要通过Scavenge算法进行垃圾回收,在Scavenge的具体 实现中,主要采用了Cheney算法</p>
-</blockquote>
-<p><img src="/images/blog/v8/csf.jpg" alt="this"></p>
-<p>Cheney 算法是一种采用复制的方式实现的垃圾回收算法。它将堆内存一分为二,每一部分空间称为 semispace。在这两个 semispace 空间中,只有一个处于使用中,另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间,处于闲置状态的空间称为 To 空间。当我们分配对象时,先是在 From 空间中进行分配。当开始进行垃圾回收时,会检查 From 空间中的存活对象,这 些存活对象将被复制到 To 空间中,而非存活对象占用的空间将会被释放。完成复制后,From 空 间和To空间的角色发生对换。 简而言之, 在垃圾回收的过程中, 就是通过将存活对象在两个 semispace 空间之间进行复制。</p>
-<h3 id="Mark-Sweep-amp-Mark-Compact"><a href="#Mark-Sweep-amp-Mark-Compact" class="headerlink" title="Mark-Sweep &amp; Mark-Compact"></a>Mark-Sweep &amp; Mark-Compact</h3><blockquote>
-<p>Scavenge算法通过牺牲空间换时间的算法非常适合生命周期短的新生代，但是，当一个对象经过多次复制，生命周期较长的时候或则To空间不足的时候，对象会被分配到进入到老生代中，需要采用新的算法进行垃圾回收。</p>
-</blockquote>
-<p><img src="/images/blog/v8/mssf.jpg" alt="this"></p>
-<p>Mark-Sweep 并不将内存空间划分为两半,所以不存在浪费一半空间的行为。与 Scavenge 复制活着的对象不同, Mark-Sweep 在标记阶段遍历堆中的所有对象,并标记活着的对象,在随后的清除阶段中,只清除没有被标记的对象。可以看出,Scavenge 中只复制活着的对象,而 Mark-Sweep 只清理死亡对象。</p>
-<p>Mark-Sweep 在进行一次标记清除回收后,内存空间会出现不连续的状态。这种内存碎片会对后续的内存分配造成问题,因为很可能出现需要分配一个大对象的情况,这时所有的碎片空间都无法完成此次分配,就会提前触发垃圾回收,而这次回收是不必要的。Mark-Compact 对象在标记为死亡后,在整理的过程中,将活着的对象往一端移动,移动完成后,直接清理掉边界外的内存</p>
-<h3 id="增量标记"><a href="#增量标记" class="headerlink" title="增量标记"></a>增量标记</h3><p>为了避免出现 JavaScript 应用逻辑与垃圾回收器看到的不一致的情况,垃圾回收的 3 种基本算法都需要将应用逻辑暂停下来,待执行完垃圾回收后再恢复执行应用逻辑,这种行为被称为“全停顿”，长时间的”全停顿”垃圾回收会让用户感受到明显的卡顿，带来体验的影响。以1.5 GB的垃圾回收堆内存为例,V8做一次小的垃圾回收需要50毫秒以上,做一次非增量式的垃圾回收甚至要1秒以上。这是垃圾回收中引起JavaScript线程暂停执行的时间,在 这样的时间花销下,应用的性能和响应能力都会直线下降。</p>
-<p>为了降低全堆垃圾回收带来的停顿时间,V8先从标记阶段入手,将原本要一口气停顿完成的动作改为增量标记(incremental marking),也就是拆分为许多小“步进”,每做完一“步进” 就让 JavaScript 应用逻辑执行一小会儿,垃圾回收与应用逻辑交替执行直到标记阶段完成</p>
-<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://www.ruanyifeng.com/blog/2017/04/memory-leak.html" target="_blank" rel="external">JavaScript 内存泄漏教程</a></p>
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>《你不知道的 javascript》是一个前端学习必读的系列，让不求甚解的JavaScript开发者迎难而上，深入语言内部，弄清楚JavaScript每一个零部件的用途。本书《你不知道的javascript》中卷介绍了该系列的两个主题：“类型和语法”以及“异步与性能”。这两块也是值得我们反复去学习琢磨的两块只是内容，今天我们用思维导图的方式来精读一遍。（思维导图图片可能有点小，记得点开看，你会有所收获）</p>
+<h3 id="第一部分-作用域和闭包"><a href="#第一部分-作用域和闭包" class="headerlink" title="第一部分 作用域和闭包"></a>第一部分 作用域和闭包</h3><h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c2f4d3ede46a?w=1105&amp;h=870&amp;f=jpeg&amp;s=140823" alt=""><br>JavaScript 有 七 种 内 置 类 型: null 、 undefined 、 boolean 、 number 、 string 、 object 和 symbol ,可以使用 typeof 运算符来查看。</p>
+<p>变量没有类型,但它们持有的值有类型。类型定义了值的行为特征。</p>
+<p>很多开发人员将 undefined 和 undeclared 混 为 一 谈, 但 在 JavaScript 中 它 们 是 两 码 事。 undefined 是值的一种。 undeclared 则表示变量还没有被声明过。</p>
+<p>遗憾的是, JavaScript 却将它们混为一谈, 在我们试图访问 “undeclared” 变量时这样报 错:ReferenceError: a is not defined, 并 且 typeof 对 undefined 和 undeclared 变 量 都 返 回 “undefined” 。</p>
+<p>然而,通过 typeof 的安全防范机制(阻止报错)来检查 undeclared 变量,有时是个不错的办法。</p>
+<h3 id="值"><a href="#值" class="headerlink" title="值"></a>值</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c2f9fd654d30?w=1299&amp;h=398&amp;f=jpeg&amp;s=77055" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c2fbdebcded2?w=1300&amp;h=894&amp;f=jpeg&amp;s=195120" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c2fdca914292?w=1303&amp;h=706&amp;f=jpeg&amp;s=150852" alt=""></p>
+<p>JavaScript 中的数组是通过数字索引的一组任意类型的值。字符串和数组类似,但是它们的 行为特征不同, 在将字符作为数组来处理时需要特别小心。 JavaScript 中的数字包括“整 数”和“浮点型”。</p>
+<p>基本类型中定义了几个特殊的值。</p>
+<p>null 类型只有一个值 null , undefined 类型也只有一个值 undefined 。 所有变量在赋值之 前默认值都是 undefined 。 void 运算符返回 undefined 。</p>
+<p>数 字 类 型 有 几 个 特 殊 值, 包 括 NaN ( 意 指“not a number” , 更 确 切 地 说 是“invalid number” )、 +Infinity 、 -Infinity 和 -0 。</p>
+<p>简单标量基本类型值(字符串和数字等)通过值复制来赋值 / 传递, 而复合值(对象等) 通过引用复制来赋值 / 传递。 JavaScript 中的引用和其他语言中的引用 / 指针不同,它们不 能指向别的变量 / 引用,只能指向值。</p>
+<h3 id="原生函数"><a href="#原生函数" class="headerlink" title="原生函数"></a>原生函数</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c303afb22377?w=1450&amp;h=770&amp;f=jpeg&amp;s=128562" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c306f032cf04?w=1450&amp;h=682&amp;f=jpeg&amp;s=180566" alt=""></p>
+<p>JavaScript 为基本数据类型值提供了封装对象,称为原生函数(如 String 、 Number 、 Boolean 等)。它们为基本数据类型值提供了该子类型所特有的方法和属性(如: String#trim() 和 Array#concat(..) )。</p>
+<p>对于简单标量基本类型值,比如 “abc” ,如果要访问它的 length 属性或 String.prototype 方法, JavaScript 引擎会自动对该值进行封装(即用相应类型的封装对象来包装它)来实现对这些属性和方法的访问。</p>
+<h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c30a226085fc?w=1499&amp;h=239&amp;f=jpeg&amp;s=43515" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c30d238ec375?w=1499&amp;h=891&amp;f=jpeg&amp;s=213161" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c30efc487344?w=1499&amp;h=887&amp;f=jpeg&amp;s=203319" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c310cc70fdcc?w=1499&amp;h=823&amp;f=jpeg&amp;s=164996" alt=""></p>
+<p>本章介绍了 JavaScript 的数据类型之间的转换,即强制类型转换:包括显式和隐式。</p>
+<p>强制类型转换常常为人诟病, 但实际上很多时候它们是非常有用的。 作为有使命感的 JavaScript 开发人员,我们有必要深入了解强制类型转换,这样就能取其精华,去其糟粕。</p>
+<p>显式强制类型转换明确告诉我们哪里发生了类型转换, 有助于提高代码可读性和可维 护性。</p>
+<p>隐式强制类型转换则没有那么明显,是其他操作的副作用。感觉上好像是显式强制类型转 换的反面,实际上隐式强制类型转换也有助于提高代码的可读性。</p>
+<p>在处理强制类型转换的时候要十分小心,尤其是隐式强制类型转换。在编码的时候,要知 其然,还要知其所以然,并努力让代码清晰易读。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c313229058fc?w=1250&amp;h=857&amp;f=jpeg&amp;s=153667" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c315bee42707?w=1253&amp;h=870&amp;f=jpeg&amp;s=194344" alt=""><br>JavaScript 语法规则中的许多细节需要我们多花点时间和精力来了解。 从长远来看, 这有 助于更深入地掌握这门语言。</p>
+<p>语句和表达式在英语中都能找到类比——语句就像英语中的句子,而表达式就像短语。表 达式可以是简单独立的,否则可能会产生副作用。</p>
+<p>JavaScript 语法规则之上是语义规则(也称作上下文)。例如, { } 在不同情况下的意思不 尽相同,可以是语句块、对象常量、解构赋值(ES6)或者命名函数参数(ES6)。</p>
+<p>JavaScript 详细定义了运算符的优先级(运算符执行的先后顺序)和关联(多个运算符的 组合方式)。只要熟练掌握了这些规则,就能对如何合理地运用它们作出自己的判断。</p>
+<p>ASI(自动分号插入)是 JavaScript 引擎的代码解析纠错机制, 它会在需要的地方自动插 入分号来纠正解析错误。问题在于这是否意味着大多数的分号都不是必要的(可以省略), 或者由于分号缺失导致的错误是否都可以交给 JavaScript 引擎来处理。</p>
+<p>JavaScript 中有很多错误类型, 分为两大类:早期错误(编译时错误, 无法被捕获)和运 行时错误(可以通过 try..catch 来捕获)。所有语法错误都是早期错误,程序有语法错误 则无法运行。</p>
+<p>函数参数和命名参数之间的关系非常微妙。尤其是 arguments 数组,它的抽象泄漏给我们 挖了不少坑。因此,尽量不要使用 arguments ,如果非用不可,也切勿同时使用 arguments 和其对应的命名参数。</p>
+<p>finally 中代码的处理顺序需要特别注意。它们有时能派上很大用场,但也容易引起困惑, 特别是在和带标签的代码块混用时。总之,使用 finally 旨在让代码更加简洁易读,切忌 弄巧成拙。</p>
+<p>switch 相对于 if..else if.. 来说更为简洁。需要注意的一点是,如果对其理解得不够透 彻,稍不注意就很容易出错。</p>
+<h3 id="第二部分-this-和对象原型"><a href="#第二部分-this-和对象原型" class="headerlink" title="第二部分 this 和对象原型"></a>第二部分 this 和对象原型</h3><h3 id="异步：现在与将来"><a href="#异步：现在与将来" class="headerlink" title="异步：现在与将来"></a>异步：现在与将来</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c318a66b1032?w=1200&amp;h=619&amp;f=jpeg&amp;s=126139" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c31aeeeaae13?w=1200&amp;h=698&amp;f=jpeg&amp;s=138515" alt=""><br>实际上, JavaScript 程序总是至少分为两个块:第一块 现在 运行;下一块 将来 运行, 以响 应某个事件。尽管程序是一块一块执行的,但是所有这些块共享对程序作用域和状态的访 问,所以对状态的修改都是在之前累积的修改之上进行的。</p>
+<p>一旦有事件需要运行, 事件循环就会运行, 直到队列清空。 事件循环的每一轮称为一个 tick。 用户交互、IO 和定时器会向事件队列中加入事件。</p>
+<p>任意时刻,一次只能从队列中处理一个事件。执行事件的时候,可能直接或间接地引发一 个或多个后续事件。</p>
+<p>并发是指两个或多个事件链随时间发展交替执行,以至于从更高的层次来看,就像是同时 在运行(尽管在任意时刻只处理一个事件)。</p>
+<p>通常需要对这些并发执行的“进程”(有别于操作系统中的进程概念)进行某种形式的交 互协调,比如需要确保执行顺序或者需要防止竞态出现。这些“进程”也可以通过把自身 分割为更小的块,以便其他“进程”插入进来。</p>
+<h3 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c31dc255b722?w=1200&amp;h=845&amp;f=jpeg&amp;s=169244" alt=""></p>
+<p>回调函数是 JavaScript 异步的基本单元。但是随着 JavaScript 越来越成熟,对于异步编程领域的发展,回调已经不够用了。</p>
+<p>第一,大脑对于事情的计划方式是线性的、阻塞的、单线程的语义,但是回调表达异步流 程的方式是非线性的、非顺序的,这使得正确推导这样的代码难度很大。难于理解的代码 是坏代码,会导致坏 bug。</p>
+<p>我们需要一种更同步、更顺序、更阻塞的的方式来表达异步,就像我们的大脑一样。</p>
+<p>第二,也是更重要的一点,回调会受到控制反转的影响,因为回调暗中把控制权交给第三 方(通常是不受你控制的第三方工具!)来调用你代码中的 continuation。 这种控制转移导 致一系列麻烦的信任问题,比如回调被调用的次数是否会超出预期。</p>
+<p>可以发明一些特定逻辑来解决这些信任问题,但是其难度高于应有的水平,可能会产生更 笨重、更难维护的代码,并且缺少足够的保护,其中的损害要直到你受到 bug 的影响才会 被发现。</p>
+<p>我们需要一个通用的方案来解决这些信任问题。不管我们创建多少回调,这一方案都应可 以复用,且没有重复代码的开销。</p>
+<p>我们需要比回调更好的机制。到目前为止,回调提供了很好的服务,但是未来的 JavaScript 需要更高级、功能更强大的异步模式。本书接下来的几章会深入探讨这些新型技术。</p>
+<h3 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c3210ed1135d?w=1559&amp;h=321&amp;f=jpeg&amp;s=81813" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c322b9dce156?w=1559&amp;h=712&amp;f=jpeg&amp;s=219007" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c32579139ed3?w=1561&amp;h=715&amp;f=jpeg&amp;s=201171" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c3279bb0a8d7?w=1506&amp;h=773&amp;f=jpeg&amp;s=236818" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c3299cc4a0d4?w=1504&amp;h=330&amp;f=jpeg&amp;s=101344" alt=""></p>
+<p>Promise 非常好,请使用。它们解决了我们因只用回调的代码而备受困扰的控制反转问题。</p>
+<p>它们并没有摈弃回调,只是把回调的安排转交给了一个位于我们和其他工具之间的可信任 的中介机制。</p>
+<p>Promise 链也开始提供(尽管并不完美)以顺序的方式表达异步流的一个更好的方法,这 有助于我们的大脑更好地计划和维护异步 JavaScript 代码。我们将在第 4 章看到针对这个 问题的一种更好的解决方案!</p>
+<h3 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c32bc25ce357?w=1430&amp;h=893&amp;f=jpeg&amp;s=251348" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c32dfa81cca0?w=1429&amp;h=875&amp;f=jpeg&amp;s=220277" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c32feeacf0c8?w=1429&amp;h=330&amp;f=jpeg&amp;s=82989" alt=""><br>生成器是 ES6 的一个新的函数类型, 它并不像普通函数那样总是运行到结束。 取而代之 的是, 生成器可以在运行当中(完全保持其状态)暂停, 并且将来再从暂停的地方恢复 运行。</p>
+<p>这种交替的暂停和恢复是合作性的而不是抢占式的,这意味着生成器具有独一无二的能力 来暂停自身,这是通过关键字 yield 实现的。不过,只有控制生成器的迭代器具有恢复生 成器的能力(通过 next(..) )。</p>
+<p>yield / next(..) 这一对不只是一种控制机制,实际上也是一种双向消息传递机制。 yield .. 表 达式本质上是暂停下来等待某个值,接下来的 next(..) 调用会向被暂停的 yield 表达式传回 一个值(或者是隐式的 undefined )。</p>
+<p>在异步控制流程方面,生成器的关键优点是:生成器内部的代码是以自然的同步 / 顺序方 式表达任务的一系列步骤。其技巧在于,我们把可能的异步隐藏在了关键字 yield 的后面, 把异步移动到控制生成器的迭代器的代码部分。</p>
+<p>换句话说,生成器为异步代码保持了顺序、同步、阻塞的代码模式,这使得大脑可以更自 然地追踪代码,解决了基于回调的异步的两个关键缺陷之一。</p>
+<h3 id="程序性能"><a href="#程序性能" class="headerlink" title="程序性能"></a>程序性能</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c33279d14790?w=1150&amp;h=757&amp;f=jpeg&amp;s=152257" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c334668ebefc?w=1150&amp;h=273&amp;f=jpeg&amp;s=64116" alt=""></p>
+<p>本部分的前四章都是基于这样一个前提:异步编码模式使我们能够编写更高效的代码,通 常能够带来非常大的改进。但是,异步特性只能让你走这么远,因为它本质上还是绑定在 一个单事件循环线程上。</p>
+<p>因此,在这一章里,我们介绍了几种能够进一步提高性能的程序级别的机制。</p>
+<p>Web Worker 让你可以在独立的线程运行一个 JavaScript 文件(即程序),使用异步事件在 线程之间传递消息。 它们非常适用于把长时间的或资源密集型的任务卸载到不同的线程 中,以提高主 UI 线程的响应性。</p>
+<p>SIMD 打算把 CPU 级的并行数学运算映射到 JavaScript API, 以获得高性能的数据并行运算,比如在大数据集上的数字处理。</p>
+<p>最后, asm.js 描述了 JavaScript 的一个很小的子集, 它避免了 JavaScript 难以优化的部分 (比如垃圾收集和强制类型转换),并且让 JavaScript 引擎识别并通过激进的优化运行这样 的代码。可以手工编写 asm.js, 但是会极端费力且容易出错,类似于手写汇编语言(这也 是其名字的由来)。实际上, asm.js 也是高度优化的程序语言交叉编译的一个很好的目标, 比如 Emscripten 把 C/C++ 转换成 JavaScript(<a href="https://github.com/kripken/emscripten/wiki" target="_blank" rel="external">https://github.com/kripken/emscripten/wiki</a>) 。</p>
+<p>JavaScript 还有一些更加激进的思路已经进入非常早期的讨论, 尽管本章并没有明确包含 这些内容,比如近似的直接多线程功能(而不是藏在数据结构 API 后面)。不管这些最终 会不会实现,还是我们将只能看到更多的并行特性偷偷加入 JavaScript, 但确实可以预见, 未来 JavaScript 在程序级别将获得更加优化的性能。</p>
+<h3 id="性能测试与调优"><a href="#性能测试与调优" class="headerlink" title="性能测试与调优"></a>性能测试与调优</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/20/1641c336f145c542?w=1486&amp;h=883&amp;f=jpeg&amp;s=206732" alt=""></p>
+<p>对一段代码进行有效的性能测试,特别是与同样代码的另外一个选择对比来看看哪种方案 更快,需要认真注意细节。</p>
+<p>与其打造你自己的统计有效的性能测试逻辑,不如直接使用 Benchmark.js 库,它已经为你 实现了这些。但是,编写测试要小心,因为我们很容易就会构造一个看似有效实际却有缺 陷的测试,即使是微小的差异也可能扭曲结果,使其完全不可靠。</p>
+<p>从尽可能多的环境中得到尽可能多的测试结果以消除硬件/ 设备的偏差, 这一点很重要。 jsPerf.com 是很好的网站,用于众包性能测试运行。</p>
+<p>遗憾的是,很多常用的性能测试执迷于无关紧要的微观性能细节,比如 x++ 对比 ++x 。编 写好的测试意味着理解如何关注大局, 比如关键路径上的优化以及避免落入类似不同的 JavaScript 实现细节这样的陷阱中。</p>
+<p>尾调用优化是 ES6 要求的一种优化方法。它使 JavaScript 中原本不可能的一些递归模式变 得实际。 TCO 允许一个函数在结尾处调用另外一个函数来执行,不需要任何额外资源。这意味着,对递归算法来说,引擎不再需要限制栈深度。</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>思维导图能比较清晰的还原整本书的知识结构体系，如果你还没用看过这本书，可以按照这个思维导图的思路快速预习一遍，提高学习效率。学习新事物总容易遗忘，我比较喜欢在看书的时候用思维导图做些记录，便于自己后期复习，如果你已经看过了这本书，也建议你收藏复习。如果你有神马建议或则想法，欢迎留言或加我微信交流：646321933，备注技术交流</p>
+<p><a href="https://bailinlin.github.io/2018/05/28/javascript1/" target="_blank" rel="external">精读《你不知道的javascript》上卷</a></p>
 <p><a href="https://bailinlin.github.io/2018/06/08/node-notes/" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
-<p><a href="chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fblog.songqingbo.cn%2Fpdf%2Fnodejs%2F%25E6%25B7%25B1%25E5%2585%25A5%25E6%25B5%2585%25E5%2587%25BANode.js.pdf" target="_blank" rel="external">《深入浅出Node.js》PDF</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
+<p><a href="https://github.com/threerocks/studyFiles/blob/master/js/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript%EF%BC%88%E4%B8%AD%E5%8D%B7%EF%BC%89.pdf" target="_blank" rel="external">你不知道的 javascript（中卷）PDF 下载地址</a></p>
 
           
         
@@ -545,7 +609,7 @@
               
                 
                 <a class="post-title-link" href="/2018/05/28/javascript1/" itemprop="url">
-                  精度《你不知道的javascript》上卷
+                  精读《你不知道的javascript》上卷
                 </a>
               
             
@@ -605,7 +669,7 @@
         
           
             <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>《你不知道的 javascript》是一个前端学习必读的系列，让不求甚解的JavaScript开发者迎难而上，深入语言内部，弄清楚JavaScript每一个零部件的用途。本书介绍了该系列的两个主题：“作用域和闭包”以及“this和对象原型”。这两块也是值得我们反复去学习琢磨的两块只是内容，今天我们用思维导图的方式来精读一遍。（思维导图图片可能有点小，记得点开看，你会有所收获）</p>
-<h3 id="第一部分-作用域和闭包"><a href="#第一部分-作用域和闭包" class="headerlink" title="第一部分 作用域和闭包"></a>第一部分 作用域和闭包</h3><h4 id="作用域是什么"><a href="#作用域是什么" class="headerlink" title="作用域是什么"></a>作用域是什么</h4><p><img src="/images/javascript/part1/zyy.jpeg" alt="this"></p>
+<h3 id="第一部分-作用域和闭包"><a href="#第一部分-作用域和闭包" class="headerlink" title="第一部分 作用域和闭包"></a>第一部分 作用域和闭包</h3><h4 id="作用域是什么"><a href="#作用域是什么" class="headerlink" title="作用域是什么"></a>作用域是什么</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a99495f8829f7?w=1377&amp;h=872&amp;f=jpeg&amp;s=209079" alt=""></p>
 <p>作用域是一套规则,用于确定在何处以及如何查找变量(标识符)。如果查找的目的是对 变量进行赋值,那么就会使用 LHS 查询;如果目的是获取变量的值,就会使用 RHS 查询。赋值操作符会导致 LHS 查询。 的赋值操作。 =操作符或调用函数时传入参数的操作都会导致关联作用域的赋值操作。<br>JavaScript 引擎首先会在代码执行前对其进行编译,在这个过程中,像 var a = 2 这样的声 明会被分解成两个独立的步骤：</p>
 <ol>
 <li>首先, var a 在其作用域中声明新变量。这会在最开始的阶段,也就是代码执行前进行。</li>
@@ -613,27 +677,27 @@
 </ol>
 <p>LHS 和 RHS 查询都会在当前执行作用域中开始,如果有需要(也就是说它们没有找到所 需的标识符),就会向上级作用域继续查找目标标识符,这样每次上升一级作用域(一层 楼),最后抵达全局作用域(顶层),无论找到或没找到都将停止。</p>
 <p>不成功的RHS引用会导致抛出 ReferenceError 异常。不成功的 LHS 引用会导致自动隐式地创建一个全局变量(非严格模式下),该变量使用 LHS 引用的目标作为标识符,或者抛 出 ReferenceError 异常(严格模式下)。</p>
-<h4 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h4><p><img src="/images/javascript/part1/cfzyy.jpeg" alt="this"></p>
+<h4 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a994edf51a32f?w=1105&amp;h=471&amp;f=jpeg&amp;s=50305" alt=""></p>
 <p>词法作用域意味着作用域是由书写代码时函数声明的位置来决定的。编译的词法分析阶段 基本能够知道全部标识符在哪里以及是如何声明的,从而能够预测在执行过程中如何对它 们进行查找。</p>
 <p>JavaScript 中有两个机制可以“欺骗”词法作用域: eval(..) 和 with 。 前者可以对一段包 含一个或多个声明的“代码”字符串进行演算,并借此来修改已经存在的词法作用域(在 运行时)。后者本质上是通过将一个对象的引用 当作 作用域来处理,将对象的属性当作作 用域中的标识符来处理,从而创建了一个新的词法作用域(同样是在运行时)。</p>
 <p>这两个机制的副作用是引擎无法在编译时对作用域查找进行优化,因为引擎只能谨慎地认 为这样的优化是无效的。使用这其中任何一个机制都 将 导致代码运行变慢。 不要使用它们。</p>
-<h4 id="函数作用域和块作用域"><a href="#函数作用域和块作用域" class="headerlink" title="函数作用域和块作用域"></a>函数作用域和块作用域</h4><p><img src="/images/javascript/part1/hszyyhkzyy.jpeg" alt="this"></p>
+<h4 id="函数作用域和块作用域"><a href="#函数作用域和块作用域" class="headerlink" title="函数作用域和块作用域"></a>函数作用域和块作用域</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a9954593cc366?w=1689&amp;h=828&amp;f=jpeg&amp;s=160928" alt=""></p>
 <p>函数是 JavaScript 中最常见的作用域单元。本质上,声明在一个函数内部的变量或函数会 在所处的作用域中“隐藏”起来,这是有意为之的良好软件的设计原则。</p>
 <p>但函数不是唯一的作用域单元。块作用域指的是变量和函数不仅可以属于所处的作用域, 也可以属于某个代码块(通常指 { .. } 内部)。</p>
 <p>从 ES3 开始, try/catch 结构在 catch 分句中具有块作用域。在 ES6 中引入了 let 关键字( var 关键字的表亲), 用来在任意代码块中声明变量。 if(..) { let a = 2; } 会声明一个劫持了 if 的 { .. } 块的变量,并且将变量添加到这个块 中。</p>
 <p>有些人认为块作用域不应该完全作为函数作用域的替代方案。两种功能应该同时存在,开 发者可以并且也应该根据需要选择使用何种作用域,创造可读、可维护的优良代码。</p>
-<h4 id="提升"><a href="#提升" class="headerlink" title="提升"></a>提升</h4><p><img src="/images/javascript/part1/ts.jpeg" alt="this"></p>
+<h4 id="提升"><a href="#提升" class="headerlink" title="提升"></a>提升</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a995873202ea4?w=1651&amp;h=539&amp;f=jpeg&amp;s=98748" alt=""></p>
 <p>我们习惯将 var a = 2; 看作一个声明,而实际上 JavaScript 引擎并不这么认为。它将 var a 和 a = 2 当作两个单独的声明,第一个是编译阶段的任务,而第二个则是执行阶段的任务。</p>
 <p>这意味着无论作用域中的声明出现在什么地方,都将在代码本身被执行前 首先 进行处理。 可以将这个过程形象地想象成所有的声明(变量和函数)都会被“移动”到各自作用域的最顶端,这个过程被称为提升。</p>
 <p>声明本身会被提升,而包括函数表达式的赋值在内的赋值操作并不会提升。</p>
 <p>要注意避免重复声明,特别是当普通的 var 声明和函数声明混合在一起的时候,否则会引 起很多危险的问题!</p>
-<h4 id="作用域闭包"><a href="#作用域闭包" class="headerlink" title="作用域闭包"></a>作用域闭包</h4><p><img src="/images/javascript/part1/zyybb.jpeg" alt="this"></p>
+<h4 id="作用域闭包"><a href="#作用域闭包" class="headerlink" title="作用域闭包"></a>作用域闭包</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a995bb92570eb?w=1549&amp;h=731&amp;f=jpeg&amp;s=158866" alt=""></p>
 <p>闭包就好像从 JavaScript 中分离出来的一个充满神秘色彩的未开化世界,只有最勇敢的人 才能够到达那里。但实际上它只是一个标准,显然就是关于如何在函数作为值按需传递的 词法环境中书写代码的。</p>
 <p>当函数可以记住并访问所在的词法作用域,即使函数是在当前词法作用域之外执行,这时 就产生了闭包。</p>
 <p>如果没能认出闭包,也不了解它的工作原理,在使用它的过程中就很容易犯错,比如在循 环中。但同时闭包也是一个非常强大的工具,可以用多种形式来实现 模块 等模式。模块有两个主要特征:</p>
 <p>(1)为创建内部作用域而调用了一个包装函数;<br>(2)包装函数的返回 值必须至少包括一个对内部函数的引用,这样就会创建涵盖整个包装函数内部作用域的闭 包。</p>
 <p>现在我们会发现代码中到处都有闭包存在,并且我们能够识别闭包然后用它来做一些有用 的事!</p>
-<h3 id="第二部分-this-和对象原型"><a href="#第二部分-this-和对象原型" class="headerlink" title="第二部分 this 和对象原型"></a>第二部分 this 和对象原型</h3><h4 id="this-全面解析"><a href="#this-全面解析" class="headerlink" title="this 全面解析"></a>this 全面解析</h4><p><img src="/images/javascript/part2/this.jpeg" alt="this"></p>
+<h3 id="第二部分-this-和对象原型"><a href="#第二部分-this-和对象原型" class="headerlink" title="第二部分 this 和对象原型"></a>第二部分 this 和对象原型</h3><h4 id="this-全面解析"><a href="#this-全面解析" class="headerlink" title="this 全面解析"></a>this 全面解析</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a996bcbf28e91" alt=""></p>
 <p>如果要判断一个运行中函数的 this 绑定,就需要找到这个函数的直接调用位置。找到之后 就可以顺序应用下面这四条规则来判断 this 的绑定对象。</p>
 <ol>
 <li><p>由 new 调用?绑定到新创建的对象。</p>
@@ -646,14 +710,15 @@
 </li>
 </ol>
 <p>一定要注意,有些调用可能在无意中使用默认绑定规则。如果想“更安全”地忽略 this 绑 定,你可以使用一个 DMZ 对象,比如 ø = Object.create(null) ,以保护全局对象。ES6中的箭头函数并不会使用四条标准的绑定规则, 而是根据当前的词法作用域来决定 this ,具体来说,箭头函数会继承外层函数调用的 this 绑定(无论 this 绑定到什么)。这 其实和 ES6 之前代码中的 self = this 机制一样。</p>
-<h4 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h4><p><img src="/images/javascript/part2/dx1.jpeg" alt="this"><br><img src="/images/javascript/part2/dx2.jpeg" alt="this"></p>
+<h4 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h4><p><img src="https://user-gold-cdn.xitu.io/2018/6/4/163c85faf904cf73?w=1378&amp;h=708&amp;f=jpeg&amp;s=79898" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/4/163c85fd6750a810?w=1260&amp;h=798&amp;f=jpeg&amp;s=138155" alt=""></p>
 <p>JavaScript 中的对象有字面形式(比如 var a = { .. } )和构造形式(比如 var a = new Array(..) )。字面形式更常用,不过有时候构造形式可以提供更多选项。</p>
 <p>许多人都以为“JavaScript 中万物都是对象”,这是错误的。对象是 6 个(或者是 7 个,取 决于你的观点)基础类型之一。对象有包括 function 在内的子类型,不同子类型具有不同 的行为,比如内部标签 [object Array] 表示这是对象的子类型数组。</p>
 <p>对象就是键 / 值对的集合。可以通过 .propName 或者 [“propName”] 语法来获取属性值。访 问属性时, 引擎实际上会调用内部的默认 [[Get]] 操作(在设置属性值时是 [[Put]] ), [[Get]] 操作会检查对象本身是否包含这个属性,如果没找到的话还会查找 [[Prototype]] 链(参见第 5 章)。</p>
 <p>属性的特性可以通过属性描述符来控制,比如 writable 和 configurable 。此外,可以使用 Object.preventExtensions(..) 、 Object.seal(..) 和 Object.freeze(..) 来设置对象(及其 属性)的不可变性级别。</p>
 <p>属性不一定包含值——它们可能是具备 getter/setter 的“访问描述符”。此外,属性可以是 可枚举或者不可枚举的,这决定了它们是否会出现在 for..in 循环中。</p>
 <p>你可以使用 ES6 的 for..of 语法来遍历数据结构(数组、对象, 等等)中的值, for..of 会寻找内置或者自定义的 @@iterator 对象并调用它的 next() 方法来遍历数据值。</p>
-<h4 id="混合对象”类”"><a href="#混合对象”类”" class="headerlink" title="混合对象”类”"></a>混合对象”类”</h4><p><img src="/images/javascript/part2/hhdxl.jpeg" alt="this"></p>
+<h4 id="混合对象”类”"><a href="#混合对象”类”" class="headerlink" title="混合对象”类”"></a>混合对象”类”</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a9977ad530352?w=1428&amp;h=862&amp;f=jpeg&amp;s=135448" alt=""></p>
 <p>类是一种设计模式。 许多语言提供了对于面向类软件设计的原生语法。 JavaScript 也有类 似的语法,但是和其他语言中的类完全不同。</p>
 <p>类意味着复制。</p>
 <p>传统的类被实例化时,它的行为会被复制到实例中。类被继承时,行为也会被复制到子类 中。</p>
@@ -662,7 +727,8 @@
 <p>混入模式(无论显式还是隐式)可以用来模拟类的复制行为,但是通常会产生丑陋并且脆 弱的语法,比如显式伪多态( OtherObj.methodName.call(this, …) ),这会让代码更加难 懂并且难以维护。</p>
 <p>此外, 显式混入实际上无法完全模拟类的复制行为, 因为对象(和函数!别忘了函数也 是对象)只能复制引用, 无法复制被引用的对象或者函数本身。 忽视这一点会导致许多 问题。</p>
 <p>总地来说,在 JavaScript 中模拟类是得不偿失的,虽然能解决当前的问题,但是可能会埋下更多的隐患。</p>
-<h4 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h4><p><img src="/images/javascript/part2/yx1.jpeg" alt="this"><br><img src="/images/javascript/part2/yx2.jpeg" alt="this"></p>
+<h4 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a997b039a7ade?w=1458&amp;h=603&amp;f=jpeg&amp;s=159321" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a997def15b21f?w=1458&amp;h=781&amp;f=jpeg&amp;s=178700" alt=""></p>
 <p>如果要访问对象中并不存在的一个属性, [[Get]] 操作(参见第 3 章)就会查找对象内部 [[Prototype]] 关联的对象。这个关联关系实际上定义了一条“原型链”(有点像嵌套的作用域链),在查找属性时会对它进行遍历。</p>
 <p>所有普通对象都有内置的 Object.prototype ,指向原型链的顶端(比如说全局作用域),如 果在原型链中找不到指定的属性就会停止。 toString() 、 valueOf() 和其他一些通用的功能 都存在于 Object.prototype 对象上,因此语言中所有的对象都可以使用它们。</p>
 <p>关联两个对象最常用的方法是使用 new 关键词进行函数调用, 在调用的 章)中会创建一个关联其他对象的新对象。4个步骤(第2章)中会创建一个关联其他对象的新对象。</p>
@@ -671,13 +737,15 @@
 <p>虽然这些 机制和传统面向类语言中的“类初始化”和“类继承”很相似, 但是  javascript 机制和传统面向对象类语言中的“类初始化”和“类继承”很相似但是 javascript 中的机制有一个核心区别，就是不会进行复制，对象之间是通过内部的 [[Prototype]] 链关联的。</p>
 <p>出于各种原因,以“继承”结尾的术语(包括“原型继承”)和其他面向对象的术语都无 法帮助你理解 JavaScript 的 真实 机制(不仅仅是限制我们的思维模式)。</p>
 <p>相比之下,“委托”是一个更合适的术语,因为对象之间的关系不是 复制 而是委托。</p>
-<h4 id="行为委托"><a href="#行为委托" class="headerlink" title="行为委托"></a>行为委托</h4><p><img src="/images/javascript/part2/xwwt.jpeg" alt="this"></p>
+<h4 id="行为委托"><a href="#行为委托" class="headerlink" title="行为委托"></a>行为委托</h4><p><img src="https://user-gold-cdn.xitu.io/2018/5/29/163a998194b182d8?w=1754&amp;h=763&amp;f=jpeg&amp;s=132903" alt=""></p>
 <p>在软件架构中你可以 选择是否 使用类和继承设计模式。大多数开发者理所当然地认为类是 唯一(合适)的代码组织方式,但是本章中我们看到了另一种更少见但是更强大的设计模式: 行为委托 。</p>
 <p>行为委托认为对象之间是兄弟关系, 互相委托, 而不是父类和子类的关系。 JavaScript 的 [[Prototype]] 机制本质上就是行为委托机制。也就是说,我们可以选择在 JavaScript 中努 力实现类机制(参见第 4 和第 5 章),也可以拥抱更自然的 [[Prototype]] 委托机制。</p>
 <p>当你只用对象来设计代码时,不仅可以让语法更加简洁,而且可以让代码结构更加清晰。</p>
 <p>对象关联(对象之前互相关联)是一种编码风格,它倡导的是直接创建和关联对象,不把 它们抽象成类。对象关联可以用基于 [[Prototype]] 的行为委托非常自然地实现。</p>
 <h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>思维导图能比较清晰的还原整本书的知识结构体系，如果你还没用看过这本书，可以按照这个思维导图的思路快速预习一遍，提高学习效率。学习新事物总容易遗忘，我比较喜欢在看书的时候用思维导图做些记录，便于自己后期复习，如果你已经看过了这本书，也建议你收藏复习。如果你有神马建议或则想法，欢迎留言或加我微信交流：646321933</p>
-<p><a href="https://www.kancloud.cn/kancloud/you-dont-know-js-this-object-prototypes/516674" target="_blank" rel="external">你不知道的javascript上卷第二部分在线文档</a><br><a href="https://github.com/threerocks/studyFiles/blob/master/js/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript%EF%BC%88%E4%B8%8A%E5%8D%B7%EF%BC%89.pdf" target="_blank" rel="external">你不知道的 javascript（上卷）PDF 下载地址</a></p>
+<p><a href="https://www.kancloud.cn/kancloud/you-dont-know-js-this-object-prototypes/516674" target="_blank" rel="external">你不知道的javascript上卷第二部分在线文档</a></p>
+<p><a href="https://github.com/threerocks/studyFiles/blob/master/js/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript%EF%BC%88%E4%B8%8A%E5%8D%B7%EF%BC%89.pdf" target="_blank" rel="external">你不知道的 javascript（上卷）PDF 下载地址</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
 
           
         
