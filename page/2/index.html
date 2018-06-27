@@ -239,6 +239,201 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/03/05/cookie-share/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/05/cookie-share/" itemprop="url">
+                  web 浏览器指纹跨域共享
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-05T17:41:49+08:00">
+                2018-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/03/05/cookie-share/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/05/cookie-share/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>概念：设备id 即设备指纹，用来表示用户设备的唯一性</p>
+</blockquote>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹</p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域名上存储设备id，通过跨域共享变量获取设备id，共享变量的原理是采用了iframe 的 contentWindow通讯，通过 postMessage 获取事件状态，调用封装好的回调函数进行数据处理</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>SDK 采集端，调用方初始化的时候调用方法</p>
+<pre><code>collect.setIframe = function () {
+      var that = this
+      var iframe = document.createElement(&apos;iframe&apos;)
+      iframe.src = &quot;http://localhost:82/&quot;
+      iframe.style = &apos;display:none&apos;
+      document.body.appendChild(iframe)
+      iframe.onload = function () {
+        iframe.contentWindow.postMessage(&apos;loaded&apos;,&apos;*&apos;);
+      }
+
+      //监听message事件
+      window.addEventListener(&quot;message&quot;, function(){
+            that.deviceId = event.data.deviceId
+
+            console.log(&apos;获取设备id&apos;,that.deviceId)
+
+            sessionStorage.setItem(&apos;PageSessionID&apos;,helper.upid())
+            helper.send(that.getParames(), that.eventUrl);
+            helper.sendDevice(that.getDevice(), that.deviceUrl);
+      }, false);
+}
+</code></pre><p>嵌套在 iframe 静态页面里的脚本</p>
+<pre><code>&lt;script&gt;
+
+     var getDeviceId = function() {
+             return &apos;xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx&apos;.replace(/[xy]/g, function (c) {
+                     var r = Math.random() * 16 | 0, v = c == &apos;x&apos; ? r : (r &amp; 0x3 | 0x8);
+                     return v.toString(16);
+             });
+     };
+
+     var hasCreated = false
+     var _deviceId = &apos;&apos;
+     if(document.cookie){
+             document.cookie.split(&apos;;&apos;).forEach(function(i){
+                     if(i.indexOf(&apos;deviceId&apos;)&gt;-1){
+                             hasCreated = true
+                             _deviceId = i.split(&apos;=&apos;)[1]
+                     }
+             })
+     }
+
+     if(!_deviceId &amp;&amp; (sessionStorage.getItem(&apos;deviceId&apos;)||localStorage.getItem(&apos;deviceId&apos;))){
+             hasCreated = true
+             _deviceId = sessionStorage.getItem(&apos;deviceId&apos;)||localStorage.getItem(&apos;deviceId&apos;)
+     }
+
+
+     if(!hasCreated) {
+             _deviceId =  getDeviceId()
+             document.cookie = &apos;deviceId=&apos; + _deviceId
+             sessionStorage.setItem(&apos;deviceId&apos;,_deviceId)
+             localStorage.setItem(&apos;deviceId&apos;,_deviceId)
+     }
+
+     //回调函数
+     function receiveMessageFromIndex ( event ) {
+             console.log( &apos;receiveMessageFromIndex&apos;, event )
+             parent.postMessage( {deviceId: _deviceId}, &apos;*&apos;);
+     }
+     //监听message事件
+     window.addEventListener(&quot;message&quot;, receiveMessageFromIndex, false);
+
+ &lt;/script&gt;
+</code></pre><h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://cxh.me/2014/11/25/flash-shared-cookie/" target="_blank" rel="external">跨浏览器cookie</a><br><a href="http://www.freebuf.com/articles/web/139984.html" target="_blank" rel="external">跨浏览器指纹识别</a><br><a href="https://paper.seebug.org/229/" target="_blank" rel="external">浏览器指纹追踪</a><br><a href="https://rockjins.js.org/2017/05/05/2017-05-05-iframe-cross-domain-Communication" target="_blank" rel="external">使用postMessage解决iframe跨域通信问题</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage" target="_blank" rel="external">window.postMessage</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/02/26/cookie-set/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1452,7 +1647,7 @@ console.log("listen at http://localhost:9090")
         
           
             <h3 id="为什么要前端自动化"><a href="#为什么要前端自动化" class="headerlink" title="为什么要前端自动化"></a>为什么要前端自动化</h3><blockquote>
-<p>什么是前端自动化构建就不说了，应为我不是写书的。在前端开发实践中，大公司都会有自己的基础前端架构，能容包括了开发环境、代码管理，代码质量，性能检测，命令行工具，开发规范，开发流程，前端架构及性能优化。相对而言，小公司或则是创业型的公司，前端架构这块做得就相对没有这么好，甚至于很不规范，而规范的目的在于提升工作效率。</p>
+<p>什么是前端自动化构建就不说了，因为我不是写书的。在前端开发实践中，大公司都会有自己的基础前端架构，能容包括了开发环境、代码管理，代码质量，性能检测，命令行工具，开发规范，开发流程，前端架构及性能优化。相对而言，小公司或则是创业型的公司，前端架构这块做得就相对没有这么好，甚至于很不规范，而规范的目的在于提升工作效率。</p>
 </blockquote>
 <p>而规范需要一定的过程，我们就先从代码质量，代码管理上入手。</p>
 <ol>
@@ -2511,7 +2706,7 @@ angular
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -1,0 +1,680 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="思维导图,http," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言 作为一个前端，如果能够深科技理解 HTTP 通信，能够让我们在日常开发工作中快速定位问题。所以我十分建议大家去读一下《图解HTTP》和《HTTP权威指南》。权威指南讲解的十分详细，内容也十分的全面，但是这本书的厚度也让很多同学望而却步。推荐大家从 《图解HTTP》 这本书开始学习，这本书虽然没有权威指南详细，但涵盖了很多我们日常开发容易忽视的知识点。
+《图解HTTP》这本书对互联网基盘——">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精读《图解HTTP》">
+<meta property="og:url" content="https://bailinlin.github.com/2018/06/25/http-read/index.html">
+<meta property="og:site_name" content="白霸天的博客">
+<meta property="og:description" content="前言 作为一个前端，如果能够深科技理解 HTTP 通信，能够让我们在日常开发工作中快速定位问题。所以我十分建议大家去读一下《图解HTTP》和《HTTP权威指南》。权威指南讲解的十分详细，内容也十分的全面，但是这本书的厚度也让很多同学望而却步。推荐大家从 《图解HTTP》 这本书开始学习，这本书虽然没有权威指南详细，但涵盖了很多我们日常开发容易忽视的知识点。
+《图解HTTP》这本书对互联网基盘——">
+<meta property="og:updated_time" content="2018-06-27T03:31:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="精读《图解HTTP》">
+<meta name="twitter:description" content="前言 作为一个前端，如果能够深科技理解 HTTP 通信，能够让我们在日常开发工作中快速定位问题。所以我十分建议大家去读一下《图解HTTP》和《HTTP权威指南》。权威指南讲解的十分详细，内容也十分的全面，但是这本书的厚度也让很多同学望而却步。推荐大家从 《图解HTTP》 这本书开始学习，这本书虽然没有权威指南详细，但涵盖了很多我们日常开发容易忽视的知识点。
+《图解HTTP》这本书对互联网基盘——">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://bailinlin.github.com/2018/06/25/http-read/"/>
+
+
+
+
+
+  <title> 精读《图解HTTP》 | 白霸天的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">白霸天的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/25/http-read/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                精读《图解HTTP》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T10:27:04+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/06/25/http-read/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/25/http-read/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p> 作为一个前端，如果能够深科技理解 HTTP 通信，能够让我们在日常开发工作中快速定位问题。所以我十分建议大家去读一下《图解HTTP》和《HTTP权威指南》。权威指南讲解的十分详细，内容也十分的全面，但是这本书的厚度也让很多同学望而却步。推荐大家从 《图解HTTP》 这本书开始学习，这本书虽然没有权威指南详细，但涵盖了很多我们日常开发容易忽视的知识点。</p>
+<p>《图解HTTP》这本书对互联网基盘—— HTTP 协议进行了全面系统的介绍。作者从 HTTP 发展史开始，严谨地剖析了 HTTP 协议的结构，列举很多常见通信场景及实战案例，最后延伸到Web安全、最新技术动向等方面。通过书中大量生动形象的通信图例，我们能够更全面地理解 HTTP 通信过程中客户端与服务器之间的交互情况。在读这本书的过程中我收获颇多，并用思维导图的方式记录下来，方便自己后期温故。如果你刚好没有读过，可以当做度这本书的预习阅读，相信你也会有所收获（思维导图图片可能有点小，记得点开看）</p>
+<h3 id="了解-HTTP-协议访问-Web"><a href="#了解-HTTP-协议访问-Web" class="headerlink" title="了解 HTTP 协议访问 Web"></a>了解 HTTP 协议访问 Web</h3><p>这一章介绍了 Web 及网络协议的基础，http 通讯被拆分成四层，应用层，传输层，网络层和链路层，每层只要考虑分派给自己的任务，不需要弄清整个协议链路的细节。应用层使我们肉眼能看见的，我们常用的 http 协议和 FTP 协议就处在这一层，往下就是传输层，TCP/IP 协议工作的地方（我们的IP是IP地址，和这里的IP 协议有做区分），再往下是网络层，传输层建立连接之后，网络层负责将数据包的传输（数据包是网络传输的最小单位）。最后是链路层，用来连接网络配件的部分，举个栗子就是我们常说的网卡啊，光纤啊。在一个完整的数据传输中，客户端会按照应用层，传输层，网络层，链路层的顺序进行进行处理，每一层都会加一个首部，服务器端在接收的时候按照链路层，网路层，传输层，应用层的顺序去移除首部。</p>
+<p>我们常说的3次握手就是 TCP 协议采用的策略，为了传输方便，TCP 将大数据分割成以报文为单位的数据包，IP 协议负责把数据包发送出去。在发送的过程中常常需要经过多个路由器的中转，这个时候会运用 ARP 协议来查找下一个路由器的地址。</p>
+<p>通常用户的习惯会去访问域名而不是IP地址，将域名解析成对应的 IP 就需要用到 DNS 协议域名解析的服务。</p>
+<h3 id="简单的-HTTP-协议"><a href="#简单的-HTTP-协议" class="headerlink" title="简单的 HTTP 协议"></a>简单的 HTTP 协议</h3><p>日常开发中我们感知不到 http 协议的底层实现，我们所了解的 HTTP 协议总是由客户端发起，服务端接收。我们关注到的请求，常常是请求的URI，协议版本，头部信息，及内容实体，我们常使用的响应信息则包括了响应状态，响应内容。</p>
+<p>我们常常会使用不通的 http 方法来执行不同的操作。我们常使用 GET 来获取资源，使用 POST 传输实体主题，使用 PUT 传输文件，使用 DELETE 删除文件，使用 OPTIONS 询问支持的方法（常常在跨域的场景中使用），使用TRACE 获取访问路径，使用 CONNECT 用隧道协议链接代理。</p>
+<p>http 协议是一种无状态协议，不会去记录上一次访问状态，这使得当我们要做类似于登录这样的公能的时候，需要通过 cookie 来进行状态的管理。</p>
+<h3 id="HTTP-报文内的-HTTP-信息"><a href="#HTTP-报文内的-HTTP-信息" class="headerlink" title="HTTP 报文内的 HTTP 信息"></a>HTTP 报文内的 HTTP 信息</h3><p>通常HTTP报文（用于HTTP协议交互的信息）的结构包括，请求行，状态行，首部字段等，从 HTTP 的报文中，我们可以获得很多信息。在 MIME 扩展中会使用一种称为多部分对象集合的方法，来容纳多份不同的数据类型， 在 HTTP 报文中使用多部分对象时，需要在首部字段上加上 Content-type 。</p>
+<p>通过设置首部字段，来达到获取部分内容范围请求（请求资源中断后，不需要重新开始请求),将传输内容编码的目的，来提高加载效率。</p>
+<p>有的时候不同的场景需要我们获取不同的内容，就比如页面的中英文切换的功能，在HTTP请求中，我们通过设置 accept 类的请求头字段实现，也就是内容协商的方式，返回最合适的内容。协商方式分为，服务器驱动协商，客户端驱动协商，透明协商。</p>
+<h3 id="返回结果的-HTTP-状态"><a href="#返回结果的-HTTP-状态" class="headerlink" title="返回结果的 HTTP 状态"></a>返回结果的 HTTP 状态</h3><p>在HTTP通讯中，通过转态码，告知客户端的请求状态。状态码大致可以被分为 5 大类，1xx 表示接受的请求正在处理，2xx 表示请求正常处理完毕，3xx 表示需要进行附加操作以完成请求，4xx 表示客户端无法处理请求，5xx 表示服务器处理出错。</p>
+<p>在这5大类请求中，我们常用的十几种状态码，需要我们重点去掌握，详细介绍看👆的思维导图。</p>
+<h3 id="与-HTTP-协作的-Web-服务器"><a href="#与-HTTP-协作的-Web-服务器" class="headerlink" title="与 HTTP 协作的 Web 服务器"></a>与 HTTP 协作的 Web 服务器</h3><p>通过使用虚拟机，可以实现单台主机多个域名的站点部署。在实际通讯中，我们常常使用，代理，网关，隧道协助请求转发，安全通信。</p>
+<p>为了提高网站性能，我们会使用缓存方式来提高站点请求速率，通常是通过设置代理服务器缓存和客户端缓存来实现。需要注意的是，缓存都会设置一个过期时间，站点内容更新时，缓存内容也需要及时更新。</p>
+<h3 id="HTTP-头部"><a href="#HTTP-头部" class="headerlink" title="HTTP 头部"></a>HTTP 头部</h3><p>在请求中，HTTP 报文由请求方法，URI，HTTP版本，HTTP 首部字段等部分构成。在响应中，HTTP 的报文有 HTTP 版本，状态码，HTTP首部字段3部分构成。首部信息尤为重要，我们可以通过首部字段的设置来传递请求信息，类比于缓存控制，报文创建时间，是否压缩编码，是否支持跨域等。</p>
+<h3 id="确保-Web-安全的-HTTPS"><a href="#确保-Web-安全的-HTTPS" class="headerlink" title="确保 Web 安全的 HTTPS"></a>确保 Web 安全的 HTTPS</h3><p>HTTP 简单灵活的设置也造就了他的缺点。1. 通信使用明文，内容可能被窃听。2、不验证通讯方省份，因此有可能会遭遇伪装。3、无法证明报文的完整性，所有有可能被篡改。HTTPS 其实也不算是一个全新的协议，HTTPS =  HTTP + 加密 + 认证 + 完整性保护。HTTPS 完善了 HTTP 的相关缺点，在 HTTP 的部分通信接口采用 SSL 和 TLS 协议替代，使用了数字证书认证机构和其他相关机关颁发的公开秘钥证书</p>
+<h3 id="何为认证"><a href="#何为认证" class="headerlink" title="何为认证"></a>何为认证</h3><p>HTTP 的认证方式通常是 BASIC认证（基本认证），DIGEST认证（摘要认证），SSL 客户端认证，FormBase 认证（基于表单认证）。BASIC 认证和 DIGEST 认证通过首部字段 Authorization 确认认证信息，SSL 借由 HTTPS 客户端证书完成认证方式。 表单认证则是依赖于 cookie 保存用户的登录状态。</p>
+<h3 id="基于-HTTP-的功能追加协议"><a href="#基于-HTTP-的功能追加协议" class="headerlink" title="基于 HTTP 的功能追加协议"></a>基于 HTTP 的功能追加协议</h3><p>SPDY 在TCP/IP 的应用层与运输层之间通过新加会话层的形式运作，使用 SPDY 使得 HTTP 协议的功能得到了扩展，实现了多路复用流，赋予请求优先级，压缩 HTTP 首部，推送功能，服务器提醒功能。</p>
+<p>使用 WebSocket 进行全双工通信，只要建立了链接，客户端和服务器都能都主动得向对方发送信息。和 HTTP 相比，减少了每次建立连接的开销，减少了通信首部信息。</p>
+<p>HTTP/2.0 改善了使用 web 时的速度体验。</p>
+<h3 id="构建-Web-内容的技术"><a href="#构建-Web-内容的技术" class="headerlink" title="构建 Web 内容的技术"></a>构建 Web 内容的技术</h3><p>web 应用开发语言的三剑客，HTML，CSS，javascript 。书出版的有点久所以书中没有提到，现在火爆的 web 构建技术，Vue，React 等流行前端框架。XML，JSON 数据发布语言，其中 JSON 比较常用，日常开发都离不了他。</p>
+<h3 id="web-的攻击技术"><a href="#web-的攻击技术" class="headerlink" title="web 的攻击技术"></a>web 的攻击技术</h3><p>在 Web 应用中，从浏览器那接收到的 HTTP 请求的全部内容，都可以在客户端自由的变更、篡改，在HTTP请求报文中加载攻击代码，就能发起对 Web 应用的攻击。Web 应用的攻击模式主要是主动攻击和被动攻击。</p>
+<p>常见的攻击方式有，跨站脚本攻击，SQL 注入攻击，HTTP 首部注入攻击。这些攻击造成的影响见👆思维导图。通常简单的 HTTP 协议本身不会存在安全性的问题，协议本身也不会成为攻击对象，黑客利用的常常是因为设计和设置上的缺陷，会话管理疏忽等引发的安全漏洞进行攻击。</p>
+<h3 id="😊往期的读书笔记"><a href="#😊往期的读书笔记" class="headerlink" title="😊往期的读书笔记"></a>😊往期的读书笔记</h3><blockquote>
+<p>《图解HTTP》这本书读完啦，下一期我们来读读《HTTP权威指南》，我在 github 建了仓库放这些思维导图的原件，如果觉得图片不清晰，同学们可以去 github 上下载查阅。如果你也喜欢用思维导图的方式来记录读书笔记，也欢迎和我一同维护这个仓库，欢迎留言或则微信（646321933）与我交流</p>
+</blockquote>
+<p><a href="https://juejin.im/post/5b0cafad51882515624dc6d2" target="_blank" rel="external">精读《你不知道的 javascript（上卷）》</a><br><a href="https://juejin.im/post/5b2a07c16fb9a00e36425ef0" target="_blank" rel="external">精读《你不知道的javascript》中卷</a><br><a href="https://juejin.im/post/5b1a18de6fb9a01e312828dd" target="_blank" rel="external">精读《深入浅出Node.js》</a><br><a href="https://juejin.im/post/5b1f7e62e51d45068a6cb98f" target="_blank" rel="external">javascript 垃圾回收算法</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/思维导图/" rel="tag"># 思维导图</a>
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/20/javascript2/" rel="next" title="精读《你不知道的javascript》中卷">
+                <i class="fa fa-chevron-left"></i> 精读《你不知道的javascript》中卷
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/06/25/http-read/"
+           data-title="精读《图解HTTP》" data-url="https://bailinlin.github.com/2018/06/25/http-read/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/bbt.jpeg"
+               alt="bailinlin" />
+          <p class="site-author-name" itemprop="name">bailinlin</p>
+          <p class="site-description motion-element" itemprop="description">前端,白霸天,博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解-HTTP-协议访问-Web"><span class="nav-number">2.</span> <span class="nav-text">了解 HTTP 协议访问 Web</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的-HTTP-协议"><span class="nav-number">3.</span> <span class="nav-text">简单的 HTTP 协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-报文内的-HTTP-信息"><span class="nav-number">4.</span> <span class="nav-text">HTTP 报文内的 HTTP 信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#返回结果的-HTTP-状态"><span class="nav-number">5.</span> <span class="nav-text">返回结果的 HTTP 状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与-HTTP-协作的-Web-服务器"><span class="nav-number">6.</span> <span class="nav-text">与 HTTP 协作的 Web 服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-头部"><span class="nav-number">7.</span> <span class="nav-text">HTTP 头部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确保-Web-安全的-HTTPS"><span class="nav-number">8.</span> <span class="nav-text">确保 Web 安全的 HTTPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#何为认证"><span class="nav-number">9.</span> <span class="nav-text">何为认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于-HTTP-的功能追加协议"><span class="nav-number">10.</span> <span class="nav-text">基于 HTTP 的功能追加协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建-Web-内容的技术"><span class="nav-number">11.</span> <span class="nav-text">构建 Web 内容的技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web-的攻击技术"><span class="nav-number">12.</span> <span class="nav-text">web 的攻击技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#😊往期的读书笔记"><span class="nav-number">13.</span> <span class="nav-text">😊往期的读书笔记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bailinlin</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"baibatian"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

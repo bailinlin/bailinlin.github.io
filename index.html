@@ -239,6 +239,157 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/25/http-read/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/06/25/http-read/" itemprop="url">
+                  精读《图解HTTP》
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T10:27:04+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/06/25/http-read/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/06/25/http-read/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p> 作为一个前端，如果能够深科技理解 HTTP 通信，能够让我们在日常开发工作中快速定位问题。所以我十分建议大家去读一下《图解HTTP》和《HTTP权威指南》。权威指南讲解的十分详细，内容也十分的全面，但是这本书的厚度也让很多同学望而却步。推荐大家从 《图解HTTP》 这本书开始学习，这本书虽然没有权威指南详细，但涵盖了很多我们日常开发容易忽视的知识点。</p>
+<p>《图解HTTP》这本书对互联网基盘—— HTTP 协议进行了全面系统的介绍。作者从 HTTP 发展史开始，严谨地剖析了 HTTP 协议的结构，列举很多常见通信场景及实战案例，最后延伸到Web安全、最新技术动向等方面。通过书中大量生动形象的通信图例，我们能够更全面地理解 HTTP 通信过程中客户端与服务器之间的交互情况。在读这本书的过程中我收获颇多，并用思维导图的方式记录下来，方便自己后期温故。如果你刚好没有读过，可以当做度这本书的预习阅读，相信你也会有所收获（思维导图图片可能有点小，记得点开看）</p>
+<h3 id="了解-HTTP-协议访问-Web"><a href="#了解-HTTP-协议访问-Web" class="headerlink" title="了解 HTTP 协议访问 Web"></a>了解 HTTP 协议访问 Web</h3><p>这一章介绍了 Web 及网络协议的基础，http 通讯被拆分成四层，应用层，传输层，网络层和链路层，每层只要考虑分派给自己的任务，不需要弄清整个协议链路的细节。应用层使我们肉眼能看见的，我们常用的 http 协议和 FTP 协议就处在这一层，往下就是传输层，TCP/IP 协议工作的地方（我们的IP是IP地址，和这里的IP 协议有做区分），再往下是网络层，传输层建立连接之后，网络层负责将数据包的传输（数据包是网络传输的最小单位）。最后是链路层，用来连接网络配件的部分，举个栗子就是我们常说的网卡啊，光纤啊。在一个完整的数据传输中，客户端会按照应用层，传输层，网络层，链路层的顺序进行进行处理，每一层都会加一个首部，服务器端在接收的时候按照链路层，网路层，传输层，应用层的顺序去移除首部。</p>
+<p>我们常说的3次握手就是 TCP 协议采用的策略，为了传输方便，TCP 将大数据分割成以报文为单位的数据包，IP 协议负责把数据包发送出去。在发送的过程中常常需要经过多个路由器的中转，这个时候会运用 ARP 协议来查找下一个路由器的地址。</p>
+<p>通常用户的习惯会去访问域名而不是IP地址，将域名解析成对应的 IP 就需要用到 DNS 协议域名解析的服务。</p>
+<h3 id="简单的-HTTP-协议"><a href="#简单的-HTTP-协议" class="headerlink" title="简单的 HTTP 协议"></a>简单的 HTTP 协议</h3><p>日常开发中我们感知不到 http 协议的底层实现，我们所了解的 HTTP 协议总是由客户端发起，服务端接收。我们关注到的请求，常常是请求的URI，协议版本，头部信息，及内容实体，我们常使用的响应信息则包括了响应状态，响应内容。</p>
+<p>我们常常会使用不通的 http 方法来执行不同的操作。我们常使用 GET 来获取资源，使用 POST 传输实体主题，使用 PUT 传输文件，使用 DELETE 删除文件，使用 OPTIONS 询问支持的方法（常常在跨域的场景中使用），使用TRACE 获取访问路径，使用 CONNECT 用隧道协议链接代理。</p>
+<p>http 协议是一种无状态协议，不会去记录上一次访问状态，这使得当我们要做类似于登录这样的公能的时候，需要通过 cookie 来进行状态的管理。</p>
+<h3 id="HTTP-报文内的-HTTP-信息"><a href="#HTTP-报文内的-HTTP-信息" class="headerlink" title="HTTP 报文内的 HTTP 信息"></a>HTTP 报文内的 HTTP 信息</h3><p>通常HTTP报文（用于HTTP协议交互的信息）的结构包括，请求行，状态行，首部字段等，从 HTTP 的报文中，我们可以获得很多信息。在 MIME 扩展中会使用一种称为多部分对象集合的方法，来容纳多份不同的数据类型， 在 HTTP 报文中使用多部分对象时，需要在首部字段上加上 Content-type 。</p>
+<p>通过设置首部字段，来达到获取部分内容范围请求（请求资源中断后，不需要重新开始请求),将传输内容编码的目的，来提高加载效率。</p>
+<p>有的时候不同的场景需要我们获取不同的内容，就比如页面的中英文切换的功能，在HTTP请求中，我们通过设置 accept 类的请求头字段实现，也就是内容协商的方式，返回最合适的内容。协商方式分为，服务器驱动协商，客户端驱动协商，透明协商。</p>
+<h3 id="返回结果的-HTTP-状态"><a href="#返回结果的-HTTP-状态" class="headerlink" title="返回结果的 HTTP 状态"></a>返回结果的 HTTP 状态</h3><p>在HTTP通讯中，通过转态码，告知客户端的请求状态。状态码大致可以被分为 5 大类，1xx 表示接受的请求正在处理，2xx 表示请求正常处理完毕，3xx 表示需要进行附加操作以完成请求，4xx 表示客户端无法处理请求，5xx 表示服务器处理出错。</p>
+<p>在这5大类请求中，我们常用的十几种状态码，需要我们重点去掌握，详细介绍看👆的思维导图。</p>
+<h3 id="与-HTTP-协作的-Web-服务器"><a href="#与-HTTP-协作的-Web-服务器" class="headerlink" title="与 HTTP 协作的 Web 服务器"></a>与 HTTP 协作的 Web 服务器</h3><p>通过使用虚拟机，可以实现单台主机多个域名的站点部署。在实际通讯中，我们常常使用，代理，网关，隧道协助请求转发，安全通信。</p>
+<p>为了提高网站性能，我们会使用缓存方式来提高站点请求速率，通常是通过设置代理服务器缓存和客户端缓存来实现。需要注意的是，缓存都会设置一个过期时间，站点内容更新时，缓存内容也需要及时更新。</p>
+<h3 id="HTTP-头部"><a href="#HTTP-头部" class="headerlink" title="HTTP 头部"></a>HTTP 头部</h3><p>在请求中，HTTP 报文由请求方法，URI，HTTP版本，HTTP 首部字段等部分构成。在响应中，HTTP 的报文有 HTTP 版本，状态码，HTTP首部字段3部分构成。首部信息尤为重要，我们可以通过首部字段的设置来传递请求信息，类比于缓存控制，报文创建时间，是否压缩编码，是否支持跨域等。</p>
+<h3 id="确保-Web-安全的-HTTPS"><a href="#确保-Web-安全的-HTTPS" class="headerlink" title="确保 Web 安全的 HTTPS"></a>确保 Web 安全的 HTTPS</h3><p>HTTP 简单灵活的设置也造就了他的缺点。1. 通信使用明文，内容可能被窃听。2、不验证通讯方省份，因此有可能会遭遇伪装。3、无法证明报文的完整性，所有有可能被篡改。HTTPS 其实也不算是一个全新的协议，HTTPS =  HTTP + 加密 + 认证 + 完整性保护。HTTPS 完善了 HTTP 的相关缺点，在 HTTP 的部分通信接口采用 SSL 和 TLS 协议替代，使用了数字证书认证机构和其他相关机关颁发的公开秘钥证书</p>
+<h3 id="何为认证"><a href="#何为认证" class="headerlink" title="何为认证"></a>何为认证</h3><p>HTTP 的认证方式通常是 BASIC认证（基本认证），DIGEST认证（摘要认证），SSL 客户端认证，FormBase 认证（基于表单认证）。BASIC 认证和 DIGEST 认证通过首部字段 Authorization 确认认证信息，SSL 借由 HTTPS 客户端证书完成认证方式。 表单认证则是依赖于 cookie 保存用户的登录状态。</p>
+<h3 id="基于-HTTP-的功能追加协议"><a href="#基于-HTTP-的功能追加协议" class="headerlink" title="基于 HTTP 的功能追加协议"></a>基于 HTTP 的功能追加协议</h3><p>SPDY 在TCP/IP 的应用层与运输层之间通过新加会话层的形式运作，使用 SPDY 使得 HTTP 协议的功能得到了扩展，实现了多路复用流，赋予请求优先级，压缩 HTTP 首部，推送功能，服务器提醒功能。</p>
+<p>使用 WebSocket 进行全双工通信，只要建立了链接，客户端和服务器都能都主动得向对方发送信息。和 HTTP 相比，减少了每次建立连接的开销，减少了通信首部信息。</p>
+<p>HTTP/2.0 改善了使用 web 时的速度体验。</p>
+<h3 id="构建-Web-内容的技术"><a href="#构建-Web-内容的技术" class="headerlink" title="构建 Web 内容的技术"></a>构建 Web 内容的技术</h3><p>web 应用开发语言的三剑客，HTML，CSS，javascript 。书出版的有点久所以书中没有提到，现在火爆的 web 构建技术，Vue，React 等流行前端框架。XML，JSON 数据发布语言，其中 JSON 比较常用，日常开发都离不了他。</p>
+<h3 id="web-的攻击技术"><a href="#web-的攻击技术" class="headerlink" title="web 的攻击技术"></a>web 的攻击技术</h3><p>在 Web 应用中，从浏览器那接收到的 HTTP 请求的全部内容，都可以在客户端自由的变更、篡改，在HTTP请求报文中加载攻击代码，就能发起对 Web 应用的攻击。Web 应用的攻击模式主要是主动攻击和被动攻击。</p>
+<p>常见的攻击方式有，跨站脚本攻击，SQL 注入攻击，HTTP 首部注入攻击。这些攻击造成的影响见👆思维导图。通常简单的 HTTP 协议本身不会存在安全性的问题，协议本身也不会成为攻击对象，黑客利用的常常是因为设计和设置上的缺陷，会话管理疏忽等引发的安全漏洞进行攻击。</p>
+<h3 id="😊往期的读书笔记"><a href="#😊往期的读书笔记" class="headerlink" title="😊往期的读书笔记"></a>😊往期的读书笔记</h3><blockquote>
+<p>《图解HTTP》这本书读完啦，下一期我们来读读《HTTP权威指南》，我在 github 建了仓库放这些思维导图的原件，如果觉得图片不清晰，同学们可以去 github 上下载查阅。如果你也喜欢用思维导图的方式来记录读书笔记，也欢迎和我一同维护这个仓库，欢迎留言或则微信（646321933）与我交流</p>
+</blockquote>
+<p><a href="https://juejin.im/post/5b0cafad51882515624dc6d2" target="_blank" rel="external">精读《你不知道的 javascript（上卷）》</a><br><a href="https://juejin.im/post/5b2a07c16fb9a00e36425ef0" target="_blank" rel="external">精读《你不知道的javascript》中卷</a><br><a href="https://juejin.im/post/5b1a18de6fb9a01e312828dd" target="_blank" rel="external">精读《深入浅出Node.js》</a><br><a href="https://juejin.im/post/5b1f7e62e51d45068a6cb98f" target="_blank" rel="external">javascript 垃圾回收算法</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/20/javascript2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3005,7 +3156,7 @@ module.exports = {
 <p>攻略是按照窝蜂上的推荐景点排序进行筛选的，但是到三亚的时候，当地居民推荐了我去其他景点，游客少的，消费更低一些的。</p>
 <p>机票是在携程上买的，杭州出发到海口，海口动车到三亚（别问为啥不直飞，因为穷，哈哈哈）海口的火车站和飞机场在一个地方，掐着点的话，下飞机一个半小时就能到三亚了。担心飞机晚点问题，还有到机场需要去提行李，所以没有提前买动车票，到站买了最近一趟去三亚，所以下飞机后我们在火车站逗留了大概一个小时才出发去三亚。</p>
 <h2 id="D1"><a href="#D1" class="headerlink" title="D1"></a>D1</h2><p>飞机是上午6点出发，8点55到海口，坐动车到三亚的时候已经是12点了，入住房间刚好，我们把房间定在三亚湾，190 一晚的海景房（一室一厅一厨一卫）感觉性价超级高，三亚的物价没有特别高，溜达的时候，有看到布丁酒店100多一晚的房间，但是不是在海边，具体房间是怎么样的，我也不太清楚，如果预算不够的话，可以住这种的。</p>
-<p>因为出门就能到海边，虽然肚子又点饿，我们没有马上去觅食，而是去海边小坐了一会，没有坐太久，因为大中午的实在太热了，哈哈。在沙滩上看到了几个皮肤十分黑的男人在光着屁股晒太阳，以为是外国黑人，还在感叹他们奔放的时候发现其实是三亚本地人，脸上3条黑线</p>
+<p>因为出门就能到海边，虽然肚子有点饿，我们没有马上去觅食，而是去海边小坐了一会，没有坐太久，因为大中午的实在太热了，哈哈。在沙滩上看到了几个皮肤十分黑的男人在光着屁股晒太阳，以为是外国黑人，还在感叹他们奔放的时候发现其实是三亚本地人，脸上3条黑线</p>
 <p>三亚湾上街购物和吃放也很方便，过一条马路就能到热闹的地方去，因为没有在淘宝上挑到自己喜欢的草帽，所以没有带，三亚很晒，所以在逛当地礼品店的时候买了一个，15块钱，和淘宝的价格差不多，没有很宰客，后面又买了一个自拍杆，20块，比淘宝上买略贵一些。</p>
 <p>中午随便吃的重庆小面，2人吃了30多，这个比在杭州吃的时候贵一丢丢，在杭州吃可能 20多就搞定了。也说不上来，可能这个不是三亚本地的吃食吧，所以要贵一些，三亚的海鲜和热带水果还是很便宜的。</p>
 <p>因为第一天早上为了赶飞机，3点多就起来了，我们两个都有点累，本来这一天也没有很特别的行程安排，所以我们就在酒店睡了一下午，晚上的时候本来想随意吃点，逛到了海鲜加工市场，就在市场里买了活海鲜加工着吃，2个人一共吃了300块，因为没有挑加工店，随意没有特别好吃也没有特别难吃，如果你们去的话，还是建议去第一海鲜市场，挑个开的时间长的加工店，</p>
@@ -3029,7 +3180,7 @@ module.exports = {
 <p>晚上到酒店，我们又重复了前一天的活动，小吃，海滩，马杀鸡</p>
 <p><img src="/images/travel/rx.jpeg" alt="三亚路牙子"></p>
 <h2 id="D4"><a href="#D4" class="headerlink" title="D4"></a>D4</h2><p>第四天，我们晚上11点的飞机，而且需要从三亚坐动车到海口机场，所以我们12点退了房子，打算继续在海滩边玩到下午5，6点再出发。不过现实总是没有想象的美好，30度的海滩，也热，我们差不多在海滩边逗留了1个小时，去吃了午饭买了些菠萝和泡面就公交到动车站避暑了。</p>
-<p>我们没有提前买动车票，总是买的就近一般有座位的，4点从三亚触发，到海口的检完票的时候差不多8点了。逛了免税店，买了2千的面膜和洗面奶，9刚好9点多。在机场吃了泡面，玩机场农药就开始回城机票检票了</p>
+<p>我们没有提前买动车票，总是买的就近一般有座位的，4点从三亚触发，到海口的检完票的时候差不多8点了。逛了免税店，买了2千的面膜和洗面奶，刚好9点多。在机场吃了泡面，玩了会机场农药就开始回城机票检票了</p>
 <p>总得来说第四天，没有很紧张的行程，就是瞎逛，买东西，吃东西。三亚的景点都离得比价远，去一个景点公交都差不多要2个小时的样子，来回需要4个小时在路上。如果要赶着玩的话其实可以把行李寄存起来再玩一个景点。但是想着太累了，我们还是把时间留下去逛免税店了。</p>
 <p><img src="/images/travel/by.jpeg" alt="三亚路牙子"></p>
 <h2 id="装备"><a href="#装备" class="headerlink" title="装备"></a>装备</h2><p>以下我罗列的非必要，但是很有用，哈哈哈</p>
@@ -3068,201 +3219,6 @@ module.exports = {
 <blockquote>
 <p>我们的行程是4天3夜，如果有时间的话，建议还是6天5夜，这样能把大部分的景点覆盖到，蜈支洲岛，分界洲，南山文化旅游区，槟榔谷，国家森林公园都可以去走一走。三亚是个很舒服的城市，在三亚，你会感觉整个时间都慢下来，很舒服很放松，你会喜欢的</p>
 </blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/03/05/cookie-share/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/05/cookie-share/" itemprop="url">
-                  web 浏览器指纹跨域共享
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-05T17:41:49+08:00">
-                2018-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2018/03/05/cookie-share/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/05/cookie-share/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>概念：设备id 即设备指纹，用来表示用户设备的唯一性</p>
-</blockquote>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在做用户行为分析项目的开发，需要采集用户的设备信息，需要用设备指纹来唯一表示用户操作设备。web 存储都和浏览器相关，我们无法通过js 来标识一台电脑，只能以浏览器作为设备维度来采集设备信息。即用户电脑中一个浏览器就是一个设备。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>web 变量存储，我们第一时间想到的就是 cookie，sessionStorage，localStorage，但是这3种存储方式都和访问资源的域名相关。我们总不能每次访问一个网站就新建一个设备指纹吧，所以我们需要通过一个方法来跨域共享设备指纹</p>
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>我们想到的方案是，通过嵌套 iframe 加载一个静态页面，在 iframe 上加载的域名上存储设备id，通过跨域共享变量获取设备id，共享变量的原理是采用了iframe 的 contentWindow通讯，通过 postMessage 获取事件状态，调用封装好的回调函数进行数据处理</p>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>SDK 采集端，调用方初始化的时候调用方法</p>
-<pre><code>collect.setIframe = function () {
-      var that = this
-      var iframe = document.createElement(&apos;iframe&apos;)
-      iframe.src = &quot;http://localhost:82/&quot;
-      iframe.style = &apos;display:none&apos;
-      document.body.appendChild(iframe)
-      iframe.onload = function () {
-        iframe.contentWindow.postMessage(&apos;loaded&apos;,&apos;*&apos;);
-      }
-
-      //监听message事件
-      window.addEventListener(&quot;message&quot;, function(){
-            that.deviceId = event.data.deviceId
-
-            console.log(&apos;获取设备id&apos;,that.deviceId)
-
-            sessionStorage.setItem(&apos;PageSessionID&apos;,helper.upid())
-            helper.send(that.getParames(), that.eventUrl);
-            helper.sendDevice(that.getDevice(), that.deviceUrl);
-      }, false);
-}
-</code></pre><p>嵌套在 iframe 静态页面里的脚本</p>
-<pre><code>&lt;script&gt;
-
-     var getDeviceId = function() {
-             return &apos;xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx&apos;.replace(/[xy]/g, function (c) {
-                     var r = Math.random() * 16 | 0, v = c == &apos;x&apos; ? r : (r &amp; 0x3 | 0x8);
-                     return v.toString(16);
-             });
-     };
-
-     var hasCreated = false
-     var _deviceId = &apos;&apos;
-     if(document.cookie){
-             document.cookie.split(&apos;;&apos;).forEach(function(i){
-                     if(i.indexOf(&apos;deviceId&apos;)&gt;-1){
-                             hasCreated = true
-                             _deviceId = i.split(&apos;=&apos;)[1]
-                     }
-             })
-     }
-
-     if(!_deviceId &amp;&amp; (sessionStorage.getItem(&apos;deviceId&apos;)||localStorage.getItem(&apos;deviceId&apos;))){
-             hasCreated = true
-             _deviceId = sessionStorage.getItem(&apos;deviceId&apos;)||localStorage.getItem(&apos;deviceId&apos;)
-     }
-
-
-     if(!hasCreated) {
-             _deviceId =  getDeviceId()
-             document.cookie = &apos;deviceId=&apos; + _deviceId
-             sessionStorage.setItem(&apos;deviceId&apos;,_deviceId)
-             localStorage.setItem(&apos;deviceId&apos;,_deviceId)
-     }
-
-     //回调函数
-     function receiveMessageFromIndex ( event ) {
-             console.log( &apos;receiveMessageFromIndex&apos;, event )
-             parent.postMessage( {deviceId: _deviceId}, &apos;*&apos;);
-     }
-     //监听message事件
-     window.addEventListener(&quot;message&quot;, receiveMessageFromIndex, false);
-
- &lt;/script&gt;
-</code></pre><h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="http://cxh.me/2014/11/25/flash-shared-cookie/" target="_blank" rel="external">跨浏览器cookie</a><br><a href="http://www.freebuf.com/articles/web/139984.html" target="_blank" rel="external">跨浏览器指纹识别</a><br><a href="https://paper.seebug.org/229/" target="_blank" rel="external">浏览器指纹追踪</a><br><a href="https://rockjins.js.org/2017/05/05/2017-05-05-iframe-cross-domain-Communication" target="_blank" rel="external">使用postMessage解决iframe跨域通信问题</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage" target="_blank" rel="external">window.postMessage</a></p>
 
           
         
@@ -3337,7 +3293,7 @@ module.exports = {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
