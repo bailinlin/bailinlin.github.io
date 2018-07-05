@@ -1,7 +1,6 @@
 ---
 title: 精读《ECMAScript 6 入门》
 date: 2018-06-29 16:23:24
-tags:[es6, javascript, 思维导图 ]
 ---
 
 #前言
