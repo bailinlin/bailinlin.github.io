@@ -239,6 +239,496 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/08/07/interview/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/08/07/interview/" itemprop="url">
+                  新鲜出炉的8月前端面试题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T10:50:11+08:00">
+                2018-08-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/08/07/interview/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/07/interview/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近参加了几场面试，积累了一些高频面试题，我把面试题分为两类，一种是基础试题: 主要考察前端技基础是否扎实，是否能够将前端知识体系串联。一种是开放式问题: 考察业务积累，是否有自己的思考，思考问题的方式，这类问题没有标准答案。</p>
+<h3 id="基础题"><a href="#基础题" class="headerlink" title="基础题"></a>基础题</h3><blockquote>
+<p>题目的答案提供了一个思考的方向，答案不一定正确全面，有错误的地方欢迎大家请在评论中指出，共同进步。</p>
+</blockquote>
+<h4 id="怎么去设计一个组件封装"><a href="#怎么去设计一个组件封装" class="headerlink" title="怎么去设计一个组件封装"></a>怎么去设计一个组件封装</h4><ol>
+<li>组件封装的目的是为了重用，提高开发效率和代码质量</li>
+<li>低耦合，单一职责，可复用性，可维护性</li>
+<li><a href="ijse blog http://ijser.cn/2017-06-25-web-component-design-in-front-end/">前端组件化设计思路</a></li>
+</ol>
+<h4 id="js-异步加载的方式"><a href="#js-异步加载的方式" class="headerlink" title="js 异步加载的方式"></a>js 异步加载的方式</h4><ol>
+<li>渲染引擎遇到 script 标签会停下来，等到执行完脚本，继续向下渲染</li>
+<li>defer 是“渲染完再执行”，async 是“下载完就执行”，defer 如果有多个脚本，会按照在页面中出现的顺序加载，多个async 脚本不能保证加载顺序</li>
+<li>加载 es6模块的时候设置 type=module，异步加载不会造成阻塞浏览器，页面渲染完再执行，可以同时加上async属性，异步执行脚本（利用顶层的this等于undefined这个语法点，可以侦测当前代码是否在 ES6 模块之中）</li>
+</ol>
+<h4 id="css-动画和-js-动画的差异"><a href="#css-动画和-js-动画的差异" class="headerlink" title="css 动画和 js 动画的差异"></a>css 动画和 js 动画的差异</h4><ol>
+<li>代码复杂度，js 动画代码相对复杂一些</li>
+<li>动画运行时，对动画的控制程度上，js 能够让动画，暂停，取消，终止，css动画不能添加事件</li>
+<li>动画性能看，js 动画多了一个js 解析的过程，性能不如 css 动画好</li>
+</ol>
+<h4 id="XSS-与-CSRF-两种跨站攻击"><a href="#XSS-与-CSRF-两种跨站攻击" class="headerlink" title="XSS 与 CSRF 两种跨站攻击"></a>XSS 与 CSRF 两种跨站攻击</h4><ol>
+<li>xss 跨站脚本攻击，主要是前端层面的，用户在输入层面插入攻击脚本，改变页面的显示，或则窃取网站 cookie，预防方法：不相信用户的所有操作，对用户输入进行一个转义，不允许 js 对 cookie 的读写</li>
+<li>csrf 跨站请求伪造，以你的名义，发送恶意请求，通过 cookie 加参数等形式过滤</li>
+<li>我们没法彻底杜绝攻击，只能提高攻击门槛</li>
+</ol>
+<h4 id="事件委托，目的，功能，写法"><a href="#事件委托，目的，功能，写法" class="headerlink" title="事件委托，目的，功能，写法"></a>事件委托，目的，功能，写法</h4><ol>
+<li>把一个或者一组元素的事件委托到它的父层或者更外层元素上</li>
+<li>优点，减少内存消耗，动态绑定事件</li>
+<li>target 是触发事件的最具体的元素，currenttarget是绑定事件的元素(在函数中一般等于this)</li>
+<li><a href="https://zhuanlan.zhihu.com/p/26536815" target="_blank" rel="external">JavaScript 事件委托详解</a></li>
+</ol>
+<h4 id="线程，进程"><a href="#线程，进程" class="headerlink" title="线程，进程"></a>线程，进程</h4><ol>
+<li>线程是最小的执行单元，进程是最小的资源管理单元</li>
+<li>一个线程只能属于一个进程，而一个进程可以有多个线程，但至少有一个线程</li>
+</ol>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><ol>
+<li>当系统面临大量用户访问，负载过高的时候，通常会使用增加服务器数量来进行横向扩展，使用集群和负载均衡提高整个系统的处理能力</li>
+<li><a href="https://www.zhihu.com/question/22610352" target="_blank" rel="external">服务器集群负载均衡原理？</a></li>
+</ol>
+<h4 id="什么是CDN缓存"><a href="#什么是CDN缓存" class="headerlink" title="什么是CDN缓存"></a>什么是CDN缓存</h4><ol>
+<li>CDN 是一种部署策略，根据不同的地区部署类似nginx 这种服务服务，会缓存静态资源。前端在项目优化的时候，习惯在讲台资源上加上一个 hash 值，每次更新的时候去改变这个 hash，hash 值变化的时候，服务会去重新取资源</li>
+<li>(CDN)是一个经策略性部署的整体系统，包括分布式存储、负载均衡、网络请求的重定向和内容管理4个要件</li>
+<li><a href="https://baike.baidu.com/item/CDN" target="_blank" rel="external">CDN_百度百科</a></li>
+</ol>
+<h4 id="闭包的写法，闭包的作用，闭包的缺点"><a href="#闭包的写法，闭包的作用，闭包的缺点" class="headerlink" title="闭包的写法，闭包的作用，闭包的缺点"></a>闭包的写法，闭包的作用，闭包的缺点</h4><ol>
+<li>使用闭包的目的——隐藏变量，间接访问一个变量,在定义函数的词法作用域外，调用函数</li>
+<li>闭包的内存泄露，是IE的一个 bug，闭包使用完成之后，收回不了闭包的引用，导致内存泄露</li>
+<li><a href="https://zhuanlan.zhihu.com/p/22486908?refer=study-fe" target="_blank" rel="external">「每日一题」JS 中的闭包是什么？</a></li>
+<li><a href="http://www.cnblogs.com/rubylouvre/p/3345294.html" target="_blank" rel="external">闭包造成内存泄露的实验</a></li>
+</ol>
+<h4 id="跨域问题，谁限制的跨域，怎么解决"><a href="#跨域问题，谁限制的跨域，怎么解决" class="headerlink" title="跨域问题，谁限制的跨域，怎么解决"></a>跨域问题，谁限制的跨域，怎么解决</h4><ol>
+<li>浏览器的同源策略导致了跨域</li>
+<li>用于隔离潜在恶意文件的重要安全机制</li>
+<li>[jsonp ，允许 script 加载第三方资源]<a href="https://segmentfault.com/a/1190000008445998" target="_blank" rel="external">https://segmentfault.com/a/1190000008445998</a></li>
+<li>nginx 反向代理（nginx 服务内部配置 Access-Control-Allow-Origin *）</li>
+<li>cors 前后端协作设置请求头部，Access-Control-Allow-Origin  等头部信息</li>
+<li>iframe 嵌套通讯，postmessage</li>
+</ol>
+<h4 id="javascript-中常见的内存泄露陷阱"><a href="#javascript-中常见的内存泄露陷阱" class="headerlink" title="javascript 中常见的内存泄露陷阱"></a>javascript 中常见的内存泄露陷阱</h4><ol>
+<li>内存泄露会导致一系列问题，比如：运行缓慢，崩溃，高延迟</li>
+<li>内存泄露是指你用不到（访问不到）的变量，依然占居着内存空间，不能被再次利用起来</li>
+<li>意外的全局变量，这些都是不会被回收的变量（除非设置 null 或者被重新赋值），特别是那些用来临时存储大量信息的变量</li>
+<li>周期函数一直在运行，处理函数并不会被回收，jq 在移除节点前都会，将事件监听移除</li>
+<li>js 代码中有对 DOM 节点的引用，dom 节点被移除的时候，引用还维持</li>
+<li><a href="http://web.jobbole.com/88463/" target="_blank" rel="external">JavaScript 中 4 种常见的内存泄露陷阱</a></li>
+</ol>
+<h4 id="babel把ES6转成ES5或者ES3之类的原理是什么"><a href="#babel把ES6转成ES5或者ES3之类的原理是什么" class="headerlink" title="babel把ES6转成ES5或者ES3之类的原理是什么"></a>babel把ES6转成ES5或者ES3之类的原理是什么</h4><ol>
+<li>它就是个编译器，输入语言是ES6+，编译目标语言是ES5</li>
+<li><a href="thejameskyle/the-super-tiny-compiler">babel 官方工作原理</a></li>
+<li>解析：将代码字符串解析成抽象语法树</li>
+<li>变换：对抽象语法树进行变换操作</li>
+<li>再建：根据变换后的抽象语法树再生成代码字符串</li>
+</ol>
+<h4 id="Promise-模拟终止"><a href="#Promise-模拟终止" class="headerlink" title="Promise 模拟终止"></a>Promise 模拟终止</h4><ol>
+<li>当新对象保持“pending”状态时，原Promise链将会中止执行。</li>
+<li>return new Promise(()=&gt;{});  // 返回“pending”状态的Promise对象</li>
+</ol>
+<h4 id="promise-放在try-catch里面有什么结果"><a href="#promise-放在try-catch里面有什么结果" class="headerlink" title="promise 放在try catch里面有什么结果"></a>promise 放在try catch里面有什么结果</h4><ol>
+<li>Promise 对象的错误具有冒泡性质，会一直向后传递，直到被捕获为止，也即是说，错误总会被下一个catch语句捕获</li>
+<li>当Promise链中抛出一个错误时，错误信息沿着链路向后传递，直至被捕获</li>
+</ol>
+<h4 id="网站性能优化"><a href="#网站性能优化" class="headerlink" title="网站性能优化"></a>网站性能优化</h4><ol>
+<li>http 请求方面，减少请求数量，请求体积，对应的做法是，对项目资源进行压缩，控制项目资源的 dns 解析在2到4个域名，提取公告的样式，公共的组件，雪碧图，缓存资源，</li>
+<li>压缩资源，提取公共资源压缩，提取 css ，js 公共方法</li>
+<li>不要缩放图片，使用雪碧图，使用字体图表（阿里矢量图库）</li>
+<li>使用 CDN，抛开无用的 cookie</li>
+<li>减少重绘重排，CSS属性读写分离，最好不要用js 修改样式，dom 离线更新，渲染前指定图片的大小</li>
+<li>js 代码层面的优化，减少对字符串的计算，合理使用闭包，首屏的js 资源加载放在最底部</li>
+</ol>
+<h4 id="js-自定义事件实现"><a href="#js-自定义事件实现" class="headerlink" title="js 自定义事件实现"></a>js 自定义事件实现</h4><ol>
+<li>原生提供了3个方法实现自定义事件</li>
+<li>createEvent，设置事件类型，是 html 事件还是 鼠标事件</li>
+<li>initEvent  初始化事件，事件名称，是否允许冒泡，是否阻止自定义事件</li>
+<li>dispatchEvent  触发事件</li>
+</ol>
+<h4 id="angular-双向数据绑定与vue数据的双向数据绑定"><a href="#angular-双向数据绑定与vue数据的双向数据绑定" class="headerlink" title="angular 双向数据绑定与vue数据的双向数据绑定"></a>angular 双向数据绑定与vue数据的双向数据绑定</h4><ol>
+<li>二者都是 MVVM 模式开发的典型代表</li>
+<li>angular 是通过脏检测实现，angular 会将 UI 事件，请求事件，settimeout 这类延迟，的对象放入到事件监测的脏队列，当数据变化的时候，触发 $diget 方法进行数据的更新，视图的渲染</li>
+<li>vue 通过数据属性的数据劫持和发布订阅的模式实现，大致可以理解成由3个模块组成，observer 完成对数据的劫持，compile 完成对模板片段的渲染，watcher 作为桥梁连接二者，订阅数据变化及更新视图</li>
+</ol>
+<h4 id="get与post-通讯的区别"><a href="#get与post-通讯的区别" class="headerlink" title="get与post 通讯的区别"></a>get与post 通讯的区别</h4><ol>
+<li>Get 请求能缓存，Post 不能</li>
+<li>Post 相对 Get 安全一点点，因为Get 请求都包含在 URL 里，且会被浏览器保存历史纪录，Post 不会，但是在抓包的情况下都是一样的。</li>
+<li>Post 可以通过 request body来传输比 Get 更多的数据，Get 没有这个技术</li>
+<li>URL有长度限制，会影响 Get 请求，但是这个长度限制是浏览器规定的，不是 RFC 规定的</li>
+<li>Post 支持更多的编码类型且不对数据类型限制</li>
+</ol>
+<h4 id="有没有去研究webpack的一些原理和机制，怎么实现的"><a href="#有没有去研究webpack的一些原理和机制，怎么实现的" class="headerlink" title="有没有去研究webpack的一些原理和机制，怎么实现的"></a>有没有去研究webpack的一些原理和机制，怎么实现的</h4><ol>
+<li>解析webpack配置参数，合并从shell传入和webpack.config.js文件里配置的参数，生产最后的配置结果。</li>
+<li>注册所有配置的插件，好让插件监听webpack构建生命周期的事件节点，以做出对应的反应。</li>
+<li>从配置的entry入口文件开始解析文件构建AST语法树，找出每个文件所依赖的文件，递归下去。</li>
+<li>在解析文件递归的过程中根据文件类型和loader配置找出合适的loader用来对文件进行转换。</li>
+<li>递归完后得到每个文件的最终结果，根据entry配置生成代码块chunk。</li>
+<li>输出所有chunk到文件系统。</li>
+</ol>
+<h4 id="ES6模块与CommonJS模块的差异"><a href="#ES6模块与CommonJS模块的差异" class="headerlink" title="ES6模块与CommonJS模块的差异"></a>ES6模块与CommonJS模块的差异</h4><ol>
+<li>CommonJs 模块输出的是一个值的拷贝，ES6模块输出的是一个值的引用</li>
+<li>CommonJS 模块是运行时加载，ES6模块是编译时输出接口</li>
+<li>ES6输入的模块变量，只是一个符号链接，所以这个变量是只读的，对它进行重新赋值就会报错</li>
+</ol>
+<h4 id="模块加载AMD，CMD，CommonJS-Modules-2-0-规范"><a href="#模块加载AMD，CMD，CommonJS-Modules-2-0-规范" class="headerlink" title="模块加载AMD，CMD，CommonJS Modules/2.0 规范"></a>模块加载AMD，CMD，CommonJS Modules/2.0 规范</h4><ol>
+<li>这些规范的目的都是为了 JavaScript 的模块化开发，特别是在浏览器端的</li>
+<li>对于依赖的模块，AMD 是提前执行，CMD 是延迟执行</li>
+<li>CMD 推崇依赖就近，AMD 推崇依赖前置</li>
+</ol>
+<h4 id="Node-事件循环，js-事件循环差异"><a href="#Node-事件循环，js-事件循环差异" class="headerlink" title="Node 事件循环，js 事件循环差异"></a>Node 事件循环，js 事件循环差异</h4><ol>
+<li>Node.js 的事件循环分为6个阶段</li>
+<li>浏览器和Node 环境下，microtask 任务队列的执行时机不同<ul>
+<li>Node.js中，microtask 在事件循环的各个阶段之间执行</li>
+<li>浏览器端，microtask 在事件循环的 macrotask 执行完之后执行</li>
+</ul>
+</li>
+<li>递归的调用process.nextTick()会导致I/O starving，官方推荐使用setImmediate()</li>
+</ol>
+<h4 id="浅拷贝和深拷贝的问题"><a href="#浅拷贝和深拷贝的问题" class="headerlink" title="浅拷贝和深拷贝的问题"></a>浅拷贝和深拷贝的问题</h4><ol>
+<li>深拷贝和浅拷贝是只针对Object和Array这样的复杂类型的</li>
+<li>也就是说a和b指向了同一块内存，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝</li>
+<li>浅拷贝， ”Object.assign() 方法用于将所有可枚举的属性的值从一个或多个源对象复制到目标对象。它将返回目标对象</li>
+<li>深拷贝，JSON.parse()和JSON.stringify()给了我们一个基本的解决办法。但是函数不能被正确处理</li>
+</ol>
+<h3 id="开放性问题"><a href="#开放性问题" class="headerlink" title="开放性问题"></a>开放性问题</h3><blockquote>
+<p>开放性问题主要是考察候选人业务积累，是否有自己的思考，思考问题的方式，没有标准答案。不过有些问题挺刁的，哈哈哈哈，比如：”  你见过的最好的代码是什么？ “总之提前准备下没错。</p>
+</blockquote>
+<ol>
+<li>先自我介绍一下，说一下项目的技术栈，以及项目中遇到的一些问题</li>
+<li>从整体中，看你对项目的认识，框架的认识和自己思考</li>
+<li>项目中有没有遇到什么难点，怎么解决</li>
+<li>如果你在创业公司你怎么从0开始做（选择什么框架，选择什么构建工具）</li>
+<li>说一下你项目中用到的技术栈，以及觉得得意和出色的点，以及让你头疼的点，怎么解决的</li>
+<li>一个业务场景，面对产品不断迭代，以及需求的变动该怎么应对，具体技术方案实现</li>
+<li>你的学习来源是什么</li>
+<li>你觉得哪个框架比较好，好在哪里</li>
+<li>你觉得最难得技术难点是什么</li>
+<li>你见过的最好的代码是什么</li>
+</ol>
+<h3 id="😊往期的读书笔记"><a href="#😊往期的读书笔记" class="headerlink" title="😊往期的读书笔记"></a>😊往期的读书笔记</h3><blockquote>
+<p>为了系统的串联前端知识，我平时喜欢用思维导图来记录读书笔记，我在 <a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">github</a> 建了仓库放这些思维导图的原件，和读书笔记。如果你也喜欢用思维导图的方式来记录读书笔记，也欢迎和我一同维护这个仓库，欢迎留言或则微信（646321933）与我交流</p>
+</blockquote>
+<p><a href="https://juejin.im/post/5b0cafad51882515624dc6d2" target="_blank" rel="external">精读《你不知道的 javascript（上卷）》</a></p>
+<p><a href="https://juejin.im/post/5b2a07c16fb9a00e36425ef0" target="_blank" rel="external">精读《你不知道的javascript》中卷</a></p>
+<p><a href="https://juejin.im/post/5b1a18de6fb9a01e312828dd" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
+<p><a href="https://juejin.im/post/5b1f7e62e51d45068a6cb98f" target="_blank" rel="external">javascript 垃圾回收算法</a></p>
+<p><a href="https://juejin.im/post/5b32f82a518825749e4a218b" target="_blank" rel="external">精读《图解HTTP》</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/07/05/jianrong/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/05/jianrong/" itemprop="url">
+                  如何机智地回答浏览器兼容性问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-05T10:31:52+08:00">
+                2018-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/07/05/jianrong/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/07/05/jianrong/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>有过面试经验的同学应该都被问过浏览器兼容性的问题，对于面试官的问题，常常猝不及防，因为通常他们都是这么问的。”来谈谈浏览器兼容的问题吧”，”你对浏览器的兼容性有了解过吗”，那么如何才是我们正确回答这个问题的姿势呢。</p>
+<blockquote>
+<p>虽然面试官的问题十分的笼统，浏览器的兼容性无非还是样式兼容性（css），交互兼容性（javascript），浏览器 hack 三个方面。</p>
+</blockquote>
+<h3 id="样式兼容性（css）方面"><a href="#样式兼容性（css）方面" class="headerlink" title="样式兼容性（css）方面"></a>样式兼容性（css）方面</h3><p><img src="https://user-gold-cdn.xitu.io/2018/7/5/16468bfe8343415c?w=1152&amp;h=412&amp;f=jpeg&amp;s=257125" alt=""></p>
+<ol>
+<li><p>因为历史原因，不同的浏览器样式存在差异，可以通过 Normalize.css 抹平差异，也可以定制自己的 reset.css，例如通过通配符选择器，全局重置样式</p>
+<pre><code>* { margin: 0; padding: 0; }
+</code></pre></li>
+<li><p>在CSS3还没有成为真正的标准时，浏览器厂商就开始支持这些属性的使用了。CSS3样式语法还存在波动时，浏览器厂商提供了针对浏览器的前缀，直到现在还是有部分的属性需要加上浏览器前缀。在开发过程中我们一般通过IDE开发插件、css 预处理器以及前端自动化构建工程帮我们处理。</p>
+<p> 浏览器内核与前缀的对应关系如下</p>
+<p> 内核 | 主要代表的浏览器 | 前缀<br> :-: | :-: | :-:<br> Trident | IE浏览器| -ms<br> Gecko| Firefox| -moz<br> Presto| Opera | -o<br> Webkit|Chrome和Safari|-webkit</p>
+</li>
+<li><p>在还原设计稿的时候我们常常会需要用到透明属性，所以解决 IE9 以下浏览器不能使用 opacit。</p>
+</li>
+</ol>
+<pre><code>opacity: 0.5;
+filter: alpha(opacity = 50); //IE6-IE8我们习惯使用filter滤镜属性来进行实现
+filter: progid:DXImageTransform.Microsoft.Alpha(style = 0, opacity = 50); //IE4-IE9都支持滤镜写法progid:DXImageTransform.Microsoft.Alpha(Opacity=xx)
+</code></pre><h3 id="交互兼容性（javascript）"><a href="#交互兼容性（javascript）" class="headerlink" title="交互兼容性（javascript）"></a>交互兼容性（javascript）</h3><p><img src="https://user-gold-cdn.xitu.io/2018/7/5/16468c023f296879?w=1272&amp;h=678&amp;f=jpeg&amp;s=332606" alt=""></p>
+<ol>
+<li>事件兼容的问题，我们通常需要会封装一个适配器的方法，过滤事件句柄绑定、移除、冒泡阻止以及默认事件行为处理</li>
+</ol>
+<pre><code>var  helper = {}
+
+//绑定事件
+helper.on = function(target, type, handler) {
+    if(target.addEventListener) {
+        target.addEventListener(type, handler, false);
+    } else {
+        target.attachEvent(&quot;on&quot; + type,
+            function(event) {
+                return handler.call(target, event);
+            }, false);
+    }
+};
+
+//取消事件监听
+helper.remove = function(target, type, handler) {
+    if(target.removeEventListener) {
+        target.removeEventListener(type, handler);
+    } else {
+        target.detachEvent(&quot;on&quot; + type,
+        function(event) {
+            return handler.call(target, event);
+        }, true);
+    }
+};
+</code></pre><ol>
+<li><p>new Date()构造函数使用，’2018-07-05’是无法被各个浏览器中，使用new Date(str)来正确生成日期对象的。 正确的用法是’2018/07/05’.</p>
+</li>
+<li><p>获取 scrollTop 通过 document.documentElement.scrollTop 兼容非chrome浏览器</p>
+<pre><code>var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+</code></pre></li>
+</ol>
+<h3 id="浏览器-hack"><a href="#浏览器-hack" class="headerlink" title="浏览器 hack"></a>浏览器 hack</h3><p><img src="https://user-gold-cdn.xitu.io/2018/7/5/16468c060484968d?w=985&amp;h=393&amp;f=jpeg&amp;s=167570" alt=""></p>
+<ol>
+<li>快速判断 IE 浏览器版本</li>
+</ol>
+<pre><code>&lt;!--[if IE 8]&gt; ie8 &lt;![endif]--&gt;
+
+&lt;!--[if IE 9]&gt; 骚气的 ie9 浏览器 &lt;![endif]--&gt;
+</code></pre><ol>
+<li><p>判断是否是 Safari 浏览器</p>
+<pre><code>/* Safari */
+var isSafari = /a/.__proto__==&apos;//&apos;;
+</code></pre></li>
+<li><p>判断是否是 Chrome 浏览器</p>
+<pre><code>/* Chrome */
+var isChrome = Boolean(window.chrome);
+</code></pre></li>
+</ol>
+<h3 id="身段不能掉，我们是个有逼格的前端"><a href="#身段不能掉，我们是个有逼格的前端" class="headerlink" title="身段不能掉，我们是个有逼格的前端"></a>身段不能掉，我们是个有逼格的前端</h3><p>“什么？你们公司要兼容IE6，我们今天的面试就到这里为止吧，再见”。现在如果还有哪个公司要兼容IE6的话就不要去了，开发起来得多不幸福。</p>
+<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><p><a href="https://www.w3cplus.com/css3/autoprefixer-css-vender-prefixes.html" target="_blank" rel="external">如何处理CSS3属性前缀_Autoprefixer</a></p>
+<p><a href="https://blog.csdn.net/freshlover/article/details/17143341" target="_blank" rel="external">CSS透明opacity和IE各版本透明度滤镜filter的最准确用法</a></p>
+<h3 id="往期文章"><a href="#往期文章" class="headerlink" title="往期文章"></a>往期文章</h3><p><a href="https://juejin.im/post/5b0cafad51882515624dc6d2" target="_blank" rel="external">精读《你不知道的 javascript（上卷）》</a></p>
+<p><a href="https://juejin.im/post/5b2a07c16fb9a00e36425ef0" target="_blank" rel="external">精读《你不知道的javascript》中卷</a></p>
+<p><a href="https://juejin.im/post/5b1a18de6fb9a01e312828dd" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
+<p><a href="https://juejin.im/post/5b1f7e62e51d45068a6cb98f" target="_blank" rel="external">javascript 垃圾回收算法</a></p>
+<p><a href="https://juejin.im/post/5b32f82a518825749e4a218b" target="_blank" rel="external">精读《图解HTTP》</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/06/25/http-read/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2689,588 +3179,11 @@ module.exports = {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/04/02/javascript-notes/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/02/javascript-notes/" itemprop="url">
-                  你需要知道的 javascript 的细节
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-02T17:27:29+08:00">
-                2018-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2018/04/02/javascript-notes/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/04/02/javascript-notes/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>现在的前端框架层出不穷，3个月就要重新入门一次前端的现状，让我们来不及学好基础就开始上手框架。常常就因为这样，我们会很快到达基础<code>技术瓶颈</code>，基础是所有技术的核心，在跳槽季重新温故了一遍 javascript 基础，有收获，整理出来分享给大家。</p>
-</blockquote>
-<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><h4 id="变量可以当对象使用"><a href="#变量可以当对象使用" class="headerlink" title="变量可以当对象使用"></a>变量可以当对象使用</h4><p><code>javascript</code> 中所有的变量都可以当做对象使用，除了<code>undefined</code> 和 <code>null</code> ，我们测试下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">false.toString() // &quot;false&quot;</div><div class="line"></div><div class="line">[1,2,3].toString() //&quot;1,2,3&quot;</div><div class="line"></div><div class="line">1..toString() //&quot;1&quot;</div><div class="line"></div><div class="line">(&#123;a:&apos;33&apos;&#125;).toString() //&quot;[object Object]&quot;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">undefined.toString() //Uncaught TypeError</div><div class="line"></div><div class="line">null.toString()   //Uncaught TypeError</div></pre></td></tr></table></figure>
-<p>数值和对象虽然能调用 <code>toString</code> 方法，但是在写法上需要注意下</p>
-<p><code>number</code> 调用时不能直接数值后面直接调用<code>toString</code> 方法，因为 <code>js</code> 会将点运算符解析为数值的小数点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.toString() //Uncaught SyntaxError</div><div class="line"></div><div class="line">1..toString() //&quot;1&quot;</div></pre></td></tr></table></figure>
-<p>对象直接调用<code>toString</code> 方法时，需要用小括号包裹起来，不然<code>js</code> 会将对象的花括号识别成块，从而报错</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;a:&apos;33&apos;&#125;.toString()  // Uncaught SyntaxError</div><div class="line"></div><div class="line">(&#123;a:&apos;33&apos;&#125;).toString() // &quot;[object Object]&quot;</div></pre></td></tr></table></figure>
-<h4 id="对象删除属性"><a href="#对象删除属性" class="headerlink" title="对象删除属性"></a>对象删除属性</h4><blockquote>
-<p>删除对象的属性唯一的方法是使用 <code>delete</code> 操作符，设置元素属性为 <code>undefined</code> 或则 <code>null</code> 并不能真正删除，只是移除了属性和值的关联</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var test = &#123;</div><div class="line">	name:&apos;bbt&apos;,</div><div class="line">	age:&apos;18&apos;,</div><div class="line">	love:&apos;dog&apos;</div><div class="line">&#125;</div><div class="line"></div><div class="line">test.name = undefined</div><div class="line">test.age = null</div><div class="line">delete test.love</div><div class="line"></div><div class="line">for (var i in test)&#123;</div><div class="line">  console.log(i+&apos;:&apos;+test[i])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>运行结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name:undefined</div><div class="line">age:null</div><div class="line">undefined</div></pre></td></tr></table></figure>
-<p>只有 <code>love</code> 被正则删除，<code>name</code> 和 <code>age</code> 还是能被遍历到</p>
-<h4 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h4><blockquote>
-<p>在 <code>javascript</code> 中，通过关键字 <code>new</code> 调用的函数就被认为是构造函数，我们可以通过构造函数创建对象实例</p>
-</blockquote>
-<p>但是在使用过程中你一定发现了，每实例化一个对象，都会在实例对象上创造构造函数的方法和属性。倘若创建的实例比较多，重复创建同一个方法去开辟内存空间就会显得十分浪费，我们可以通过把被经常复用的方法放在原型链上。</p>
-<h4 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h4><blockquote>
-<p><code>javascript</code> 和一些我们所了解的面向对象编程的语言不太一样，在 <code>es6</code> 语法以前，我们是通过原型链来实现方法和属性的继承</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">function Child()&#123;</div><div class="line">  this.name = &apos;bbt&apos;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Child.prototype = &#123;</div><div class="line">	title:&apos;baba&apos;,</div><div class="line">    method: function() &#123;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">function Grandson()&#123;&#125;</div><div class="line"></div><div class="line">//设置 Grandson 的 prototype 为 Child 的实例</div><div class="line">Grandson.prototype = new Child()</div><div class="line"></div><div class="line">//为 Grandson 的原型添加添加属性 age</div><div class="line">Grandson.prototype.age = 40</div><div class="line"></div><div class="line">// 修正 Grandson.prototype.constructor 为 Grandson 本身</div><div class="line">Grandson.prototype.constructor = Grandson;</div><div class="line"></div><div class="line">var xiaomin = new Grandson()</div><div class="line"></div><div class="line">//原型链如下</div><div class="line">xiaomin // Grandson的实例</div><div class="line">    Grandson.prototype // Child的实例</div><div class="line">         Grandson.prototype //&#123;title:&apos;baba&apos;,...&#125;</div><div class="line">            Object.prototype</div><div class="line">                &#123;toString: ... /* etc. */&#125;;</div></pre></td></tr></table></figure>
-<p>对象的属性查找，<code>javascript</code> 会在原型链上向上查找属性，直到查到 原型链顶部，所以，属性在原型链的越上端，查找的时间会越长，查找性能和复用属性方面需要开发者自己衡量下。</p>
-<h4 id="获取自身对象属性"><a href="#获取自身对象属性" class="headerlink" title="获取自身对象属性"></a>获取自身对象属性</h4><p><code>hasOwnProperty</code> 方法能够判断一个对象是否包含自定义属性，而不是在原型链上的属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var test = &#123;hello:&apos;123&apos;&#125;</div><div class="line"></div><div class="line">Object.prototype.name = &apos;bbt&apos;</div><div class="line"></div><div class="line">test.name  //&apos;bbt&apos;</div><div class="line">test.hasOwnProperty(&apos;hello&apos;) //true</div><div class="line">test.hasOwnProperty(&apos;name&apos;) //false</div></pre></td></tr></table></figure>
-<p><code>for in</code> 循环可以遍历对象原型链上的所有属性，如此我们将 <code>hasOwnProperty</code>结合循环<code>for in</code> 能够获取到对象自定义属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var test = &#123;hello:&apos;222&apos;&#125;</div><div class="line">Object.prototype.name = &apos;bbt&apos;</div><div class="line"></div><div class="line">for(var i in test)&#123;</div><div class="line">  console.log(i) // 输出两个属性，hello ，name</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">for(var i in test)&#123;</div><div class="line">  if(test.hasOwnProperty(i))&#123;</div><div class="line">    console.log(i)//只输出 hello</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>除了上面的方法，<code>getOwnPropertyNames</code> 和 <code>Object.keys</code> 方法，能够返回对象自身的所有属性名，也是接受一个对象作为参数，返回一个数组，包含了该对象自身的所有属性名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var test = &#123;hello:&apos;222&apos;&#125;</div><div class="line">Object.prototype.name = &apos;bbt&apos;</div><div class="line"></div><div class="line">Object.keys(test) //[&quot;hello&quot;]</div><div class="line">Object.getOwnPropertyNames(test) //[&quot;hello&quot;]</div></pre></td></tr></table></figure>
-<p>那 <code>getOwnPropertyNames</code> 和 <code>Object.keys</code> 的用法有什么区别呢</p>
-<p><code>Object.keys</code>方法只返回可枚举的属性，<code>Object.getOwnPropertyNames</code>  方法还返回不可枚举的属性名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var a = [&apos;Hello&apos;, &apos;World&apos;];</div><div class="line"></div><div class="line">Object.keys(a) // [&quot;0&quot;, &quot;1&quot;]</div><div class="line"></div><div class="line">Object.getOwnPropertyNames(a) // [&quot;0&quot;, &quot;1&quot;, &quot;length&quot;]  // length 是不可枚举属性</div></pre></td></tr></table></figure>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><h4 id="函数声明的变量提升"><a href="#函数声明的变量提升" class="headerlink" title="函数声明的变量提升"></a>函数声明的变量提升</h4><p>我们通常会使用函数声明或函数赋值表达式来定义一个函数，函数声明和变量声明一样都存在提升的情况，函数可以在声明前调用，但是不可以在赋值前调用</p>
-<p>函数声明</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">foo(); // 正常运行，因为foo在代码运行前已经被创建</div><div class="line">function foo() &#123;&#125;</div></pre></td></tr></table></figure>
-<p>函数表达式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">foo; // &apos;undefined&apos;</div><div class="line">foo(); // 出错：TypeError</div><div class="line">var foo = function() &#123;&#125;;</div></pre></td></tr></table></figure>
-<p>变量提升是在代码解析的时候进行的，foo() 方法调用的时候，已经在解析阶段将 foo 定义过了。赋值语句只在代码运行时才进行，所以在赋值前调用会报错</p>
-<p>一种比较少用的函数赋值操作，将命名函数赋值给一个变量，此时的函数名只对函数内部可见</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var test = function foo()&#123;</div><div class="line">  console.log(foo) //正常输出</div><div class="line">&#125;</div><div class="line"></div><div class="line">console.log(foo) //Uncaught ReferenceError</div></pre></td></tr></table></figure>
-<h4 id="this-的工作原理"><a href="#this-的工作原理" class="headerlink" title="this 的工作原理"></a>this 的工作原理</h4><blockquote>
-<p>在 <code>javascript</code> 中 ，<code>this</code> 是一个比较难理解的点，不同的调用环境会导致 <code>this</code> 的不同指向，但是唯一不变的是 <code>this</code> 总是指向一个对象</p>
-</blockquote>
-<p>简单的说，<code>this</code> 就是属性和方法当前所在的对象（函数执行坐在的作用域），平时使用的 <code>this</code>  的情况可以大致分为5种</p>
-<table>
-<thead>
-<tr>
-<th>调用方式</th>
-<th>指向</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1. 全局范围调用</td>
-<td>指向 window 全局对象</td>
-</tr>
-<tr>
-<td>2. 函数调用</td>
-<td>指向 window 全局变量</td>
-</tr>
-<tr>
-<td>3. 对象的方法调用</td>
-<td>指向方法调用的对象</td>
-</tr>
-<tr>
-<td>4. 构造函数调用</td>
-<td>指向构造函数创建的实例</td>
-</tr>
-<tr>
-<td>5. 通过，call ，apply ，bind 显示的指定 this指向</td>
-<td>和传参有关</td>
-</tr>
-</tbody>
-</table>
-<p>Function.call</p>
-<blockquote>
-<p>语法：function.call(thisArg, arg1, arg2, …)，<code>thisArg</code>表示希望函数被调用的作用域，<code>arg1, arg2, …</code>表示希望被传入函数额参数 , 如果参数为空、<code>null</code>和<code>undefined</code>，则默认传入全局对象。</p>
-</blockquote>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var name = &apos;xiaomin&apos;</div><div class="line">var test = &#123;name : &apos;bbt&apos;&#125;</div><div class="line"></div><div class="line">function hello( _name )&#123;</div><div class="line">  _name ?console.log(this.name,_name): console.log(this.name)</div><div class="line">&#125;</div><div class="line"></div><div class="line">hello() //xiaomin</div><div class="line">hello.call(test) //bbt</div><div class="line">hello.call(test,&apos;xiaohong&apos;) //bbt xiaohong</div><div class="line">hello.call() //xiaomin</div><div class="line">hello.call(null) //xiaomin</div><div class="line">hello.call(undefined) //xiaomin</div></pre></td></tr></table></figure>
-<p>Function.apply</p>
-<blockquote>
-<p>语法和<code>call</code> 方法类似，不同的是，传入调用函数的参数变成以数组的形式传入，即 func.apply(thisArg, [argsArray])</p>
-</blockquote>
-<p>改造上面的示例就是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hello.apply(test,[&apos;xiaomin&apos;])</div></pre></td></tr></table></figure>
-<p>Function.bind</p>
-<blockquote>
-<p><code>bind</code>方法用于将函数体内的<code>this</code>绑定到某个对象，然后返回一个新函数。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var d = new Date();</div><div class="line">d.getTime()</div><div class="line"></div><div class="line">var print = d.getTime; //赋值后 getTime 已经不指向 d 实例</div><div class="line">print() // Uncaught TypeError</div></pre></td></tr></table></figure>
-<p>解决方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var print = d.getTime.bind(d)</div></pre></td></tr></table></figure>
-<p>容易出错的地方</p>
-<p>容易出错的地方，函数调用，<code>this</code> 总是指向 <code>window</code> 全局变量，所以在对象的方法里如果有函数的调用的话（闭包的情况），<code>this</code> 是会指向 全局对象的，不会指向调用的对象，具体示例如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var name = &apos;xiaomin&apos;</div><div class="line">var test = &#123;</div><div class="line">  name : &apos;bbt&apos;</div><div class="line">&#125;</div><div class="line">test.method = function()&#123;</div><div class="line">  function hello()&#123;</div><div class="line">      console.log(this.name)</div><div class="line">    &#125;</div><div class="line">    hello()</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 调用</div><div class="line">test.method() // 输出 xiaomin</div></pre></td></tr></table></figure>
-<p>如果需要将 <code>this</code> 指向调用的对象，可以将对象的 <code>this</code> 指向存储起来，通常我们使用 <code>that</code> 变量来做这个存储。改进之后的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">var name = &apos;xiaomin&apos;</div><div class="line">var test = &#123;</div><div class="line">  name : &apos;bbt&apos;</div><div class="line">&#125;</div><div class="line">test.method = function()&#123;</div><div class="line">  var that = this</div><div class="line">  function hello()&#123;</div><div class="line">      console.log(that.name)</div><div class="line">    &#125;</div><div class="line">    hello()</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 调用</div><div class="line">test.method() // 输出 bbt</div></pre></td></tr></table></figure>
-<p>####闭包和引用</p>
-<blockquote>
-<p>闭包我们可以理解成是在函数内部定义的函数</p>
-</blockquote>
-<p>在 <code>javascript</code> 中，内部作用域可以访问到外部作用域的变量，但是外部作用域不能访问内部作用域，需要访问的时候，我们需要通过创建闭包，来操作内部变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">function test(_count)&#123;</div><div class="line">  var count = _count</div><div class="line"></div><div class="line">  return &#123;</div><div class="line">    inc:function()&#123;</div><div class="line">      count++</div><div class="line">    &#125;,</div><div class="line">    get:function()&#123;</div><div class="line">      return count</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var a = test(4)</div><div class="line">a.get()//4</div><div class="line">a.inc()</div><div class="line">a.get()//5</div></pre></td></tr></table></figure>
-<p>闭包中常会出错的面试题</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for(var i = 0; i &lt; 10; i++) &#123;</div><div class="line">    setTimeout(function() &#123;</div><div class="line">        console.log(i);</div><div class="line">    &#125;, 0);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>很多同学会觉得，上面的代码会正常输出0到9，但是实际是输出十次10。遇到这个题目，除了闭包的概念要理解清楚，你还需要知道，<code>setTimeout</code> 内的代码会被异步执行，代码会先执行所有的同步代码，即上面的这段代码会先将 <code>for</code> 循环执行，此时 <code>i</code> 的值为 10，console.log(i) 一直引用着全局变量的 i  所以会输出十次 10</p>
-<p> 改进代码，我们在 <code>for</code> 循环里创建一个闭包，把循环自增的 <code>i</code> 作为参数传入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">for(var i = 0; i &lt; 10; i++) &#123;</div><div class="line">    (function(e) &#123;</div><div class="line">        setTimeout(function() &#123;</div><div class="line">            console.log(e);</div><div class="line">        &#125;, 1000);</div><div class="line">    &#125;)(i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="setTimeout-amp-amp-setInterval"><a href="#setTimeout-amp-amp-setInterval" class="headerlink" title="setTimeout &amp;&amp; setInterval"></a>setTimeout &amp;&amp; setInterval</h4><blockquote>
-<p><code>javascript</code> 是异步的单线程运行语言，其他代码运行的时候可能会阻塞 <code>setTimeout</code> &amp;&amp; <code>setInterval</code> 的运行</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">console.log(1)</div><div class="line">setTimeout(function()&#123;</div><div class="line">  console.log(2)</div><div class="line">&#125;, 0);</div><div class="line">console.log(3)</div><div class="line"></div><div class="line">输出结果： 1，3，2  //setTimeout 被阻塞</div></pre></td></tr></table></figure>
-<p>处理阻塞的方法是将<code>setTimeout</code> 和 <code>setInterval</code>放在回调函数里执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function test()&#123;</div><div class="line">  	setTimeout(function()&#123;</div><div class="line">  		console.log(2)</div><div class="line">	&#125;, 0);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><code>setTimeout</code> 和 <code>setInterval</code> 被调用时会返回一个 ID 用来清除定时器</p>
-<p>手工清除某个定时器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var id = setTimeout(foo, 1000);</div><div class="line">clearTimeout(id);</div></pre></td></tr></table></figure>
-<p>清楚所有的定时器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var lastId = setTimeout(function()&#123;</div><div class="line">  console.log(&apos;11&apos;)</div><div class="line">&#125;, 0);</div><div class="line"></div><div class="line">for(var i=0;i&lt;lastId;i++;)&#123;</div><div class="line">  clearTimeout(i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>获取最后一个定时器的id，遍历清除定时器，可以清除所有的定时器。</p>
-<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>####包装对象</p>
-<blockquote>
-<p>数值、字符串、布尔值——在一定条件下，也会自动转为对象，也就是原始类型的“包装对象”。</p>
-</blockquote>
-<p>我们可以通过构造函数，将原始类型转化为对应的对象即包装对象，从而是原始类型能够方便的调用某些方法</p>
-<p>数值，字符串，布尔值的类型转换函数分别是 <code>Number，String，Boolean</code>，在调用的时候在函数前面加上New 就变成了构造函数，能够蒋对应的原始类型转化为“包装对象”</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var v1 = new Number(123);</div><div class="line">var v2 = new String(&apos;abc&apos;);</div><div class="line">var v3 = new Boolean(true);</div><div class="line"></div><div class="line">typeof v1 // &quot;object&quot;</div><div class="line">typeof v2 // &quot;object&quot;</div><div class="line">typeof v3 // &quot;object&quot;</div><div class="line"></div><div class="line">v1 === 123 // false</div><div class="line">v2 === &apos;abc&apos; // false</div><div class="line">v3 === true // false</div></pre></td></tr></table></figure>
-<h4 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h4><p>类型转换分为强制类型转换和自动转换，<code>javascript</code> 是动态类型语言，在到吗解析运行时，需要的数据类型和传入的数据类型不一致的时候，<code>javascript</code> 会进行自动类型转化。当然，你也可以通过类型转换方法进行强制类型装换。</p>
-<p>日常开发中，我们最常用的数据类型自动转换不过就下面三种情况</p>
-<p>不同数据类型之间相互运算</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;2&apos;+4 // &apos;24&apos;</div></pre></td></tr></table></figure>
-<p>对非布尔值进行布尔运算</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if(&apos;22&apos;)&#123;</div><div class="line">  console.log(&apos;hello&apos;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>对非数据类型使用一元运算符</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+&apos;12&apos;  //12</div></pre></td></tr></table></figure>
-<p>我们也通过<code>Number ，String，Boolean</code> 来进行强制数据类型转换。强制类型转化的规则有点复杂，我们来了解一下。</p>
-<p>Number 转换  <a href="http://javascript.ruanyifeng.com/grammar/conversion.html" target="_blank" rel="external">引用阮老师的详细解释</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">第一步，调用对象自身的valueOf方法。如果返回原始类型的值，则直接对该值使用Number函数，不再进行后续步骤。</div><div class="line"></div><div class="line">第二步，如果 valueOf 方法返回的还是对象，则改为调用对象自身的 toString 方法。如果 toString 方法返回原始类型的值，则对该值使用 Number 函数，不再进行后续步骤。</div><div class="line"></div><div class="line">第三步，如果 toString 方法返回的是对象，就报错。</div></pre></td></tr></table></figure>
-<p><code>String</code> 转换方法同样也是通过调用原对象的 <code>toString</code> 方法和 <code>valueOf</code> 方法，但是不同的是 <code>String</code> 函数会先调用 <code>toString</code> 方法进行转换</p>
-<p><code>Boolean</code> 的转换规则会相对简单一些，除了几个特殊的值，都会被转化为 <code>true</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">undefined</div><div class="line">null</div><div class="line">+0或-0</div><div class="line">NaN</div><div class="line">&apos;&apos;（空字符串）</div></pre></td></tr></table></figure>
-<p>但是要注意</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Boolean(&apos;false&apos;) //true</div></pre></td></tr></table></figure>
-<h4 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h4><blockquote>
-<p><code>typeof</code> 操作符返回数据类型，但是由于 <code>javascript</code> 设计的历史原因，<code>typeof</code> 现已经不能满足我们现在对于类型判断的要求了</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>Value</th>
-<th>Class</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>“foo”</td>
-<td>String</td>
-<td>string</td>
-</tr>
-<tr>
-<td>new String(“foo”)</td>
-<td>String</td>
-<td>object</td>
-</tr>
-<tr>
-<td>1.2</td>
-<td>Number</td>
-<td>number</td>
-</tr>
-<tr>
-<td>new Number(1.2)</td>
-<td>Number</td>
-<td>object</td>
-</tr>
-<tr>
-<td>true</td>
-<td>Boolean</td>
-<td>boolean</td>
-</tr>
-<tr>
-<td>new Boolean(true)</td>
-<td>Boolean</td>
-<td>object</td>
-</tr>
-<tr>
-<td>new Date()</td>
-<td>Date</td>
-<td>object</td>
-</tr>
-<tr>
-<td>new Error()</td>
-<td>Error</td>
-<td>object</td>
-</tr>
-<tr>
-<td>[1,2,3]</td>
-<td>Array</td>
-<td>object</td>
-</tr>
-<tr>
-<td>new Array(1, 2, 3)</td>
-<td>Array</td>
-<td>object</td>
-</tr>
-<tr>
-<td>new Function(“”)</td>
-<td>Function</td>
-<td>functio</td>
-</tr>
-<tr>
-<td>/abc/g</td>
-<td>RegExp</td>
-<td>object (function in Nitro/V8)</td>
-</tr>
-<tr>
-<td>new RegExp(“meow”)</td>
-<td>RegExp</td>
-<td>object (function in Nitro/V8)</td>
-</tr>
-<tr>
-<td>{}</td>
-<td>Object</td>
-<td>object</td>
-</tr>
-<tr>
-<td>new Object()</td>
-<td>Object</td>
-<td>object</td>
-</tr>
-<tr>
-<td>null</td>
-<td>null</td>
-<td>object</td>
-</tr>
-</tbody>
-</table>
-<p>我们可以看到，<code>typeof</code> 不能区分对象的数组和日期，还会把 <code>null</code> 判断成对象，那我们一般是什么时候用 <code>typeof</code> 呢。我们可以用来判断一个已经定义的变量是否被赋值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var a</div><div class="line">if(typeof a == &apos;undefined&apos;)&#123;</div><div class="line">  console.log(&apos;a 已经被定义&apos;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h4><blockquote>
-<p><code>instanceof</code> 操作符通常用来判断，一个对象是否在另一个对象的原型链上，需要注意的是 <code>instanceof</code> 的左值是对象，右值是构造函数</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// defining constructors</div><div class="line">function C() &#123;&#125;</div><div class="line">function D() &#123;&#125;</div><div class="line"></div><div class="line">var o = new C();</div><div class="line"></div><div class="line">// true, because: Object.getPrototypeOf(o) === C.prototype</div><div class="line">o instanceof C;</div><div class="line"></div><div class="line">// false, because D.prototype is nowhere in o&apos;s prototype chain</div><div class="line">o instanceof D;</div></pre></td></tr></table></figure>
-<h4 id="Object-prototype-toString"><a href="#Object-prototype-toString" class="headerlink" title="Object.prototype.toString"></a>Object.prototype.toString</h4><blockquote>
-<p>那么我们有没有可以用来区分变量数据类型的方法呢，有，<code>Object.prototype.toString</code></p>
-</blockquote>
-<p>一些原始数据类型也有 <code>toString</code> 方法，但是通常他们的 <code>toString</code> 方法都是改造过的，不能进行 数据类型判断，所以我们需要用 <code>Object</code> 原型链上的 <code>toString</code> 方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var a = 1234</div><div class="line">a.toString() // &apos;1234&apos;</div><div class="line"></div><div class="line">Object.prototype.toString.call(a) // &quot;[object Number]&quot;</div></pre></td></tr></table></figure>
-<p> 不同类型返回的结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">1. 数值 [object Number]</div><div class="line">2. 字符串 [object String]</div><div class="line">3.布尔值 [object Boolean]</div><div class="line">4.undefined [object undefined]</div><div class="line">5.null  [object Null]</div><div class="line">6.数组 [object Array]</div><div class="line">7.arguments [object Arguments]</div><div class="line">8.函数 [object function]</div><div class="line">9.Error [object Error]</div><div class="line">10.Date [object Date]</div><div class="line">11.RegExp [object RegExp]</div><div class="line">12.其他对象 [object object]</div></pre></td></tr></table></figure>
-<p>那么我们就能够通过 <code>Object.prototype.toString</code> 方法，封装一个可以判断变量数据类型的函数了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function type(obj) &#123;</div><div class="line">    return Object.prototype.toString.call(obj).slice(8, -1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">type(function()&#123;&#125;) //&quot;Function&quot;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>这次我们从对象、函数、类型三方面入手了解了<code>javascript</code> 中容易被忽视或则说比较难理解的地方，我会继续将我在学习中积累的内容分享给大家，如果大家觉得文章有需要改进或则有其他想要了解的内容的，欢迎私信，评论或则微信我，我的微信是：646321933</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/03/28/sanya/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/28/sanya/" itemprop="url">
-                  三亚之旅
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-28T16:31:57+08:00">
-                2018-03-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2018/03/28/sanya/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/28/sanya/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>大家总说，身体和心灵需要有一个在路上。读书不一定所有的人都能喜欢，但是旅行绝对是每一个年龄阶段的人都不会拒绝的的一种亦或是放松亦或是长见识的方式，如果说优缺点的话，那应该就是心疼钱了。我很喜欢旅游，我觉得每年一次旅行是必要的。</p>
-</blockquote>
-<p>旅行一般我都是临时起意的，看到哪里的机票便宜了，就买了准备走，所以我还是比较倾向于不需要办签证的地方，比如济州岛，或则国内。这次我们去了三亚。</p>
-<p>因为是自由行，去之前做了一些粗略的攻略，确定几个自己想要游玩的景点。但是这次行程除了入住的地方和攻略是一致的，其他的都没有按照攻略来。</p>
-<p>攻略是按照窝蜂上的推荐景点排序进行筛选的，但是到三亚的时候，当地居民推荐了我去其他景点，游客少的，消费更低一些的。</p>
-<p>机票是在携程上买的，杭州出发到海口，海口动车到三亚（别问为啥不直飞，因为穷，哈哈哈）海口的火车站和飞机场在一个地方，掐着点的话，下飞机一个半小时就能到三亚了。担心飞机晚点问题，还有到机场需要去提行李，所以没有提前买动车票，到站买了最近一趟去三亚，所以下飞机后我们在火车站逗留了大概一个小时才出发去三亚。</p>
-<h2 id="D1"><a href="#D1" class="headerlink" title="D1"></a>D1</h2><p>飞机是上午6点出发，8点55到海口，坐动车到三亚的时候已经是12点了，入住房间刚好，我们把房间定在三亚湾，190 一晚的海景房（一室一厅一厨一卫）感觉性价超级高，三亚的物价没有特别高，溜达的时候，有看到布丁酒店100多一晚的房间，但是不是在海边，具体房间是怎么样的，我也不太清楚，如果预算不够的话，可以住这种的。</p>
-<p>因为出门就能到海边，虽然肚子有点饿，我们没有马上去觅食，而是去海边小坐了一会，没有坐太久，因为大中午的实在太热了，哈哈。在沙滩上看到了几个皮肤十分黑的男人在光着屁股晒太阳，以为是外国黑人，还在感叹他们奔放的时候发现其实是三亚本地人，脸上3条黑线</p>
-<p>三亚湾上街购物和吃放也很方便，过一条马路就能到热闹的地方去，因为没有在淘宝上挑到自己喜欢的草帽，所以没有带，三亚很晒，所以在逛当地礼品店的时候买了一个，15块钱，和淘宝的价格差不多，没有很宰客，后面又买了一个自拍杆，20块，比淘宝上买略贵一些。</p>
-<p>中午随便吃的重庆小面，2人吃了30多，这个比在杭州吃的时候贵一丢丢，在杭州吃可能 20多就搞定了。也说不上来，可能这个不是三亚本地的吃食吧，所以要贵一些，三亚的海鲜和热带水果还是很便宜的。</p>
-<p>因为第一天早上为了赶飞机，3点多就起来了，我们两个都有点累，本来这一天也没有很特别的行程安排，所以我们就在酒店睡了一下午，晚上的时候本来想随意吃点，逛到了海鲜加工市场，就在市场里买了活海鲜加工着吃，2个人一共吃了300块，因为没有挑加工店，随意没有特别好吃也没有特别难吃，如果你们去的话，还是建议去第一海鲜市场，挑个开的时间长的加工店，</p>
-<p>晚上我们吃完饭又去沙滩上坐了会，穿着拖鞋去海棠踏浪。快到10点的时候准备回房间，在沿着海滩边上的路牙上有好多大姐大妈在按摩，20块钱可以按20分钟，挺舒服的。</p>
-<p><img src="/images/travel/yz.jpeg" alt="三亚路牙子"></p>
-<h2 id="D2"><a href="#D2" class="headerlink" title="D2"></a>D2</h2><p>第二天，我们睡到9点起，打算坐公交车去亚龙湾潜水，在等公交的时候有个大叔问我们去哪，可以送。开始以为是黄牛，有点不太想搭理他。他和我们说可以送我们去亚龙湾，带我们去售票点买票，他们是通过带人去售票店买票积分，然后领礼品的。他和我们说潜水的话，亚龙湾398可以潜，水上项目想多玩点的话，可以去西岛，西岛的套票是 980 可以玩18项。送我们去西岛的话只要每人5块的路费</p>
-<p>我们想着，反正也来了，就去多玩点吧，亚龙湾是在三亚的海岸边，海水可能也会比较浑浊，出海到岛上潜水体验应该能好点。于是我们坐了他老婆的车到西岛售票处，车子沿着海边开了半个小时左右，5块一个人的路费真是良心价。</p>
-<p>到西岛后，我们买了980 的套票，里面包括珊瑚礁潜水，保礁潜水，香蕉船，飞鱼船，快艇，观光艇，划伞，中午的自助餐，鱼疗和台风体验等小项目，也不是所有的项目都好玩，一半一半吧，反正这么买套票我觉得是十分划算的</p>
-<p>我们上岛第一个玩的项目是潜水，潜水有潜水服，但是你还是要穿自己的泳衣在里面，玩其他水上项目也会把衣服弄湿，所以潜完之后，你可以不换衣服，直接去玩其他水上项目了。</p>
-<p>潜水很好玩，潜水前教练会教你一些简单的手势动作，全程教练牵着你移动，所以即使不会游泳也没有关系。潜水的时候最好自己带着鱼食，吸引小鱼。虽然我没有买，但是和我一起潜的其他同学买了，蹭了一把鱼食，小鱼在自己周边游动，十分有趣，壮观</p>
-<p>潜完水，我们衣服没换去吃了自助餐，然后去划伞，划伞这个项目说不上好玩不好玩，就是快艇拉着你在海上兜一圈，不是很刺激，看起来很好玩，实际也没有特别好玩，如果没买套票的话，不是很建议单买着玩</p>
-<p>然后我们去坐了香蕉船，飞羽船，快艇，基本上都是你坐在气垫小船上被快艇拉着在海上兜一圈，速度比较快，挺刺激的。（香蕉船千万别坐第一排，海水很咸，十分辣眼睛，一路海水打在脸上眼睛上，全程睁不开眼睛，飞鱼船可以坐第一排，不会有很多水贱上来，第一排视野还算开阔的）</p>
-<p>水上项目都在一个地方，我们玩了全部的水上项目基本也到下午3点钟了，去做了鱼疗足浴，其实是热带小鱼吃你的角质，脚放进去会痒痒的，但是还满舒服的。然后坐环岛电瓶去了牛岛，因为赶着要在6点前离岛，我们就再牛岛上随意逛了下，拍了几张照片。</p>
-<p>出岛的时候人比较多，我们排队差不多排了半个小时，晚上回去的时候我问了下，打车去三亚湾要60多，不是很划算，我们去坐了公交车，在等公交的时候我买了芒果，10块钱2小袋，我数了一下，一共有11个手掌心这么大的芒果，而且十分甜，很好吃。</p>
-<p>到酒店的时候差不多7点多，我们洗个澡出门觅食，找到一条小吃街，在解放路上，我们住的地方过去需要走15分钟，也算方便，吃了海鲜烧烤和清补凉臭豆腐，买了泡椒鸡爪，一个人50块钱管够了</p>
-<p>吃完饭，我们照例去海滩边逛了下，躺一会，晚上的海滩真的太舒服了，让人想融化在沙滩上。等老了真心可以在海滩边买一套房子养老，哈哈哈。晚上的海滩很热闹，很多游客在踩水，拍婚纱照，还有当地的老人歌舞团的聚会活动，到处是欢声笑语。从海滩边回来，我们在路牙边做了马杀鸡，好多老阿姨按摩，20块钱可以按20分钟，不贵，很舒服，按完然后回去睡觉<br><img src="/images/travel/hb.jpeg" alt="三亚路牙子"></p>
-<h2 id="D3"><a href="#D3" class="headerlink" title="D3"></a>D3</h2><p>前一天玩水玩的比较累，第二天10点才起来，按照原来的计划，是想去南山文化旅游区，那边的108米的海上观音很出名，但是后来没有去，也幸好没去，30多度在外面逛露天的景点实在不太合适，昨天玩水一起认识的几个小伙伴去了，他们和我说让我别去，他们就逛了10几分钟就走了，因为实在太热了</p>
-<p>在我们不知道要去哪里的时候，昨天带我们去西岛的大姐发微信和我说，我们可以去热带雨林，20块钱一个人带我们玩一天，在景点买票就行。而且雨林里有丛林飞跃，是我很想玩的项目，于是我们去了呀渃哒，大姐和我们说这个在海南话里是 1，2，3 的意思。呀渃哒 的门票加丛林飞跃项目是 300块一人，后来我们又加了踏步戏水的项目，每人150。踏步戏水不是很建议玩，感觉比较像是团建，因为大家的身体素质不一样，景区不太敢开放太冒险的路段，所以不是很刺激，没有特别好玩。丛林飞跃就是玉林滑索项目，索道从一个山头到另一个山头，一共有130米，速度不是很快，但是在玉林中飞过，眺看整个玉林的样子真是很舒服，值得一玩。可惜就是不让带手机，索道的终点会有人给你拍照，照片是要钱的，要不要照片就看你个人意愿了，反正我是不太喜欢。</p>
-<p>丛林飞跃之后可以在玉林里闲逛一会，景区会给散客一个电子讲解器，讲解到是挺详细的，反正我是没有耐心听下来，全程拍照瞎晃。只记住槟榔树在海南是一个很重要的文化，以前小伙子要爬49颗槟榔树才能取到老婆。</p>
-<p>雨林很舒服，有身处大自然的感觉，值得去，反正我是觉得一天雨林一天海滩的玩耍方案挺合适的，到是海滩和雨林的景点是比较多的，除了我玩的几个，你们可以自由选择下</p>
-<p>晚上到酒店，我们又重复了前一天的活动，小吃，海滩，马杀鸡</p>
-<p><img src="/images/travel/rx.jpeg" alt="三亚路牙子"></p>
-<h2 id="D4"><a href="#D4" class="headerlink" title="D4"></a>D4</h2><p>第四天，我们晚上11点的飞机，而且需要从三亚坐动车到海口机场，所以我们12点退了房子，打算继续在海滩边玩到下午5，6点再出发。不过现实总是没有想象的美好，30度的海滩，也热，我们差不多在海滩边逗留了1个小时，去吃了午饭买了些菠萝和泡面就公交到动车站避暑了。</p>
-<p>我们没有提前买动车票，总是买的就近一般有座位的，4点从三亚触发，到海口的检完票的时候差不多8点了。逛了免税店，买了2千的面膜和洗面奶，刚好9点多。在机场吃了泡面，玩了会机场农药就开始回城机票检票了</p>
-<p>总得来说第四天，没有很紧张的行程，就是瞎逛，买东西，吃东西。三亚的景点都离得比价远，去一个景点公交都差不多要2个小时的样子，来回需要4个小时在路上。如果要赶着玩的话其实可以把行李寄存起来再玩一个景点。但是想着太累了，我们还是把时间留下去逛免税店了。</p>
-<p><img src="/images/travel/by.jpeg" alt="三亚路牙子"></p>
-<h2 id="装备"><a href="#装备" class="headerlink" title="装备"></a>装备</h2><p>以下我罗列的非必要，但是很有用，哈哈哈</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">防晒</th>
-<th style="text-align:center">记录旅程</th>
-<th style="text-align:center">玩水</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">防晒霜</td>
-<td style="text-align:center">自拍杆</td>
-<td style="text-align:center">手机防水袋</td>
-</tr>
-<tr>
-<td style="text-align:center">防晒外套</td>
-<td style="text-align:center">美美的衣服</td>
-<td style="text-align:center">拖鞋</td>
-</tr>
-<tr>
-<td style="text-align:center">帽子</td>
-<td style="text-align:center">墨镜</td>
-<td style="text-align:center">钱</td>
-</tr>
-</tbody>
-</table>
-<h2 id="你可能想要知道的东西"><a href="#你可能想要知道的东西" class="headerlink" title="你可能想要知道的东西"></a>你可能想要知道的东西</h2><ol>
-<li>我们190订的海景房，是在爱彼迎上定的，这个平台主打民宿所以比携程上便宜，平台注册链接 <a href="https://zh.airbnb.com/c/09425c" target="_blank" rel="external">https://zh.airbnb.com/c/09425c</a></li>
-<li>三亚水果很便宜，最便宜的是在槟榔谷，10块钱能买5个菠萝。市区0块钱只能买3个，如果想买没有削皮的菠萝，可以去就近的菜市场</li>
-<li>马杀鸡在三亚湾的海岸上，20块1次，可以按20分钟</li>
-<li>如果你有其他的想问，可以私我像我，我的微信：646321933</li>
-</ol>
-<blockquote>
-<p>我们的行程是4天3夜，如果有时间的话，建议还是6天5夜，这样能把大部分的景点覆盖到，蜈支洲岛，分界洲，南山文化旅游区，槟榔谷，国家森林公园都可以去走一走。三亚是个很舒服的城市，在三亚，你会感觉整个时间都慢下来，很舒服很放松，你会喜欢的</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -3311,7 +3224,7 @@ module.exports = {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -3321,7 +3234,7 @@ module.exports = {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

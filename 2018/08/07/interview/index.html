@@ -1,0 +1,819 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言最近参加了几场面试，积累了一些高频面试题，我把面试题分为两类，一种是基础试题: 主要考察前端技基础是否扎实，是否能够将前端知识体系串联。一种是开放式问题: 考察业务积累，是否有自己的思考，思考问题的方式，这类问题没有标准答案。
+基础题
+题目的答案提供了一个思考的方向，答案不一定正确全面，有错误的地方欢迎大家请在评论中指出，共同进步。
+
+怎么去设计一个组件封装
+组件封装的目的是为了重用，提高开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新鲜出炉的8月前端面试题">
+<meta property="og:url" content="https://bailinlin.github.com/2018/08/07/interview/index.html">
+<meta property="og:site_name" content="白霸天的博客">
+<meta property="og:description" content="前言最近参加了几场面试，积累了一些高频面试题，我把面试题分为两类，一种是基础试题: 主要考察前端技基础是否扎实，是否能够将前端知识体系串联。一种是开放式问题: 考察业务积累，是否有自己的思考，思考问题的方式，这类问题没有标准答案。
+基础题
+题目的答案提供了一个思考的方向，答案不一定正确全面，有错误的地方欢迎大家请在评论中指出，共同进步。
+
+怎么去设计一个组件封装
+组件封装的目的是为了重用，提高开发">
+<meta property="og:updated_time" content="2018-08-07T07:08:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="新鲜出炉的8月前端面试题">
+<meta name="twitter:description" content="前言最近参加了几场面试，积累了一些高频面试题，我把面试题分为两类，一种是基础试题: 主要考察前端技基础是否扎实，是否能够将前端知识体系串联。一种是开放式问题: 考察业务积累，是否有自己的思考，思考问题的方式，这类问题没有标准答案。
+基础题
+题目的答案提供了一个思考的方向，答案不一定正确全面，有错误的地方欢迎大家请在评论中指出，共同进步。
+
+怎么去设计一个组件封装
+组件封装的目的是为了重用，提高开发">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://bailinlin.github.com/2018/08/07/interview/"/>
+
+
+
+
+
+  <title> 新鲜出炉的8月前端面试题 | 白霸天的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">白霸天的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/08/07/interview/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                新鲜出炉的8月前端面试题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T10:50:11+08:00">
+                2018-08-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/08/07/interview/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/07/interview/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近参加了几场面试，积累了一些高频面试题，我把面试题分为两类，一种是基础试题: 主要考察前端技基础是否扎实，是否能够将前端知识体系串联。一种是开放式问题: 考察业务积累，是否有自己的思考，思考问题的方式，这类问题没有标准答案。</p>
+<h3 id="基础题"><a href="#基础题" class="headerlink" title="基础题"></a>基础题</h3><blockquote>
+<p>题目的答案提供了一个思考的方向，答案不一定正确全面，有错误的地方欢迎大家请在评论中指出，共同进步。</p>
+</blockquote>
+<h4 id="怎么去设计一个组件封装"><a href="#怎么去设计一个组件封装" class="headerlink" title="怎么去设计一个组件封装"></a>怎么去设计一个组件封装</h4><ol>
+<li>组件封装的目的是为了重用，提高开发效率和代码质量</li>
+<li>低耦合，单一职责，可复用性，可维护性</li>
+<li><a href="ijse blog http://ijser.cn/2017-06-25-web-component-design-in-front-end/">前端组件化设计思路</a></li>
+</ol>
+<h4 id="js-异步加载的方式"><a href="#js-异步加载的方式" class="headerlink" title="js 异步加载的方式"></a>js 异步加载的方式</h4><ol>
+<li>渲染引擎遇到 script 标签会停下来，等到执行完脚本，继续向下渲染</li>
+<li>defer 是“渲染完再执行”，async 是“下载完就执行”，defer 如果有多个脚本，会按照在页面中出现的顺序加载，多个async 脚本不能保证加载顺序</li>
+<li>加载 es6模块的时候设置 type=module，异步加载不会造成阻塞浏览器，页面渲染完再执行，可以同时加上async属性，异步执行脚本（利用顶层的this等于undefined这个语法点，可以侦测当前代码是否在 ES6 模块之中）</li>
+</ol>
+<h4 id="css-动画和-js-动画的差异"><a href="#css-动画和-js-动画的差异" class="headerlink" title="css 动画和 js 动画的差异"></a>css 动画和 js 动画的差异</h4><ol>
+<li>代码复杂度，js 动画代码相对复杂一些</li>
+<li>动画运行时，对动画的控制程度上，js 能够让动画，暂停，取消，终止，css动画不能添加事件</li>
+<li>动画性能看，js 动画多了一个js 解析的过程，性能不如 css 动画好</li>
+</ol>
+<h4 id="XSS-与-CSRF-两种跨站攻击"><a href="#XSS-与-CSRF-两种跨站攻击" class="headerlink" title="XSS 与 CSRF 两种跨站攻击"></a>XSS 与 CSRF 两种跨站攻击</h4><ol>
+<li>xss 跨站脚本攻击，主要是前端层面的，用户在输入层面插入攻击脚本，改变页面的显示，或则窃取网站 cookie，预防方法：不相信用户的所有操作，对用户输入进行一个转义，不允许 js 对 cookie 的读写</li>
+<li>csrf 跨站请求伪造，以你的名义，发送恶意请求，通过 cookie 加参数等形式过滤</li>
+<li>我们没法彻底杜绝攻击，只能提高攻击门槛</li>
+</ol>
+<h4 id="事件委托，目的，功能，写法"><a href="#事件委托，目的，功能，写法" class="headerlink" title="事件委托，目的，功能，写法"></a>事件委托，目的，功能，写法</h4><ol>
+<li>把一个或者一组元素的事件委托到它的父层或者更外层元素上</li>
+<li>优点，减少内存消耗，动态绑定事件</li>
+<li>target 是触发事件的最具体的元素，currenttarget是绑定事件的元素(在函数中一般等于this)</li>
+<li><a href="https://zhuanlan.zhihu.com/p/26536815" target="_blank" rel="external">JavaScript 事件委托详解</a></li>
+</ol>
+<h4 id="线程，进程"><a href="#线程，进程" class="headerlink" title="线程，进程"></a>线程，进程</h4><ol>
+<li>线程是最小的执行单元，进程是最小的资源管理单元</li>
+<li>一个线程只能属于一个进程，而一个进程可以有多个线程，但至少有一个线程</li>
+</ol>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><ol>
+<li>当系统面临大量用户访问，负载过高的时候，通常会使用增加服务器数量来进行横向扩展，使用集群和负载均衡提高整个系统的处理能力</li>
+<li><a href="https://www.zhihu.com/question/22610352" target="_blank" rel="external">服务器集群负载均衡原理？</a></li>
+</ol>
+<h4 id="什么是CDN缓存"><a href="#什么是CDN缓存" class="headerlink" title="什么是CDN缓存"></a>什么是CDN缓存</h4><ol>
+<li>CDN 是一种部署策略，根据不同的地区部署类似nginx 这种服务服务，会缓存静态资源。前端在项目优化的时候，习惯在讲台资源上加上一个 hash 值，每次更新的时候去改变这个 hash，hash 值变化的时候，服务会去重新取资源</li>
+<li>(CDN)是一个经策略性部署的整体系统，包括分布式存储、负载均衡、网络请求的重定向和内容管理4个要件</li>
+<li><a href="https://baike.baidu.com/item/CDN" target="_blank" rel="external">CDN_百度百科</a></li>
+</ol>
+<h4 id="闭包的写法，闭包的作用，闭包的缺点"><a href="#闭包的写法，闭包的作用，闭包的缺点" class="headerlink" title="闭包的写法，闭包的作用，闭包的缺点"></a>闭包的写法，闭包的作用，闭包的缺点</h4><ol>
+<li>使用闭包的目的——隐藏变量，间接访问一个变量,在定义函数的词法作用域外，调用函数</li>
+<li>闭包的内存泄露，是IE的一个 bug，闭包使用完成之后，收回不了闭包的引用，导致内存泄露</li>
+<li><a href="https://zhuanlan.zhihu.com/p/22486908?refer=study-fe" target="_blank" rel="external">「每日一题」JS 中的闭包是什么？</a></li>
+<li><a href="http://www.cnblogs.com/rubylouvre/p/3345294.html" target="_blank" rel="external">闭包造成内存泄露的实验</a></li>
+</ol>
+<h4 id="跨域问题，谁限制的跨域，怎么解决"><a href="#跨域问题，谁限制的跨域，怎么解决" class="headerlink" title="跨域问题，谁限制的跨域，怎么解决"></a>跨域问题，谁限制的跨域，怎么解决</h4><ol>
+<li>浏览器的同源策略导致了跨域</li>
+<li>用于隔离潜在恶意文件的重要安全机制</li>
+<li>[jsonp ，允许 script 加载第三方资源]<a href="https://segmentfault.com/a/1190000008445998" target="_blank" rel="external">https://segmentfault.com/a/1190000008445998</a></li>
+<li>nginx 反向代理（nginx 服务内部配置 Access-Control-Allow-Origin *）</li>
+<li>cors 前后端协作设置请求头部，Access-Control-Allow-Origin  等头部信息</li>
+<li>iframe 嵌套通讯，postmessage</li>
+</ol>
+<h4 id="javascript-中常见的内存泄露陷阱"><a href="#javascript-中常见的内存泄露陷阱" class="headerlink" title="javascript 中常见的内存泄露陷阱"></a>javascript 中常见的内存泄露陷阱</h4><ol>
+<li>内存泄露会导致一系列问题，比如：运行缓慢，崩溃，高延迟</li>
+<li>内存泄露是指你用不到（访问不到）的变量，依然占居着内存空间，不能被再次利用起来</li>
+<li>意外的全局变量，这些都是不会被回收的变量（除非设置 null 或者被重新赋值），特别是那些用来临时存储大量信息的变量</li>
+<li>周期函数一直在运行，处理函数并不会被回收，jq 在移除节点前都会，将事件监听移除</li>
+<li>js 代码中有对 DOM 节点的引用，dom 节点被移除的时候，引用还维持</li>
+<li><a href="http://web.jobbole.com/88463/" target="_blank" rel="external">JavaScript 中 4 种常见的内存泄露陷阱</a></li>
+</ol>
+<h4 id="babel把ES6转成ES5或者ES3之类的原理是什么"><a href="#babel把ES6转成ES5或者ES3之类的原理是什么" class="headerlink" title="babel把ES6转成ES5或者ES3之类的原理是什么"></a>babel把ES6转成ES5或者ES3之类的原理是什么</h4><ol>
+<li>它就是个编译器，输入语言是ES6+，编译目标语言是ES5</li>
+<li><a href="thejameskyle/the-super-tiny-compiler">babel 官方工作原理</a></li>
+<li>解析：将代码字符串解析成抽象语法树</li>
+<li>变换：对抽象语法树进行变换操作</li>
+<li>再建：根据变换后的抽象语法树再生成代码字符串</li>
+</ol>
+<h4 id="Promise-模拟终止"><a href="#Promise-模拟终止" class="headerlink" title="Promise 模拟终止"></a>Promise 模拟终止</h4><ol>
+<li>当新对象保持“pending”状态时，原Promise链将会中止执行。</li>
+<li>return new Promise(()=&gt;{});  // 返回“pending”状态的Promise对象</li>
+</ol>
+<h4 id="promise-放在try-catch里面有什么结果"><a href="#promise-放在try-catch里面有什么结果" class="headerlink" title="promise 放在try catch里面有什么结果"></a>promise 放在try catch里面有什么结果</h4><ol>
+<li>Promise 对象的错误具有冒泡性质，会一直向后传递，直到被捕获为止，也即是说，错误总会被下一个catch语句捕获</li>
+<li>当Promise链中抛出一个错误时，错误信息沿着链路向后传递，直至被捕获</li>
+</ol>
+<h4 id="网站性能优化"><a href="#网站性能优化" class="headerlink" title="网站性能优化"></a>网站性能优化</h4><ol>
+<li>http 请求方面，减少请求数量，请求体积，对应的做法是，对项目资源进行压缩，控制项目资源的 dns 解析在2到4个域名，提取公告的样式，公共的组件，雪碧图，缓存资源，</li>
+<li>压缩资源，提取公共资源压缩，提取 css ，js 公共方法</li>
+<li>不要缩放图片，使用雪碧图，使用字体图表（阿里矢量图库）</li>
+<li>使用 CDN，抛开无用的 cookie</li>
+<li>减少重绘重排，CSS属性读写分离，最好不要用js 修改样式，dom 离线更新，渲染前指定图片的大小</li>
+<li>js 代码层面的优化，减少对字符串的计算，合理使用闭包，首屏的js 资源加载放在最底部</li>
+</ol>
+<h4 id="js-自定义事件实现"><a href="#js-自定义事件实现" class="headerlink" title="js 自定义事件实现"></a>js 自定义事件实现</h4><ol>
+<li>原生提供了3个方法实现自定义事件</li>
+<li>createEvent，设置事件类型，是 html 事件还是 鼠标事件</li>
+<li>initEvent  初始化事件，事件名称，是否允许冒泡，是否阻止自定义事件</li>
+<li>dispatchEvent  触发事件</li>
+</ol>
+<h4 id="angular-双向数据绑定与vue数据的双向数据绑定"><a href="#angular-双向数据绑定与vue数据的双向数据绑定" class="headerlink" title="angular 双向数据绑定与vue数据的双向数据绑定"></a>angular 双向数据绑定与vue数据的双向数据绑定</h4><ol>
+<li>二者都是 MVVM 模式开发的典型代表</li>
+<li>angular 是通过脏检测实现，angular 会将 UI 事件，请求事件，settimeout 这类延迟，的对象放入到事件监测的脏队列，当数据变化的时候，触发 $diget 方法进行数据的更新，视图的渲染</li>
+<li>vue 通过数据属性的数据劫持和发布订阅的模式实现，大致可以理解成由3个模块组成，observer 完成对数据的劫持，compile 完成对模板片段的渲染，watcher 作为桥梁连接二者，订阅数据变化及更新视图</li>
+</ol>
+<h4 id="get与post-通讯的区别"><a href="#get与post-通讯的区别" class="headerlink" title="get与post 通讯的区别"></a>get与post 通讯的区别</h4><ol>
+<li>Get 请求能缓存，Post 不能</li>
+<li>Post 相对 Get 安全一点点，因为Get 请求都包含在 URL 里，且会被浏览器保存历史纪录，Post 不会，但是在抓包的情况下都是一样的。</li>
+<li>Post 可以通过 request body来传输比 Get 更多的数据，Get 没有这个技术</li>
+<li>URL有长度限制，会影响 Get 请求，但是这个长度限制是浏览器规定的，不是 RFC 规定的</li>
+<li>Post 支持更多的编码类型且不对数据类型限制</li>
+</ol>
+<h4 id="有没有去研究webpack的一些原理和机制，怎么实现的"><a href="#有没有去研究webpack的一些原理和机制，怎么实现的" class="headerlink" title="有没有去研究webpack的一些原理和机制，怎么实现的"></a>有没有去研究webpack的一些原理和机制，怎么实现的</h4><ol>
+<li>解析webpack配置参数，合并从shell传入和webpack.config.js文件里配置的参数，生产最后的配置结果。</li>
+<li>注册所有配置的插件，好让插件监听webpack构建生命周期的事件节点，以做出对应的反应。</li>
+<li>从配置的entry入口文件开始解析文件构建AST语法树，找出每个文件所依赖的文件，递归下去。</li>
+<li>在解析文件递归的过程中根据文件类型和loader配置找出合适的loader用来对文件进行转换。</li>
+<li>递归完后得到每个文件的最终结果，根据entry配置生成代码块chunk。</li>
+<li>输出所有chunk到文件系统。</li>
+</ol>
+<h4 id="ES6模块与CommonJS模块的差异"><a href="#ES6模块与CommonJS模块的差异" class="headerlink" title="ES6模块与CommonJS模块的差异"></a>ES6模块与CommonJS模块的差异</h4><ol>
+<li>CommonJs 模块输出的是一个值的拷贝，ES6模块输出的是一个值的引用</li>
+<li>CommonJS 模块是运行时加载，ES6模块是编译时输出接口</li>
+<li>ES6输入的模块变量，只是一个符号链接，所以这个变量是只读的，对它进行重新赋值就会报错</li>
+</ol>
+<h4 id="模块加载AMD，CMD，CommonJS-Modules-2-0-规范"><a href="#模块加载AMD，CMD，CommonJS-Modules-2-0-规范" class="headerlink" title="模块加载AMD，CMD，CommonJS Modules/2.0 规范"></a>模块加载AMD，CMD，CommonJS Modules/2.0 规范</h4><ol>
+<li>这些规范的目的都是为了 JavaScript 的模块化开发，特别是在浏览器端的</li>
+<li>对于依赖的模块，AMD 是提前执行，CMD 是延迟执行</li>
+<li>CMD 推崇依赖就近，AMD 推崇依赖前置</li>
+</ol>
+<h4 id="Node-事件循环，js-事件循环差异"><a href="#Node-事件循环，js-事件循环差异" class="headerlink" title="Node 事件循环，js 事件循环差异"></a>Node 事件循环，js 事件循环差异</h4><ol>
+<li>Node.js 的事件循环分为6个阶段</li>
+<li>浏览器和Node 环境下，microtask 任务队列的执行时机不同<ul>
+<li>Node.js中，microtask 在事件循环的各个阶段之间执行</li>
+<li>浏览器端，microtask 在事件循环的 macrotask 执行完之后执行</li>
+</ul>
+</li>
+<li>递归的调用process.nextTick()会导致I/O starving，官方推荐使用setImmediate()</li>
+</ol>
+<h4 id="浅拷贝和深拷贝的问题"><a href="#浅拷贝和深拷贝的问题" class="headerlink" title="浅拷贝和深拷贝的问题"></a>浅拷贝和深拷贝的问题</h4><ol>
+<li>深拷贝和浅拷贝是只针对Object和Array这样的复杂类型的</li>
+<li>也就是说a和b指向了同一块内存，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝</li>
+<li>浅拷贝， ”Object.assign() 方法用于将所有可枚举的属性的值从一个或多个源对象复制到目标对象。它将返回目标对象</li>
+<li>深拷贝，JSON.parse()和JSON.stringify()给了我们一个基本的解决办法。但是函数不能被正确处理</li>
+</ol>
+<h3 id="开放性问题"><a href="#开放性问题" class="headerlink" title="开放性问题"></a>开放性问题</h3><blockquote>
+<p>开放性问题主要是考察候选人业务积累，是否有自己的思考，思考问题的方式，没有标准答案。不过有些问题挺刁的，哈哈哈哈，比如：”  你见过的最好的代码是什么？ “总之提前准备下没错。</p>
+</blockquote>
+<ol>
+<li>先自我介绍一下，说一下项目的技术栈，以及项目中遇到的一些问题</li>
+<li>从整体中，看你对项目的认识，框架的认识和自己思考</li>
+<li>项目中有没有遇到什么难点，怎么解决</li>
+<li>如果你在创业公司你怎么从0开始做（选择什么框架，选择什么构建工具）</li>
+<li>说一下你项目中用到的技术栈，以及觉得得意和出色的点，以及让你头疼的点，怎么解决的</li>
+<li>一个业务场景，面对产品不断迭代，以及需求的变动该怎么应对，具体技术方案实现</li>
+<li>你的学习来源是什么</li>
+<li>你觉得哪个框架比较好，好在哪里</li>
+<li>你觉得最难得技术难点是什么</li>
+<li>你见过的最好的代码是什么</li>
+</ol>
+<h3 id="😊往期的读书笔记"><a href="#😊往期的读书笔记" class="headerlink" title="😊往期的读书笔记"></a>😊往期的读书笔记</h3><blockquote>
+<p>为了系统的串联前端知识，我平时喜欢用思维导图来记录读书笔记，我在 <a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">github</a> 建了仓库放这些思维导图的原件，和读书笔记。如果你也喜欢用思维导图的方式来记录读书笔记，也欢迎和我一同维护这个仓库，欢迎留言或则微信（646321933）与我交流</p>
+</blockquote>
+<p><a href="https://juejin.im/post/5b0cafad51882515624dc6d2" target="_blank" rel="external">精读《你不知道的 javascript（上卷）》</a></p>
+<p><a href="https://juejin.im/post/5b2a07c16fb9a00e36425ef0" target="_blank" rel="external">精读《你不知道的javascript》中卷</a></p>
+<p><a href="https://juejin.im/post/5b1a18de6fb9a01e312828dd" target="_blank" rel="external">精读《深入浅出Node.js》</a></p>
+<p><a href="https://juejin.im/post/5b1f7e62e51d45068a6cb98f" target="_blank" rel="external">javascript 垃圾回收算法</a></p>
+<p><a href="https://juejin.im/post/5b32f82a518825749e4a218b" target="_blank" rel="external">精读《图解HTTP》</a></p>
+<p><a href="https://github.com/bailinlin/Awsome-Front-End-Xmind" target="_blank" rel="external">思维导图下载地址</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/05/jianrong/" rel="next" title="如何机智地回答浏览器兼容性问题">
+                <i class="fa fa-chevron-left"></i> 如何机智地回答浏览器兼容性问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/08/07/interview/"
+           data-title="新鲜出炉的8月前端面试题" data-url="https://bailinlin.github.com/2018/08/07/interview/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/bbt.jpeg"
+               alt="bailinlin" />
+          <p class="site-author-name" itemprop="name">bailinlin</p>
+          <p class="site-description motion-element" itemprop="description">前端,白霸天,博客</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础题"><span class="nav-number">2.</span> <span class="nav-text">基础题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#怎么去设计一个组件封装"><span class="nav-number">2.1.</span> <span class="nav-text">怎么去设计一个组件封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js-异步加载的方式"><span class="nav-number">2.2.</span> <span class="nav-text">js 异步加载的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#css-动画和-js-动画的差异"><span class="nav-number">2.3.</span> <span class="nav-text">css 动画和 js 动画的差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS-与-CSRF-两种跨站攻击"><span class="nav-number">2.4.</span> <span class="nav-text">XSS 与 CSRF 两种跨站攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事件委托，目的，功能，写法"><span class="nav-number">2.5.</span> <span class="nav-text">事件委托，目的，功能，写法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程，进程"><span class="nav-number">2.6.</span> <span class="nav-text">线程，进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#负载均衡"><span class="nav-number">2.7.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是CDN缓存"><span class="nav-number">2.8.</span> <span class="nav-text">什么是CDN缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#闭包的写法，闭包的作用，闭包的缺点"><span class="nav-number">2.9.</span> <span class="nav-text">闭包的写法，闭包的作用，闭包的缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#跨域问题，谁限制的跨域，怎么解决"><span class="nav-number">2.10.</span> <span class="nav-text">跨域问题，谁限制的跨域，怎么解决</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#javascript-中常见的内存泄露陷阱"><span class="nav-number">2.11.</span> <span class="nav-text">javascript 中常见的内存泄露陷阱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#babel把ES6转成ES5或者ES3之类的原理是什么"><span class="nav-number">2.12.</span> <span class="nav-text">babel把ES6转成ES5或者ES3之类的原理是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-模拟终止"><span class="nav-number">2.13.</span> <span class="nav-text">Promise 模拟终止</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#promise-放在try-catch里面有什么结果"><span class="nav-number">2.14.</span> <span class="nav-text">promise 放在try catch里面有什么结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网站性能优化"><span class="nav-number">2.15.</span> <span class="nav-text">网站性能优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js-自定义事件实现"><span class="nav-number">2.16.</span> <span class="nav-text">js 自定义事件实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#angular-双向数据绑定与vue数据的双向数据绑定"><span class="nav-number">2.17.</span> <span class="nav-text">angular 双向数据绑定与vue数据的双向数据绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get与post-通讯的区别"><span class="nav-number">2.18.</span> <span class="nav-text">get与post 通讯的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有没有去研究webpack的一些原理和机制，怎么实现的"><span class="nav-number">2.19.</span> <span class="nav-text">有没有去研究webpack的一些原理和机制，怎么实现的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ES6模块与CommonJS模块的差异"><span class="nav-number">2.20.</span> <span class="nav-text">ES6模块与CommonJS模块的差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模块加载AMD，CMD，CommonJS-Modules-2-0-规范"><span class="nav-number">2.21.</span> <span class="nav-text">模块加载AMD，CMD，CommonJS Modules/2.0 规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node-事件循环，js-事件循环差异"><span class="nav-number">2.22.</span> <span class="nav-text">Node 事件循环，js 事件循环差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#浅拷贝和深拷贝的问题"><span class="nav-number">2.23.</span> <span class="nav-text">浅拷贝和深拷贝的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开放性问题"><span class="nav-number">3.</span> <span class="nav-text">开放性问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#😊往期的读书笔记"><span class="nav-number">4.</span> <span class="nav-text">😊往期的读书笔记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bailinlin</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"baibatian"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
