@@ -239,6 +239,276 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/04/28/history/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="bailinlin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/bbt.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="白霸天的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/28/history/" itemprop="url">
+                  你需要知道的单页面路由实现原理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-28T09:43:21+08:00">
+                2018-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/04/28/history/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/04/28/history/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近开发的埋点项目，需要记录用户行为轨迹即用户页面访问顺序。需要在页面跳转的时候，记录用户访问的信息（比如 url ，请求头部等），非单页面应用可以给 window 对象加上一个 beforeunload 事件，在页面离开时触发采集开关，但是现在很多业务是单页面应用，用户切换地址的时候，是无刷新的局部更新，没有办法触发 beforeunload。所以单页面应用的路由插件一定运用了 window 自带的无刷新修改用户浏览记录的方法，pushState 和 replaceState。</p>
+<h3 id="pushState-和-replaceState-了解一下"><a href="#pushState-和-replaceState-了解一下" class="headerlink" title="pushState 和 replaceState 了解一下"></a>pushState 和 replaceState 了解一下</h3><blockquote>
+<p>history 提供了两个方法，能够无刷新的修改用户的浏览记录，pushSate，和 replaceState，区别的 pushState 在用户访问页面后面添加一个访问记录， replaceState 则是直接替换了当前访问记录</p>
+</blockquote>
+<p>history 对象的详细信息已经有很多很好很详细的介绍文献，这里不再做总结，我们引用阮老师的教程介绍，<a href="http://javascript.ruanyifeng.com/bom/history.html" target="_blank" rel="external">history对象 – JavaScript 标准参考教程（alpha）</a></p>
+<h4 id="history-pushState"><a href="#history-pushState" class="headerlink" title="history.pushState"></a>history.pushState</h4><p>history.pushState方法接受三个参数，依次为：</p>
+<blockquote>
+<p>state：一个与指定网址相关的状态对象，popstate事件触发时，该对象会传入回调函数。如果不需要这个对象，此处可以填null。<br>title：新页面的标题，但是所有浏览器目前都忽略这个值，因此这里可以填null。<br>url：新的网址，必须与当前页面处在同一个域。浏览器的地址栏将显示这个网址。<br>假定当前网址是example.com/1.html，我们使用pushState方法在浏览记录（history对象）中添加一个新记录。</p>
+</blockquote>
+<pre>
+    var stateObj = { foo: 'bar' };
+    history.pushState(stateObj, 'page 2', '2.html');
+</pre>
+
+<p>添加上面这个新记录后，浏览器地址栏立刻显示 example.com/2.html，但并不会跳转到 2.html，甚至也不会检查2.html 是否存在，它只是成为浏览历史中的最新记录。这时，你在地址栏输入一个新的地址(比如访问 google.com )，然后点击了倒退按钮，页面的 URL 将显示 2.html；你再点击一次倒退按钮，URL 将显示 1.html。</p>
+<p>总之，pushState 方法不会触发页面刷新，只是导致 history 对象发生变化，地址栏会有反应。</p>
+<p>如果 pushState 的 url参数，设置了一个新的锚点值（即hash），并不会触发 hashchange 事件。如果设置了一个跨域网址，则会报错。</p>
+<pre>
+    // 报错
+    history.pushState(null, null, 'https://twitter.com/hello');
+
+    上面代码中，pushState想要插入一个跨域的网址，导致报错。这样设计的目的是，防止恶意代码让用户以为他们是在另一个网站上。
+</pre>
+
+<h4 id="history-replaceState"><a href="#history-replaceState" class="headerlink" title="history.replaceState"></a>history.replaceState</h4><p>history.replaceState 方法的参数与 pushState 方法一模一样，区别是它修改浏览历史中当前纪录,假定当前网页是 example.com/example.html。</p>
+<pre>
+    history.pushState({page: 1}, 'title 1', '?page=1');
+    history.pushState({page: 2}, 'title 2', '?page=2');
+    history.replaceState({page: 3}, 'title 3', '?page=3');
+
+    history.back()
+    // url显示为http://example.com/example.html?page=1
+
+    history.back()
+    // url显示为http://example.com/example.html
+
+    history.go(2)
+    // url显示为http://example.com/example.html?page=3
+
+</pre>
+
+<h3 id="单页面应用用户访问轨迹埋点"><a href="#单页面应用用户访问轨迹埋点" class="headerlink" title="单页面应用用户访问轨迹埋点"></a>单页面应用用户访问轨迹埋点</h3><p>开发过单页面应用的同学，一定比较清楚，单页面应用的路由切换是无感知的，不会重新进行 http 请求去获取页面，而是通过改变页面渲染视图来实现。所以他的实现原理一定也是通过原生的 pushState 或则 replaceState 来实现的。所以在页面跳转的时候一定会调用 pushState 或则 replaceState ，要记录用户的跳转信息，我们只要拦截 pushState 和 replaceState，在执行默行为<strong>前</strong>先执行我们的方法就能够采集到用户的跳转信息了</p>
+<pre>
+
+    // 改写思路：拷贝 window 默认的 replaceState 函数，重写 history.replaceState 在方法里插入我们的采集行为，在重写的 replaceState 方法最后调用，window 默认的 replaceState 方法
+
+    collect = {}
+
+    collect.onPushStateCallback : function(){}  // 自定义的采集方法
+
+    (function(history){
+
+        var replaceState = history.replaceState;   // 存储原生 replaceState
+
+        history.replaceState = function(state, param) {     // 改写 replaceState
+           var url = arguments[2];
+
+           if (typeof collect.onPushStateCallback == "function") {
+                 collect.onPushStateCallback({state: state, param: param, url: url});   //自定义的采集行为方法
+           }
+
+           return replaceState.apply(history, arguments);    // 调用原生的 replaceState
+        };
+     })(window.history);
+
+
+</pre>
+
+<h3 id="vue-router-的路由实现"><a href="#vue-router-的路由实现" class="headerlink" title="vue-router 的路由实现"></a>vue-router 的路由实现</h3><p>既然知道了这个原理，我们来看下 vue-router 的实现，我们打开 <a href="https://github.com/vuejs/vue-router" target="_blank" rel="external">vue-router 项目地址</a>,把项目克隆下来，或则直接在 github 上预览，在 Vue 开发的项目里，我们通过 router.push(‘home’) 来实现页面的跳转，所以我们检索下，push 方法的实现</p>
+<p><img src="/images/history/search.jpeg" alt="push方法检索"></p>
+<p>我们检索到了 20 个 js 文件，😂，一般到这个时候，我们会放弃源码阅读，那么我们今天的文章就到这结束，谢谢大家！</p>
+<p>开个玩笑，源码阅读不能这么粗糙，我们找到 src 目录，点开 <code>index.js</code> 文件，看到 history对象的定义和 mode 参数有关</p>
+<pre>
+ if (!inBrowser) {
+      mode = 'abstract'
+    }
+    this.mode = mode
+
+    switch (mode) {
+      case 'history':
+        this.history = new HTML5History(this, options.base)
+        break
+      case 'hash':
+        this.history = new HashHistory(this, options.base, this.fallback)
+        break
+      case 'abstract':
+        this.history = new AbstractHistory(this, options.base)
+        break
+      default:
+        if (process.env.NODE_ENV !== 'production') {
+          assert(false, `invalid mode: ${mode}`)
+        }
+    }
+</pre>
+
+<p>看到 history 对象的实例与配置的 mode 有关，vue-router 通过3中方式实现了路由切换。与我们今天讲的内容相匹配的是 <code>HTML5History</code> 的实现方案，其他的将不再文章中做扩展，若果你感兴趣想要了解，可以看文章后面的扩展阅读</p>
+<p>我们来看 vue-router 中的 HTML5History 源码：</p>
+<pre>
+    push (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+      const { current: fromRoute } = this
+      this.transitionTo(location, route => {
+        pushState(cleanPath(this.base + route.fullPath))
+        handleScroll(this.router, route, fromRoute, false)
+        onComplete && onComplete(route)
+      }, onAbort)
+    }
+
+    replace (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+      const { current: fromRoute } = this
+      this.transitionTo(location, route => {
+        replaceState(cleanPath(this.base + route.fullPath))
+        handleScroll(this.router, route, fromRoute, false)
+        onComplete && onComplete(route)
+      }, onAbort)
+    }
+
+    // src/util/push-state.js
+    export function pushState (url?: string, replace?: boolean) {
+      saveScrollPosition()
+      // try...catch the pushState call to get around Safari
+      // DOM Exception 18 where it limits to 100 pushState calls
+      const history = window.history
+      try {
+        if (replace) {
+          history.replaceState({ key: _key }, '', url)
+        } else {
+          _key = genKey()
+          history.pushState({ key: _key }, '', url)
+        }
+      } catch (e) {
+        window.location[replace ? 'replace' : 'assign'](url)
+      }
+    }
+
+    export function replaceState (url?: string) {
+      pushState(url, true)
+    }
+</pre>
+
+<p>在使用 Vue 开发的过程中，我们一定用到过 push 和 replace 来改变路由，和视图。</p>
+<p>router 实例调用的 push 实际是 history 的方法，通过 mode 来确定匹配 history 的实现方案，从代码中我们看到，push 调用了 src/util/push-state.js 中被改写过的 pushState 的方法，改写过的方法会根据传入的参数 <code>replace?: boolean</code>来进行判断调用 pushState 还是 replaceState ，同时做了错误捕获，如果，history 无刷新修改访问路径失败，则调用  <code>window.location.replace(url)</code> ,有刷新的切换用户访问地址 ，同理 <code>pushState</code> 也是这样。这里的 transitionTo 方法主要的作用是做视图的跟新及路由跳转监测，如果 url 没有变化（访问地址切换失败的情况），在 transitionTo 方法内部还会调用一个 ensureURL 方法，来修改 url。 transitionTo 方法中应用的父方法比较多，这里不做长篇赘述，具体代码分析可以关注后我以后的文章</p>
+<h3 id="模拟单页面路由"><a href="#模拟单页面路由" class="headerlink" title="模拟单页面路由"></a>模拟单页面路由</h3><p>通过上面的学习，我们知道了，单页面应用路由的实现原理，我们也尝试去实现一个。在做管理系统的时候，我们通常会在页面的左侧放置一个固定的导航 sidebar，页面的右侧放与之匹配的内容 main 。点击导航时，我们只希望内容进行更新，如果刷新了整个页面，到时导航和通用的头部底部也进行重绘重排的话，十分浪费资源，体验也会不好。这个时候，我们就能用到我们今天学习到的内容，通过使用 HTML5 的 pushState 方法和 replaceState 方法来实现，</p>
+<p>思路：首先绑定 click 事件。当用户点击一个链接时，通过 preventDefault 函数防止默认的行为（页面跳转），同时读取链接的地址（如果有 jQuery，可以写成$(this).attr(‘href’)），把这个地址通过pushState塞入浏览器历史记录中，再利用 AJAX 技术拉取（如果有 jQuery，可以使用$.get方法）这个地址中真正的内容，同时替换当前网页的内容。</p>
+<p>为了处理用户前进、后退，我们监听 popstate 事件。当用户点击前进或后退按钮时，浏览器地址自动被转换成相应的地址，同时popstate事件发生。在事件处理函数中，我们根据当前的地址抓取相应的内容，然后利用 AJAX 拉取这个地址的真正内容，呈现，即可。</p>
+<p>最后，整个过程是不会改变页面标题的，可以通过直接对 document.title 赋值来更改页面标题。</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>好了,我们今天通过多个方面来讲了 pushState 方法和 replaceState 的应用，你应该对这个两个方法能有一个比较深刻的印象，如果想要了解更多，你可以参考以下链接</p>
+<p><a href="http://javascript.ruanyifeng.com/bom/history.html" target="_blank" rel="external">history对象 – JavaScript 标准参考教程（alpha）</a><br><a href="https://zhuanlan.zhihu.com/p/27588422" target="_blank" rel="external">从vue-router看前端路由的两种实现</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2018/04/02/javascript-notes/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2326,558 +2596,6 @@ gulp.task(&apos;watch&apos;,function(){
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://bailinlin.github.com/2015/11/15/ng1-style-guide1/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="bailinlin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/bbt.jpeg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="白霸天的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="白霸天的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/15/ng1-style-guide1/" itemprop="url">
-                  你需要知道的 Angular 编程指南(上)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-15T20:20:00+08:00">
-                2015-11-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2015/11/15/ng1-style-guide1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/15/ng1-style-guide1/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>一个好的编程风格有助于团队的协同开发，所以在做 angular 开发时，我们也有一些约定，本文章主要是针对于使用 angular 和 coffeescript 编程的团队。（这是一个粗糙的翻译版本，原文的链接在文章下，感兴趣的同学可以去看）</p>
-<blockquote>
-<p><a href="https://github.com/johnpapa/angular-styleguide" target="_blank" rel="external">Angular 编程风格指导原文地址</a></p>
-</blockquote>
-<p>##1. 单一职责</p>
-<p><strong>原则 1：一个文件只能定义一个组件</strong></p>
-<p>下面的例子定义了app模块和他的依赖，把控制器和服务都定义到一个文件了</p>
-<pre><code>-- 不推荐 --
-SomeController = ()-&gt;
-someFactory = ()-&gt;
-angular
-    .module(&apos;app&apos;, [&apos;ngRoute&apos;])
-    .controller(&apos;SomeController&apos; , SomeController)
-    .factory(&apos;someFactory&apos; , someFactory)
-</code></pre><p>同样的组建，现在我们把它分解到他们自己的文件中</p>
-<pre><code>-- 推荐方式 --
--- app.module.js --
-
-angular
-    .module(&apos;app&apos;, [&apos;ngRoute&apos;])
-
-
--- 推荐方式 --
--- someController.js --
-SomeController = ()-&gt;
-angular
-    .module(&apos;app&apos;)
-    .controller(&apos;SomeController&apos; , SomeController)
-
-
--- 推荐方式 --
--- someFactory.js --
-someFactory = ()-&gt;
-angular
-    .module(&apos;app&apos;)
-    .factory(&apos;someFactory&apos; , someFactory)
-</code></pre><p>##2. 模块</p>
-<p><strong>原则 2：定义模块的时候不要用变量来定义，用设置的语法来定义</strong></p>
-<blockquote>
-<p>因为我们使用的单一职责的原则，每一个组建一个文件，在定义组建的时候你已经用<code>angular.module</code>来介绍这个组建是哪个模块的了。</p>
-</blockquote>
-<pre><code>-- 不推荐 --
-app = angular.module(&apos;app&apos;, [
-    &apos;ngAnimate&apos;
-    &apos;ngRoute&apos;
-    &apos;app.shared&apos;
-    &apos;app.dashboard&apos;
-])
-</code></pre><p>下面是不用变量的语法</p>
-<pre><code>-- 推荐方式 --
-angular
-    .module(&apos;app&apos;, [
-    &apos;ngAnimate&apos;
-    &apos;ngRoute&apos;
-    &apos;app.shared&apos;
-    &apos;app.dashboard&apos;
-])
-</code></pre><p><strong>拓展</strong>：当使用模块的时候，不要用变量，要用链式定义的语法</p>
-<blockquote>
-<p>这样做能够使代码的可读性更高，同时也能避免变量的泄露和碰撞（重名）</p>
-</blockquote>
-<pre><code>-- 不推荐--
-app = angular.module(&apos;app&apos;)
-app.controller(&apos;SomeController&apos; , SomeController)
-SomeController = ()-&gt;
-
--- 推荐方式 --
-SomeController = ()-&gt;
-
-angular
-  .module(&apos;app&apos;)
-  .controller(&apos;SomeController&apos; , SomeController)
-</code></pre><p><strong>设置 vs 获取</strong>所有的实例只要设置一次</p>
-<blockquote>
-<p>一个模块只要被创建一次，之后的模块获取只要通过这个切入点来获取就可以了</p>
-</blockquote>
-<ul>
-<li>用 <code>angular.module(&#39;app&#39;, [])</code> 来设置模块</li>
-<li>用<code>angular.module(&#39;app&#39;)</code>来获取模块</li>
-</ul>
-<p><strong>命名函数 vs 匿名函数</strong>：使用命名函数来代替向回掉函数传递匿名函数</p>
-<blockquote>
-<p>这样能够是代码的可读性更高，更加容易debug，减少回调函数的嵌套</p>
-</blockquote>
-<pre><code>-- 不推荐 --
-angular
-  .module(&apos;app&apos;)
-  .controller(&apos;Dashboard&apos;, ()-&gt;)
-  .factory(&apos;logger&apos;, ()-&gt; )
-
--- 推荐方式 --
--- dashboard.js --
-Dashboard = ()-&gt;
-  # logic goes here --&gt;
-  return
-
-angular
-  .module(&apos;app&apos;)
-  .controller(&apos;Dashboard&apos;, Dashboard)
-
--- 推荐方式 --
--- logger.js --
-logger = ()-&gt;
-  # logic goes here --&gt;
-  return
-
-angular
-  .module(&apos;app&apos;)
-  .factory(&apos;logger&apos;, logger)
-</code></pre><p><strong>IIFE（立即调用函数表达式）：</strong>把angular 组建包裹在能够马上调用的函数表达式中</p>
-<blockquote>
-<p>IIFE 把变量从全局作用域里解放出来，这样做能防止把变量和函数定义在全局作用句中从而造成变量的碰撞（）变量重名造成的莫名其妙的bug）</p>
-</blockquote>
-<pre><code>(-&gt;
-  logger = ()-&gt;
-    # logic goes here --&gt;
-    return
-
-  angular
-    .module(&apos;app&apos;)
-    .factory(&apos;logger&apos;, logger);
-
-)()
-</code></pre><p><strong>主意</strong>：为了使代码更加简洁，下面的编程先省略 IIFE 语法</p>
-<p>##3. 控制器</p>
-<p><strong>controller as view 语法：</strong>用 <code>controllerAs</code>语法来代替经典的把controller 绑定到  $scope 作用域的语法</p>
-<ul>
-<li>控制器是一个构造类，需要通过<code>newed</code>来创建一个新的实例，但是<code>controllerAS</code>语法更像 javascript 的构造函数</li>
-<li>这样的用法能够促进我们在视图中绑定对应对象的变量（ 用<code>customer.name</code>来取代<code>name</code>）等等，这样能够是我们的代码更易读，避免我们没有指定对象的时候的一些参考问题。</li>
-<li><p>能够让我们避免在视图中的嵌套控制器中使用<code>$parent</code>来调用父级控制器</p>
-<pre><code>-- 不推荐 --
-&lt;div ng-controller=&quot;Customer&quot;&gt;
-  {{ name }}
-&lt;/div&gt;
--- 推荐方式 --
-&lt;div ng-controller=&quot;Customer as customer&quot;&gt;
-  {{ customer.name }}
-&lt;/div&gt;
-</code></pre></li>
-</ul>
-<p><strong>controllerAs Controller Syntax</strong>：用<code>controllerAs</code>来代替<code>传统的将控制器绑定到$scope</code>的语法</p>
-<ul>
-<li><code>controllerAs</code>通过 <code>this</code>来从控制器的内部把返回的内容绑定到$scope 上<br><code>controllerAs</code>在语法上比 <code>$scope</code>要友好，使用<code>controllerAs</code> 你依旧可以把把数据绑定到视图，依旧可以访问绑定在<code>$scope</code>上的方法</li>
-<li><p>能够避免可能把方法定义到服务上更好的时候，想要将控制器中的方法绑定到<code>$scope</code>上，在服务中要考虑$scope 的用法，在控制器中只有必要的时候才能绑定到<code>$scope</code>上，举个例子，当要通过<code>$emit</code>,<code>$broadcast</code>,<code>$on</code>来传递和接收事件的时候，要在服务中定义，再在控制器中调用<br><strong>主意</strong>：介于 coffeescript 会自动返回最后一行，我们最好在函数的最后一行加上一个return 声明（即使这个函数没有任何东西返回），大多数上可以没有返回声明，但是在我自己的开发过程中，没有返回声明的时候，会报错，所以建议还是加上这个返回声明</p>
-<pre><code>-- 不推荐 --
-(-&gt;
-  Customer = ($scope)-&gt;
-    $scope.name = {}
-    $scope.sendMessage = ()-&gt;
-  angular
-    .module(&apos;app&apos;)
-    .controller(&apos;Customer&apos;, Customer)
-)()
--- 推荐方法 --
-(-&gt;
-  Customer = ()-&gt;
-    @name = {}
-    @sendMessage = ()-&gt;
-    return
-
-  angular
-    .module(&apos;app&apos;)
-    .controller(&apos;Customer&apos;, Customer)
-)()
-</code></pre></li>
-</ul>
-<p><strong>controllerAS with vm</strong>当使用<code>controllerAs</code>语法时，用一个变量来代替 this ，找一个统一的变量名来代替视图模型例如 <code>vm</code></p>
-<p><code>this</code>关键字是联系上下文的，当在控制器中使用函数的时候可能会改变上下文，为了避免这样的情况，最好用一个变量来捕获<code>this</code></p>
-<pre><code>-- 不推荐 --
-(-&gt;
-  Customer = ()-&gt;
-    @name = {}
-    @sendMessage = ()-&gt;
-      # here @/this is not the same
-      @stuff = &quot;stuff&quot;
-
-    return
-  angular
-    .module(&apos;app&apos;)
-    .controller(&apos;Customer&apos;, Customer)
-)()
-
-
--- 推荐方式 --
-(-&gt;
-  Customer = ()-&gt;
-    vm = @
-    vm.name = {}
-    vm.sendMessage = ()-&gt;
-
-    return
-  angular
-    .module(&apos;app&apos;)
-    .controller(&apos;Customer&apos;, Customer)
-)()
-</code></pre><p>【tip】</p>
-<pre><code>### OR use the fat arrow in functions =&gt; ###
-(-&gt;
-  Customer = ()-&gt;
-    @name = {}
-    @sendMessage = ()=&gt;
-      @stuff
-
-    return
-  angular
-    .module(&apos;app&apos;)
-    .controller(&apos;Customer&apos;, Customer)
-)()
-</code></pre><p>【note】：你可以把下面这段代码放到你的代码的最前一行，来避免一些组建的语法检查</p>
-<pre><code>### jshint validthis: true ###
-vm = @
-</code></pre><p><strong>把变量放在控制器的最前面</strong></p>
-<p>把数据绑定的变量成员（按照字母顺序）放在控制器的最前面，而不是遍布在整个控制器中。</p>
-<blockquote>
-<p>把数据绑定的变量成员放在控制器的最前面,使程序更加易读，帮你立即分辨控制器中这个变量成员可以绑定在视图中</p>
-</blockquote>
-<pre><code>-- 不推荐 --
-function SessionsController() {
-    var vm = this;
-
-    vm.gotoSession = function() {
-      /* ... */
-    };
-    vm.refresh = function() {
-      /* ... */
-    };
-    vm.search = function() {
-      /* ... */
-    };
-    vm.sessions = [];
-    vm.title = &apos;Sessions&apos;;
-}
-
--- 推荐方式 --
-function SessionsController() {
-    var vm = this;
-
-    vm.gotoSession = gotoSession;
-    vm.refresh = refresh;
-    vm.search = search;
-    vm.sessions = [];
-    vm.title = &apos;Sessions&apos;;
-
-    ////////////
-
-    function gotoSession() {
-      /* */
-    }
-
-    function refresh() {
-      /* */
-    }
-
-    function search() {
-      /* */
-    }
-}
-</code></pre><p>【note】 如果函数是一行的就把函数也放在控制器的前面，这样做对代码的阅读性不会有影响</p>
-<pre><code>-- 不推荐--
-function SessionsController(data) {
-    var vm = this;
-
-    vm.gotoSession = gotoSession;
-    vm.refresh = function() {
-        blabla
-    };
-    vm.search = search;
-    vm.sessions = [];
-    vm.title = &apos;Sessions&apos;;
-}
-
-
-
--- 推荐方法--
-function SessionsController(sessionDataService) {
-    var vm = this;
-
-    vm.gotoSession = gotoSession;
-    vm.refresh = sessionDataService.refresh; // 1 liner is OK
-    vm.search = search;
-    vm.sessions = [];
-    vm.title = &apos;Sessions&apos;;
-}
-</code></pre><h3 id="函数声明，隐藏实现细节"><a href="#函数声明，隐藏实现细节" class="headerlink" title="函数声明，隐藏实现细节"></a>函数声明，隐藏实现细节</h3><p>函数声明，隐藏实现的细节。把用于数据绑定的变量成员的声明，放在控制器的前面，实现放在文件的后面。</p>
-<ul>
-<li>把数据绑定的成员放在前面易于代码的阅读，能让你一眼就分辨出哪个变量用于视图的哪块区域的绑定</li>
-<li>把函数的实现放在文件的后面，把函数实现这部分比较复杂的部分放在后面。能让你直接看到函数声明这部分重要的信息</li>
-<li>因为函数的声明被提升了，所以在函数定义前，你是不需要关心这个函数的</li>
-<li>你不需要担心函数声明的位子移动的问题，你不用担心”因为a函数是依赖于b函数的，a函数移动到b函数前面会让你的代码出错”这样子的问题</li>
-<li><p>顺序在函数表达式中很重要</p>
-<pre><code>--不建议使用函数表达式--
-function AvengersController(avengersService, logger) {
-    var vm = this;
-    vm.avengers = [];
-    vm.title = &apos;Avengers&apos;;
-
-    var activate = function() {
-        return getAvengers().then(function() {
-            logger.info(&apos;Activated Avengers View&apos;);
-        });
-    }
-
-    var getAvengers = function() {
-        return avengersService.getAvengers().then(function(data) {
-            vm.avengers = data;
-            return vm.avengers;
-        });
-    }
-
-    vm.getAvengers = getAvengers;
-
-    activate();
-}
-</code></pre></li>
-</ul>
-<p>主意上面的例子中把重要的函数声明分散在控制器中，但在下面的例子中重要的函数声明都被提升到了顶部。举个栗子，函数绑定变量如<code>vm.avengers</code>和<code>vm.title</code>，把函数实现的细节放在后面，这样更加有利于代码的阅读</p>
-<pre><code>--  推荐方法 --
-function AvengersController(avengersService, logger) {
-    var vm = this;
-    vm.avengers = [];
-    vm.getAvengers = getAvengers;
-    vm.title = &apos;Avengers&apos;;
-
-    activate();
-
-    function activate() {
-        return getAvengers().then(function() {
-            logger.info(&apos;Activated Avengers View&apos;);
-        });
-    }
-
-    function getAvengers() {
-        return avengersService.getAvengers().then(function(data) {
-            vm.avengers = data;
-            return vm.avengers;
-        });
-    }
-}
-</code></pre><p>###把控制器的逻辑定义放到服务中</p>
-<ul>
-<li>逻辑可能会在多个控制器中复用，通过封装在服务中来通过函数暴露给控制器</li>
-<li>把逻辑封装在服务中，能更容易在单元测试中分离成独立作用域，在控制器中调用函数也更容易模拟</li>
-<li>从控制器中移除依赖，把实现细节隐藏起来</li>
-<li><p>让控制器变得简单，苗条，且专注</p>
-<pre><code>-- 不推荐 --
-function OrderController($http, $q, config, userInfo) {
-    var vm = this;
-    vm.checkCredit = checkCredit;
-    vm.isCreditOk;
-    vm.total = 0;
-
-    function checkCredit() {
-        var settings = {};
-        // Get the credit service base URL from config
-        // Set credit service required headers
-        // Prepare URL query string or data object with request data
-        // Add user-identifying info so service gets the right credit limit for this user.
-        // Use JSONP for this browser if it doesn&apos;t support CORS
-        return $http.get(settings)
-            .then(function(data) {
-             // Unpack JSON data in the response object
-               // to find maxRemainingAmount
-               vm.isCreditOk = vm.total &lt;= maxRemainingAmount
-            })
-            .catch(function(error) {
-               // Interpret error
-               // Cope w/ timeout? retry? try alternate service?
-               // Re-reject with appropriate error for a user to see
-            });
-    };
-}
--- 推荐方法 --
-function OrderController(creditService) {
-    var vm = this;
-    vm.checkCredit = checkCredit;
-    vm.isCreditOk;
-    vm.total = 0;
-
-    function checkCredit() {
-       return creditService.isOrderTotalOk(vm.total)
-          .then(function(isOk) { vm.isCreditOk = isOk; })
-          .catch(showError);
-    };
-}
-</code></pre></li>
-</ul>
-<h3 id="使控制器变得专注"><a href="#使控制器变得专注" class="headerlink" title="使控制器变得专注"></a>使控制器变得专注</h3><p>为一个视图定义一个控制器，不要讲一个控制器为多个视图复用，要把复用的逻辑封装到服务中，保证一个控制器只专注于他的视图</p>
-<p>给多个视图复用的控制器是很脆的，一个好的 E2E测试覆盖率是用来确定一个应用的稳定性的</p>
-<h3 id="路由分配"><a href="#路由分配" class="headerlink" title="路由分配"></a>路由分配</h3><p>当一个控制器必须和某个视图绑定但也有可能和其他视图或者控制器复用，把控制器的定义和路由条状一起定义</p>
-<p>【note】如果一个视图不是通过路由而是通过其他方式加载的，请用<code>ng-controller=&quot;Avengers as vm&quot;</code>语法</p>
-<p>在路由中分配控制器，允许不同的路由去调用不同的控制器和视图，当控制器是在视图中通过<code>ng-controller</code> 进行声明，那么这个视图就要和这个控制器一直关联</p>
-<pre><code>-- 不推荐 --
-
-// route-config.js
-angular
-    .module(&apos;app&apos;)
-    .config(config);
-
-function config($routeProvider) {
-    $routeProvider
-        .when(&apos;/avengers&apos;, {
-          templateUrl: &apos;avengers.html&apos;
-        });
-}
-
-&lt;!-- avengers.html --&gt;
-&lt;div ng-controller=&quot;AvengersController as vm&quot;&gt;
-&lt;/div&gt;
-
-
-
--- 推荐方式 --
-
-// route-config.js
-angular
-    .module(&apos;app&apos;)
-    .config(config);
-
-function config($routeProvider) {
-    $routeProvider
-        .when(&apos;/avengers&apos;, {
-            templateUrl: &apos;avengers.html&apos;,
-            controller: &apos;Avengers&apos;,
-            controllerAs: &apos;vm&apos;
-        });
-}
-&lt;!-- avengers.html --&gt;
-&lt;div&gt;
-&lt;/div&gt;
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2923,7 +2641,7 @@ function config($routeProvider) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
